@@ -1,0 +1,59 @@
+{
+	"pages": [{
+		"path": "pages/me/me",
+		"style": {
+			"navigationBarTitleText": "我"
+		}
+	}, {
+		"path": "pages/home/home",
+		"style": {
+			"navigationBarTitleText": "主页",
+			"enablePullDownRefresh": false
+		}
+
+	}    ,{
+            "path" : "pages/dashBoard/dashBoard",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "仪表盘",
+                "enablePullDownRefresh": true
+            }
+            
+        }
+    ],
+	"globalStyle": {
+		"navigationBarTextStyle": "white",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#007AFF",
+		"backgroundColor": "#F8F8F8",
+		"app-plus": {
+			"background": "#efeff4",
+			"bounce": "none"
+		}
+	},
+	
+	"tabBar": {
+	    "color": "#7A7E83",
+	    "selectedColor": "#007AFF",
+	    "borderStyle": "black",
+	    "backgroundColor": "#ffffff",
+	    "list": [{
+	        "pagePath": "pages/home/home",
+	        "iconPath": "static/images/home.png",
+	        "selectedIconPath": "static/images/home_selected.png",
+	        "text": "主页"
+	    },
+		{
+		    "pagePath": "pages/dashBoard/dashBoard",
+		    "iconPath": "static/images/dashBoard.png",
+		    "selectedIconPath": "static/images/dashBoard_selected.png",
+		    "text": "仪表盘"
+		}, {
+	        "pagePath": "pages/me/me",
+	        "iconPath": "static/images/me.png",
+	        "selectedIconPath": "static/images/me_selected.png",
+	        "text": "我"
+	    }]
+	}
+	
+}

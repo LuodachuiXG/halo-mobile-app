@@ -1,0 +1,22 @@
+@import '@/uni_modules/uni-scss/variables.scss';
+* {
+	transition: all .3s ease;
+}
+
+input {
+	border: 1px solid #D9D9D9;
+	padding: 5px;
+	padding-left: 10px;
+	padding-right: 10px;
+	border-radius: 4px;
+}
+
+input:hover {
+	border: 1px solid #597EF7;
+}
+
+button {
+	font-size: 1.1em;
+	height: 40px;
+	line-height: 40px;
+}
