@@ -1,8 +1,8 @@
 {
-    "name" : "Halo-app",
+    "name" : "Halo",
     "appid" : "__UNI__96B3944",
     "description" : "Halo移动端程序",
-    "versionName" : "1.0.0",
+    "versionName" : "0.0.1",
     "versionCode" : "100",
     "transformPx" : false,
     "app-plus" : {

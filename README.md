@@ -19,8 +19,8 @@
 - 显示最近文章
 
 ### 截图
-<img src="https://raw.githubusercontent.com/LuodachuiXG/halo-app/main/static/images/ScreenShot_1.jpg" width = "300"  alt="screenshot_1"  />
+<img src="https://ldc-1251523367.cos.ap-beijing.myqcloud.com/luodachui/ScreenShot_1_1640112194729.jpg" width = "300"  alt="screenshot_1"  />
 
-<img src="https://raw.githubusercontent.com/LuodachuiXG/halo-app/main/static/images/ScreenShot_2.jpg" width = "300"  alt="screenshot_2"  />
+<img src="https://ldc-1251523367.cos.ap-beijing.myqcloud.com/luodachui/ScreenShot_2_1640112203044.jpg" width = "300"  alt="screenshot_2"  />
 
-<img src="https://raw.githubusercontent.com/LuodachuiXG/halo-app/main/static/images/ScreenShot_3.jpg" width = "300"  alt="screenshot_3"  />
+<img src="https://ldc-1251523367.cos.ap-beijing.myqcloud.com/luodachui/ScreenShot_3_1640112209326.jpg" width = "300"  alt="screenshot_3"  />
