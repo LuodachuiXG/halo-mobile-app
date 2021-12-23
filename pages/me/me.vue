@@ -8,8 +8,9 @@
 				@confirm="popupCodeConfirm"></uni-popup-dialog>
 		</uni-popup>
 
-		<view class="view-login" v-if="!isLogin">
-			<image src="/static/images/halo.png"></image>
+		</uni-notice-bar>
+		<view class="view-login block" v-if="!isLogin">
+			<image class="view-login-image" src="/static/images/halo.png"></image>
 			<view class="login-view">
 				<label for="url">站点地址</label>
 				<input id="url" v-model="url" type="text" placeholder="https://域名" :disabled="disable" />
@@ -28,23 +29,52 @@
 		</view>
 
 		<view class="view-me" v-else>
-			<view class="container">
+			<view class="view-me-head block">
+				<image class="view-me-avatar" :src="avatar"></image>
+				<text class="view-me-text-name">{{ nickname }}</text>
+				<text class="view-me-text-description">{{ description }}</text>
+				<view class="view-me-view-link">
+					<uni-icons type="link" class="view-me-email-icon"></uni-icons>
+					<uni-link color="#4368F1" :href="url" :text="url"></uni-link>
+				</view>
+				<view class="view-me-view-email">
+					<uni-icons class="view-me-email-icon" type="email"></uni-icons>
+					<text>{{ email }}</text>
+				</view>
+				<view class="view-me-view-calendar">
+					<uni-icons class="view-me-email-icon" type="calendar"></uni-icons>
+					<text>{{ createdDay }} 天</text>
+				</view>
+			</view>
 
-				<view class="view-me-head">
-					<image class="avatar" :src="avatar"></image>
-					<text class="view-me-text-name">{{ nickname }}</text>
-					<view class="view-me-view-link">
-						<uni-icons class="view-me-email-icon" type="link"></uni-icons>
-						<uni-link color="#4368F1" :href="url" :text="url"></uni-link>
-					</view>
-					<view class="view-me-view-email">
-						<uni-icons class="view-me-email-icon" type="email"></uni-icons>
-						<text>{{ email }}</text>
-					</view>
-					<view class="view-me-view-calendar">
-						<uni-icons class="view-me-email-icon" type="calendar"></uni-icons>
-						<text>{{ createdDay }} 天</text>
-					</view>
+			<view class="view-me-option block">
+				<view class="view-me-option-item item" @click="onOptionClick(0)">
+					<image src="/static/images/setting.png"></image>
+					<text>博客设置</text>
+					<view class="item-sign"></view>
+				</view>
+				<view class="view-me-option-item item" @click="onOptionClick(1)">
+					<image src="/static/images/me.png"></image>
+					<text>个人资料</text>
+					<view class="item-sign"></view>
+				</view>
+				<view class="view-me-option-item item" @click="onOptionClick(2)">
+					<image src="/static/images/theme.png"></image>
+					<text>主题管理</text>
+					<view class="item-sign"></view>
+				</view>
+			</view>
+
+			<view class="view-me-app-option block">
+				<view class="view-me-exit item" @click="onOptionClick(3)">
+					<image src="/static/images/setting.png"></image>
+					<text>设置</text>
+					<view class="item-sign"></view>
+				</view>
+				<view class="view-me-exit item" @click="exit">
+					<image src="/static/images/exit.png"></image>
+					<text>退出</text>
+					<view class="item-sign"></view>
 				</view>
 			</view>
 		</view>
@@ -76,6 +106,7 @@
 				createTime: "",
 				createdDay: "",
 				updateTime: "",
+				description: ""
 			}
 		},
 
@@ -98,10 +129,30 @@
 		},
 
 		onShow: function() {
+			let that = this
 			// 判断个人信息是否过期
 			if (this.isExpired()) {
 				// token已经过期，更改登录状态
 				this.isLogin = false
+				setTimeout(function() {
+					// 延迟执行popup，防止组件还没加载完成导致此处报错
+					that.popup("信息过期，请重新登录", "error")
+				}, 500)
+			}
+		},
+
+		/**
+		 * 下拉刷新事件
+		 */
+		onPullDownRefresh() {
+			// 判断个人信息是否过期，没过期就加载个人资料
+			if (!this.isExpired()) {
+				// token没有过期，更改登录状态，并加载个人信息
+				this.isLogin = true
+				this.setData("isLogin", "true")
+				this.loadAdminInfo()
+			} else {
+				// token已经过期，留在登录view，并提示用户
 				this.popup("信息过期，请重新登录", "error")
 			}
 		},
@@ -278,15 +329,19 @@
 						that.email = data.data.email
 						that.createTime = data.data.createTime
 						that.updateTime = data.data.updateTime
-						
+						that.description = data.data.description
+
 						// 计算用户已经创建多少天了
 						let now = Number(Date.parse(new Date()))
 						let createdTime = (now - Number(that.createTime)) / 1000
 						that.createdDay = Math.floor(createdTime / 86400)
-						
+						// 停止下拉刷新
+						uni.stopPullDownRefresh()
 						that.popup("欢迎回来，" + that.nickname, "success")
 					},
 					fail: function(e) {
+						// 停止下拉刷新
+						uni.stopPullDownRefresh()
 						uni.showModal({
 							title: "获取个人资料失败",
 							content: e.errMsg,
@@ -294,6 +349,77 @@
 						})
 					}
 				})
+			},
+
+			/**
+			 * 注销或退出
+			 */
+			exit: function() {
+				var accessToken = this.getData("access_token")
+				var that = this
+				var list = ["注销"]
+
+				// APP有退出程序
+				// #ifdef APP-PLUS
+				list = ["注销", "退出程序"]
+				// #endif
+
+				uni.showActionSheet({
+					itemList: list,
+					success: function(res) {
+						if (res.tapIndex === 0) {
+							// 注销，清除会话
+							uni.request({
+								method: "POST",
+								dataType: "json",
+								url: that.url + "/api/admin/logout",
+								header: {
+									"Content-Type": "*/*",
+									"ADMIN-Authorization": accessToken
+								},
+								complete: function(e) {
+									// 清除本地登录数据
+									that.isLogin = false
+									that.accessToken = ""
+									that.avatar = ""
+									that.username = ""
+									that.nickname = ""
+									that.email = ""
+									that.createTime = ""
+									that.createdDay = ""
+									that.updateTime = ""
+									that.description = ""
+									that.setData("expired_date", "0")
+									that.setData("isLogin", "false")
+									that.setData("access_token", "")
+								}
+							})
+						} else {
+							// #ifdef APP-PLUS
+							if (uni.getSystemInfoSync().platform == 'ios') {
+								plus.ios.import("UIApplication").sharedApplication().performSelector(
+									"exit")
+							} else if (uni.getSystemInfoSync().platform == 'android') {
+								plus.runtime.quit();
+							}
+							// #endif
+						}
+					}
+				})
+			},
+
+			/**
+			 * 选项点击事件
+			 * @param {Object} i
+			 */
+			onOptionClick: function(i) {
+				switch (i) {
+					case 0:
+						uni.navigateTo({
+							url: "../blogSetting/blogSetting"
+						})
+						break
+				}
 			},
 
 
@@ -320,15 +446,13 @@
 </script>
 
 <style>
-	.container {
-		background-color: #F0F2F5;
-	}
+	.container {}
 
 	.login-view {
 		margin-bottom: 20rpx;
 	}
 
-	image {
+	.view-login-image {
 		display: block;
 		width: 128rpx;
 		height: 128rpx;
@@ -347,63 +471,73 @@
 		line-height: 24px;
 	}
 
-	.view-me {}
+
+
+	.view-me {
+		position: relative;
+	}
 
 	.view-me-head {
-		background-color: #FFFFFF;
-		height: 450rpx;
+		padding-bottom: 20rpx;
+	}
+
+	.view-me-avatar {
 		position: relative;
-		margin: 14px;
-		box-shadow: 0 0 5px rgba(216, 216, 216, .5);
-		border-radius: 6px;
-	}
-
-	.view-me-text-name {
-		position: relative;
-		top: 220rpx;
-		display: block;
-		font-size: 1.3em;
-		text-align: center;
-		padding-left: 0rpx;
-	}
-
-	.view-me-view-link {
-		position: relative;
-		top: 240rpx;
-	}
-
-	.view-me-view-link text {
-		margin-left: 20rpx;
-	}
-
-	.view-me-view-email {
-		position: relative;
-		top: 250rpx;
-	}
-
-	.view-me-view-email text {
-		margin-left: 20rpx;
-		color: #595959;
-		font-size: 0.9em;
-	}
-	
-	.view-me-view-calendar {
-		position: relative;
-		top: 260rpx;
-	}
-	
-	.view-me-view-calendar text {
-		margin-left: 20rpx;
-		color: #595959;
-		font-size: 0.9em;
-	}
-
-	.avatar {
-		position: absolute;
 		width: 148rpx;
 		height: 148rpx;
 		border-radius: 99999px;
-		top: 10rpx;
+		top: 30rpx;
 		left: calc(50% - 74rpx);
+	}
+
+	.view-me-text-name {
+		margin-top: 20rpx;
+		display: block;
+		font-size: 1.3em;
+		text-align: center;
+	}
+
+	.view-me-text-description {
+		margin-top: 5px;
+		display: block;
+		font-size: .8em;
+		text-align: center;
+		color: #8C8C8C;
+		/* 自动换行 */
+		word-break: break-all;
+		padding-left: 40rpx;
+		padding-right: 40rpx;
+	}
+
+	.view-me-view-link {
+		margin-top: 5px;
+		padding-left: 30rpx;
+	}
+
+	.view-me-view-link text {
+		margin-left: 5px;
+	}
+
+	.view-me-view-email {
+		margin-top: 20rpx;
+		padding-left: 30rpx;
+	}
+
+	.view-me-view-email text {
+		margin-left: 5px;
+		color: #595959;
+		font-size: 0.9em;
+	}
+
+	.view-me-view-calendar {
+		margin-top: 20rpx;
+		margin-bottom: 20rpx;
+		padding-left: 30rpx;
+	}
+
+	.view-me-view-calendar text {
+		margin-left: 5px;
+		color: #595959;
+		font-size: 0.9em;
 	}
 </style>

@@ -1,11 +1,13 @@
 # halo-app
+
 [Halo](https://halo.run/) admin app client
 一个[Halo](https://halo.run/)的移动客户端
 
 ### 开发框架
 - [Uni-App](https://uniapp.dcloud.io/)
 
-### HaloApi
+### 开发使用的HaloApi
+
 - [HaloApi](https://api.halo.run/admin-api.html)
 
 
@@ -18,9 +20,12 @@
 - 显示博客统计信息
 - 显示最近文章
 
-### 截图
-<img src="https://ldc-1251523367.cos.ap-beijing.myqcloud.com/luodachui/ScreenShot_1_1640112194729.jpg" width = "300"  alt="screenshot_1"  />
+### 部分截图
 
-<img src="https://ldc-1251523367.cos.ap-beijing.myqcloud.com/luodachui/ScreenShot_2_1640112203044.jpg" width = "300"  alt="screenshot_2"  />
+<img src="https://ldc-1251523367.cos.ap-beijing.myqcloud.com/luodachui/1_1640289037461.png?imageMogr2/interlace/0%7Cwatermark/2/text/bHVvZGFjaHVpLmNu/font/dGFob21hLnR0Zg/fontsize/24/fill/I2ZmMDAwMA/dissolve/60/gravity/center/dx/0/dy/0" width = "300"  alt="screenshot_1"  />
 
-<img src="https://ldc-1251523367.cos.ap-beijing.myqcloud.com/luodachui/ScreenShot_3_1640112209326.jpg" width = "300"  alt="screenshot_3"  />
+<img src="https://ldc-1251523367.cos.ap-beijing.myqcloud.com/luodachui/2_1640289037543.png?imageMogr2/interlace/0%7Cwatermark/2/text/bHVvZGFjaHVpLmNu/font/dGFob21hLnR0Zg/fontsize/24/fill/I2ZmMDAwMA/dissolve/60/gravity/center/dx/0/dy/0" width = "300"  alt="screenshot_2"  />
+
+<img src="https://ldc-1251523367.cos.ap-beijing.myqcloud.com/luodachui/3_1640289037460.png?imageMogr2/interlace/0%7Cwatermark/2/text/bHVvZGFjaHVpLmNu/font/dGFob21hLnR0Zg/fontsize/24/fill/I2ZmMDAwMA/dissolve/60/gravity/center/dx/0/dy/0" width = "300"  alt="screenshot_3"  />
+
+<img src="https://ldc-1251523367.cos.ap-beijing.myqcloud.com/luodachui/4_1640289040512.png?imageMogr2/interlace/0%7Cwatermark/2/text/bHVvZGFjaHVpLmNu/font/dGFob21hLnR0Zg/fontsize/24/fill/I2ZmMDAwMA/dissolve/60/gravity/center/dx/0/dy/0" width = "300"  alt="screenshot_3"  />

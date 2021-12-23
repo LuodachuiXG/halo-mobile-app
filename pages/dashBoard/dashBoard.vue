@@ -5,7 +5,7 @@
 		</uni-popup>
 
 		<uni-collapse accordion class="uni-collapse">
-			<uni-collapse-item title="总览">
+			<uni-collapse-item title="总览" open>
 				<view class="view-block">
 					<uni-row class="row">
 						<uni-col :span="10">
@@ -86,13 +86,12 @@
 					</uni-row>
 				</view>
 			</uni-collapse-item>
-			<uni-collapse-item title="最近文章" open>
+			<uni-collapse-item title="最近文章">
 				<view class="view-latestPost">
-					<view class="view-latestPost-block" v-for="post in posts">
+					<view class="view-latestPost-block" v-for="(post, i) in posts" @click="selectPost(i)">
 						<uni-row>
 							<uni-col :span="15">
-								<uni-link color="#595959" :href="url + post.fullPath" 
-									:text="post.title" showUnderLine="false"></uni-link>
+								<text>{{ post.title }}</text>
 							</uni-col>
 							<uni-col :span="9" :push="0" style="text-align: right;font-size: .9em;">
 								<text>{{ format(Number(post.createTime)) }}</text>
@@ -260,6 +259,11 @@
 					}
 				})
 			},
+			
+			selectPost: function(i) {
+				let url = this.url + this.posts[i].fullPath
+				this.openURL(url)
+			},
 
 			/**
 			 * popup弹出层
@@ -335,7 +339,6 @@
 
 	.view-latestPost {
 		position: relative;
-		padding: 10rpx;
 	}
 
 	.view-latestPost-title {
@@ -343,9 +346,18 @@
 	}
 
 	.view-latestPost-block {
+		margin-left: 10rpx;
+		margin-right: 10rpx;
 		padding: 20rpx;
 		padding-top: 30rpx;
 		padding-bottom: 30rpx;
-		border-bottom: 1px solid #E8E8E8;
+		border-bottom: 1px solid #eeeeee;
+	}
+	
+	.view-latestPost-block:last-child {
+		border-bottom: none;
+	}
+	.view-latestPost-block:active {
+		background-color: #e9ebec;
 	}
 </style>

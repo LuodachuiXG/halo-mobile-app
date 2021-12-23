@@ -18,9 +18,22 @@
 	@import '@/uni_modules/uni-scss';
 	/* #ifndef APP-NVUE */
 	@import '@/static/customicons.css';
+	
+	
+
 	// 设置整个项目的背景色
+	uni-page-body,
+	html,
+	body {
+		width: 100%;
+		height: 100%;
+		--primaryColor: #007AFF;
+	}
+
 	page {
-		background-color: #f5f5f5;
+		width: 100%;
+		height: 100%;
+		background-color: #F0F2F5;
 	}
 
 	/* #endif */
@@ -29,4 +42,110 @@
 		color: #333;
 		padding: 10px;
 	}
+	
+	* {
+		transition: all .2s ease;
+	}
+	
+	input {
+		border: 1px solid #D9D9D9;
+		padding: 5px;
+		padding-left: 10px;
+		padding-right: 10px;
+		border-radius: 4px;
+	}
+	
+	input:hover {
+		border: 1px solid #597EF7;
+	}
+	
+	button {
+		font-size: 1.1em;
+		height: 40px;
+		line-height: 40px;
+	}
+	
+	.block {
+		background-color: #FFFFFF;
+		margin: 30rpx;
+		box-shadow: 0 2px 10px rgba(216, 216, 216, .5);
+		border-radius: 6px;
+	}
+	
+	.item {
+		position: relative;
+		padding: 30rpx;
+		border-bottom: 1px solid #eeeeee;
+		line-height: 40rpx;
+	}
+		
+	.item:first-child {
+		border-radius: 6px 6px 0px 0px;
+	}
+		
+	.item:last-child {
+		border-radius: 0px 0px 6px 6px;
+	}
+		
+	.item:active {
+		background-color: #e9ebec;
+	}
+	
+	.item:last-child {
+		border-bottom: none;
+	}
+	
+	.item text {
+		margin-left: 20rpx;
+		font-size: .9em;
+		color: #616255;
+	}
+	
+	.item image {
+		position: relative;
+		top: 9rpx;
+		width: 35rpx;
+		height: 35rpx;
+	}
+	
+	.item-sign {
+		position: absolute;
+		top: calc(50% - 15rpx);
+		right: 40rpx;
+		background-color: #cbcbcb;
+		width: 8rpx;
+		height: 30rpx;
+		border-radius: 99999px;
+	}
+	
+	.block-title {
+		display: inline-block;
+		margin-left: 40rpx;
+		margin-right: 30rpx;
+		margin-top: 20rpx;
+		margin-bottom: -20rpx;
+		position: relative;
+		z-index: 99999;
+	}
+	
+	.block-title text {
+		margin-left: 15rpx;
+		font-size: 1.1em;
+		font-weight: bold;
+		color: #FFFFFF;
+		text-shadow: 2px 2px 5px rgba(0, 0, 0,.5);
+	}
+	
+	
+	.block-title view {
+		position: absolute;
+		top: 40%;
+		width: 130%;
+		height: 20px;
+		border-radius: 999999px;
+		background-color: var(--primaryColor);
+		z-index: -1;
+		opacity: 1;
+	}
+
 </style>

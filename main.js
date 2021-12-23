@@ -88,6 +88,10 @@ function add0(m) {
 	return m < 10 ? '0' + m : m
 }
 
+/**
+ * 时间戳格式化
+ * @param {Object} time
+ */
 Vue.prototype.format = function(time) {
 	//time是整数，否则要parseInt转换
 	var time = new Date(time);
@@ -99,4 +103,18 @@ Vue.prototype.format = function(time) {
 	// var s = time.getSeconds();
 	return y + '-' + add0(m) + '-' + add0(d) + ' ' + add0(h) + ':' + add0(mm) ;
 	// + ':' + add0(s);
+}
+
+Vue.prototype.openURL = function(url) {
+	// #ifdef APP-PLUS
+	plus.runtime.openURL(url);
+	// #endif
+	// #ifdef H5
+	window.open(url)
+	// #endif
+	// #ifdef MP
+	uni.setClipboardData({
+		data: url
+	});
+	// #endif
 }

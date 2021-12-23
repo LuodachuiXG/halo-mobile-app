@@ -2,7 +2,13 @@
 	"pages": [{
 		"path": "pages/me/me",
 		"style": {
-			"navigationBarTitleText": "我"
+			"navigationBarTitleText": "我",
+			"enablePullDownRefresh": true,
+			"app-plus": {
+				"pullToRefresh": {
+					"color":"#007AFF"
+				}
+			}
 		}
 	}, {
 		"path": "pages/home/home",
@@ -16,7 +22,21 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "仪表盘",
-                "enablePullDownRefresh": true
+                "enablePullDownRefresh": true,
+				"app-plus": {
+					"pullToRefresh": {
+						"color":"#007AFF"
+					}
+				}
+            }
+            
+        }
+        ,{
+            "path" : "pages/blogSetting/blogSetting",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "博客设置",
+                "enablePullDownRefresh": false
             }
             
         }
