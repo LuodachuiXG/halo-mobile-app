@@ -3,12 +3,7 @@
 		"path": "pages/me/me",
 		"style": {
 			"navigationBarTitleText": "我",
-			"enablePullDownRefresh": true,
-			"app-plus": {
-				"pullToRefresh": {
-					"color":"#007AFF"
-				}
-			}
+			"enablePullDownRefresh": true
 		}
 	}, {
 		"path": "pages/home/home",
@@ -22,12 +17,7 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "仪表盘",
-                "enablePullDownRefresh": true,
-				"app-plus": {
-					"pullToRefresh": {
-						"color":"#007AFF"
-					}
-				}
+                "enablePullDownRefresh": true
             }
             
         }
@@ -40,6 +30,24 @@
             }
             
         }
+        ,{
+            "path" : "pages/blogSetting_pages/general/general",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "常规设置",
+                "enablePullDownRefresh": true
+            }
+            
+        }
+        ,{
+            "path" : "pages/attachment/selectAttachment/selectAttachment",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "选择图片",
+                "enablePullDownRefresh": true
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
@@ -48,7 +56,10 @@
 		"backgroundColor": "#F8F8F8",
 		"app-plus": {
 			"background": "#efeff4",
-			"bounce": "none"
+			"bounce": "none",
+			"pullToRefresh": {
+				"color":"#007AFF"
+			}
 		}
 	},
 	

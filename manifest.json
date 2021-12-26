@@ -39,7 +39,7 @@
                     "<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>",
                     "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
                 ],
-                "abiFilters" : [ "armeabi-v7a" ]
+                "abiFilters" : [ "armeabi-v7a", "arm64-v8a", "x86" ]
             },
             "ios" : {},
             /* ios打包配置 */
@@ -79,7 +79,8 @@
                 }
             },
             "splashscreen" : {
-                "androidStyle" : "common"
+                "androidStyle" : "common",
+                "useOriginalMsgbox" : false
             }
         }
     },

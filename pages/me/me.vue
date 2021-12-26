@@ -13,19 +13,19 @@
 			<image class="view-login-image" src="/static/images/halo.png"></image>
 			<view class="login-view">
 				<label for="url">站点地址</label>
-				<input id="url" v-model="url" type="text" placeholder="https://域名" :disabled="disable" />
+				<input class="input" id="url" v-model="url" type="text" placeholder="https://域名" :disabled="disable" />
 			</view>
 
 			<view class="login-view">
 				<label for="username">用户名/邮箱</label>
-				<input id="username" v-model="username" type="text" placeholder="用户名/邮箱" :disabled="disable" />
+				<input class="input" id="username" v-model="username" type="text" placeholder="用户名/邮箱" :disabled="disable" />
 			</view>
 
 			<view class="login-view">
 				<label for="username">密码</label>
-				<input id="password" v-model="password" password="true" placeholder="密码" :disabled="disable" />
+				<input class="input" id="password" v-model="password" password="true" placeholder="密码" :disabled="disable" />
 			</view>
-			<button type="primary" @click="login" id="login" :disabled="disable" :loading="disable">登录</button>
+			<button class="button" type="primary" @click="login" id="login" :disabled="disable" :loading="disable">登录</button>
 		</view>
 
 		<view class="view-me" v-else>
@@ -300,6 +300,7 @@
 			 */
 			loadAdminInfo: function() {
 				let accessToken = this.getData("access_token")
+				console.log(accessToken)
 				let that = this
 
 				// 获取用户资料

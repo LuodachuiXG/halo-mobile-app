@@ -44,10 +44,12 @@
 	}
 	
 	* {
-		transition: all .2s ease;
+		transition-property: all;
+		transition-duration: .2s;
+		transition-timing-function: ease;
 	}
 	
-	input {
+	.input {
 		border: 1px solid #D9D9D9;
 		padding: 5px;
 		padding-left: 10px;
@@ -55,11 +57,12 @@
 		border-radius: 4px;
 	}
 	
-	input:hover {
+	.input:hover{
 		border: 1px solid #597EF7;
+		box-shadow: 0px 0 3px .1px rgba(0, 122, 255, .5)
 	}
 	
-	button {
+	.button {
 		font-size: 1.1em;
 		height: 40px;
 		line-height: 40px;
@@ -147,5 +150,58 @@
 		z-index: -1;
 		opacity: 1;
 	}
-
+	
+	.view-input {
+		margin: 30rpx;
+		margin-left: 20rpx;
+		margin-right: 20rpx;
+	}
+	.view-input-titleView text {
+		position: relative;
+		top: 6rpx;
+		margin-right: 10rpx;
+	}
+	
+	.view-input textarea{
+		width: auto;
+	}
+	.view-input-titleView {
+		margin-bottom: 10rpx;
+		color: #616255;
+	}
+	
+	// 带按钮input
+	.button-input {
+		position: relative;
+	}
+	
+	.button-input view:first-child {
+		display: inline-block;
+		width: 90%;
+		vertical-align: top;
+	}
+	.button-input view:last-child {
+		width: 9.6%;
+		position: relative;
+		display: inline-block;
+		background-color: #FAFAFA;
+		border: 1px solid #D9D9D9;
+		border-left: none;
+		border-top-right-radius: 4px;
+		border-bottom-right-radius: 4px;
+		text-align: center;
+		vertical-align: top;
+		padding-top: 5px;
+		padding-bottom: 5px;
+	}
+	.button-input image {
+		width: 20px;
+		height: 20px;
+		vertical-align: middle;
+	}
+	.button-input input {
+		border-top-right-radius: 0px;
+		border-bottom-right-radius: 0px;
+	}
+	
 </style>
