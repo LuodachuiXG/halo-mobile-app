@@ -28,6 +28,7 @@
 		width: 100%;
 		height: 100%;
 		--primaryColor: #007AFF;
+		--textPrimaryColor: #616255
 	}
 
 	page {

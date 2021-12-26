@@ -79,13 +79,32 @@
 			 * @param {Object} i
 			 */
 			onOptionClick: function(i) {
+				let url = ""
 				switch(i) {
 					// 常规设置
 					case 0:
-						uni.navigateTo({
-							url:"../blogSetting_pages/general/general"
-						})
+						url = "../blogSetting_pages/general/general"
+						break;
+					// SEO设置
+					case 1:	
+						url = "../blogSetting_pages/seo/seo"
+						break;
+					// 文章设置
+					case 2:	
+						url = "../blogSetting_pages/post/post"
+						break;	
+					// 评论设置
+					case 3:	
+						url = "../blogSetting_pages/comment/comment"
+						break;
+					// 附件设置
+					case 4:	
+						url = "../blogSetting_pages/attachment/attachment"
+						break;
 				}
+				uni.navigateTo({
+					url: url
+				})
 			}
 		}
 	}

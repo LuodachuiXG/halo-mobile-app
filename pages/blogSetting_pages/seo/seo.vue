@@ -5,43 +5,18 @@
 		</uni-popup>
 		<view class="block">
 			<view class="view-input">
-				<view class="view-input-titleView"><text style="color: red;">*</text>博客标题：</view>
-				<input class="input" type="text" v-model="blog_title" />
+				<view class="view-input-titleView">屏蔽搜索引擎：</view>
+				<switch :checked="seo_spider_disabled" @change="switchChange" />
 			</view>
 
 			<view class="view-input">
-				<view class="view-input-titleView"><text style="color: red;">*</text>博客地址：</view>
-				<input class="input" type="text" v-model="blog_url" placeholder="如:https://halo.run" />
+				<view class="view-input-titleView">关键词：</view>
+				<input class="input" type="text" v-model="seo_keywords" placeholder="多个关键词以英文状态下的逗号隔开" />
 			</view>
 
 			<view class="view-input">
-				<view class="view-input-titleView">Logo：</view>
-				<view class="button-input">
-					<view>
-						<input class="input" type="text" v-model="blog_logo" />
-					</view>
-					<view>
-						<image src="/static/images/picture.png" @click="selectAttachment('blog_logo')"></image>
-					</view>
-				</view>
-			</view>
-			
-			
-			<view class="view-input">
-				<view class="view-input-titleView">Favicon：</view>
-				<view class="button-input">
-					<view>
-						<input class="input" type="text" v-model="blog_favicon" />
-					</view>
-					<view>
-						<image src="/static/images/picture.png" @click="selectAttachment('blog_favicon')"></image>
-					</view>
-				</view>
-			</view>
-
-			<view class="view-input">
-				<view class="view-input-titleView">页脚消息：</view>
-				<textarea class="input" v-model="blog_footer_info" placeholder="支持HTML格式的文本"></textarea>
+				<view class="view-input-titleView">博客描述：</view>
+				<textarea class="input" v-model="seo_description"></textarea>
 			</view>
 
 			<button class="button save-button" type="primary" @click="saving">保存</button>
@@ -56,11 +31,9 @@
 				accessToken: "",
 				url: "",
 
-				blog_title: "",
-				blog_url: "",
-				blog_logo: "",
-				blog_favicon: "",
-				blog_footer_info: "",
+				seo_spider_disabled: "",
+				seo_keywords: "",
+				seo_description: "",
 
 				popupType: "",
 				popupMessage: ""
@@ -85,7 +58,7 @@
 			 * 刷新数据
 			 */
 			refreshData: function() {
-				let array = ["blog_title", "blog_url", "blog_logo", "blog_favicon", "blog_footer_info"]
+				let array = ["seo_spider_disabled", "seo_keywords", "seo_description"]
 				let that = this
 				uni.request({
 					method: "POST",
@@ -110,11 +83,9 @@
 							return
 						}
 						let data = res.data.data
-						that.blog_title = data.blog_title
-						that.blog_url = data.blog_url
-						that.blog_logo = data.blog_logo
-						that.blog_favicon = data.blog_favicon
-						that.blog_footer_info = data.blog_footer_info
+						that.seo_spider_disabled = data.seo_spider_disabled
+						that.seo_keywords = data.seo_keywords
+						that.seo_description = data.seo_description
 					},
 					fail: function(e) {
 						uni.stopPullDownRefresh()
@@ -127,33 +98,24 @@
 			},
 			
 			/**
-			 * 打开新窗口选择附件
-			 * @param {Object} attrName 当前页面的变量，传递给附件选择页，用于选择附件后修改的变量
+			 * 屏蔽搜索引擎switch改变事件
+			 * @param {Object} e
 			 */
-			selectAttachment: function(attrName) {
-				uni.navigateTo({
-					url: "../../attachment/selectAttachment/selectAttachment?attrName=" + attrName
-				})
+			switchChange: function(e) {
+				this.seo_spider_disabled = e.detail.value
 			},
+			
 			
 			/**
 			 * 保存按钮事件
 			 */
 			saving: function() {
-				if (this.blog_title.length <= 0 || this.blog_url <= 0) {
-					this.popup("请将必填内容填写完整")
-					return 
-				}
-				
 				let json = {
-					"blog_title": this.blog_title,
-					"blog_url": this.blog_url,
-					"blog_logo": this.blog_logo,
-					"blog_favicon": this.blog_favicon,
-					"blog_footer_info": this.blog_footer_info
+					"seo_spider_disabled": this.seo_spider_disabled,
+					"seo_keywords": this.seo_keywords,
+					"seo_description": this.seo_description
 				}
 				let that = this
-				
 				uni.request({
 					method: "POST",
 					dataType: "json",

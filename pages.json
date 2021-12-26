@@ -48,6 +48,42 @@
             }
             
         }
+        ,{
+            "path" : "pages/blogSetting_pages/seo/seo",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "SEO设置",
+                "enablePullDownRefresh": true
+            }
+            
+        }
+        ,{
+            "path" : "pages/blogSetting_pages/post/post",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "文章设置",
+                "enablePullDownRefresh": true
+            }
+            
+        }
+        ,{
+            "path" : "pages/blogSetting_pages/comment/comment",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "评论设置",
+                "enablePullDownRefresh": true
+            }
+            
+        }
+        ,{
+            "path" : "pages/blogSetting_pages/attachment/attachment",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "附件设置",
+                "enablePullDownRefresh": true
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
