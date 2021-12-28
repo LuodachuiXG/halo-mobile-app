@@ -1,19 +1,16 @@
-# halo-app
-
-[Halo](https://halo.run/) admin app client
-一个[Halo](https://halo.run/)的移动客户端
+# halo-mobile-app
+📱[Halo](https://halo.run/) admin app client
+📱一个[Halo](https://halo.run/)博客的移动端后台管理程序
 
 ### 开发框架
 - [Uni-App](https://uniapp.dcloud.io/)
 
-### 开发使用的HaloApi
-
+### 使用的HaloApi
 - [HaloApi](https://api.halo.run/admin-api.html)
-
 
 ### 进度
 目前还是刚刚开始，也顺便练练手
-已经完成开发的功能看发行版更新信息~
+已经完成开发的功能看发行版更新信息~~
 
 ### 部分截图
 
