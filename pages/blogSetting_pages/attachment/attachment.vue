@@ -28,368 +28,371 @@
 					</picker>
 				</view>
 			</view>
-
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === 'SM.MS'">
-				<view class="view-input-titleView">Secret Token：</view>
-				<input class="input" type="text" v-model="smms_api_secret_token" placeholder="需要到 sm.ms 官网注册后获取" />
-			</view>
-
-
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '又拍云'">
-				<view class="view-input-titleView">绑定域名协议：</view>
-				<view class="input">
-					<picker @change="ossUpyunDomainProtocolChange" :value="oss_upyun_domain_protocolIndex"
-						:range="oss_upyun_domain_protocolText">
-						<view>{{oss_upyun_domain_protocolText[oss_upyun_domain_protocolIndex]}}</view>
-					</picker>
-				</view>
-			</view>
-
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '又拍云'">
-				<view class="view-input-titleView">绑定域名：</view>
-				<input class="input" type="text" v-model="oss_upyun_domain" placeholder="无需再加上 http:// 或者 https://" />
-			</view>
-
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '又拍云'">
-				<view class="view-input-titleView">空间名称：</view>
-				<input class="input" type="text" v-model="oss_upyun_bucket" />
-			</view>
-
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '又拍云'">
-				<view class="view-input-titleView">操作员名称：</view>
-				<input class="input" type="text" v-model="oss_upyun_operator" />
-			</view>
-
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '又拍云'">
-				<view class="view-input-titleView">操作员密码：</view>
-				<input class="input" type="text" password v-model="oss_upyun_password" />
-			</view>
-
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '又拍云'">
-				<view class="view-input-titleView">文件目录：</view>
-				<input class="input" type="text" v-model="oss_upyun_source" />
-			</view>
-
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '又拍云'">
-				<view class="view-input-titleView">图片处理策略：</view>
-				<input class="input" type="text" v-model="oss_upyun_style_rule" placeholder="间隔标识符+图片处理版本名称" />
-			</view>
-
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '又拍云'">
-				<view class="view-input-titleView">缩略图处理策略：</view>
-				<input class="input" type="text" v-model="oss_upyun_thumbnail_style_rule"
-					placeholder="间隔标识符+图片处理版本名称,一般为后台展示所用" />
-			</view>
-
-
-
-
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '七牛云'">
-				<view class="view-input-titleView">绑定域名协议：</view>
-				<view class="input">
-					<picker @change="ossQiniuDomainProtocolChange" :value="oss_qiniu_domain_protocolIndex"
-						:range="oss_qiniu_domain_protocolText">
-						<view>{{oss_qiniu_domain_protocolText[oss_qiniu_domain_protocolIndex]}}</view>
-					</picker>
-				</view>
-			</view>
-
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '七牛云'">
-				<view class="view-input-titleView">绑定域名：</view>
-				<input class="input" type="text" v-model="oss_qiniu_domain" placeholder="无需再加上 http:// 或者 https://" />
-			</view>
-
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '七牛云'">
-				<view class="view-input-titleView">区域：</view>
-				<view class="input">
-					<picker @change="ossQiniuZoneChange" :value="oss_qiniu_zoneIndex" :range="oss_qiniu_zoneText">
-						<view>{{oss_qiniu_zoneText[oss_qiniu_zoneIndex]}}</view>
-					</picker>
-				</view>
-			</view>
-
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '七牛云'">
-				<view class="view-input-titleView">Access Key：</view>
-				<input class="input" type="text" v-model="oss_qiniu_access_key" password />
-			</view>
-
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '七牛云'">
-				<view class="view-input-titleView">Secret Key：</view>
-				<input class="input" type="text" v-model="oss_qiniu_secret_key" password />
-			</view>
-
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '七牛云'">
-				<view class="view-input-titleView">文件目录：</view>
-				<input class="input" type="text" v-model="oss_qiniu_source" placeholder="不写则上传到根目录" />
-			</view>
-
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '七牛云'">
-				<view class="view-input-titleView">Bucket：</view>
-				<input class="input" type="text" v-model="oss_qiniu_bucket" placeholder="存储空间名称" />
-			</view>
-			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '七牛云'">
-				<view class="view-input-titleView">图片处理策略：</view>
-				<input class="input" type="text" v-model="oss_qiniu_style_rule" placeholder="间隔标识符+图片处理版本名称" />
-			</view>
-
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '七牛云'">
-				<view class="view-input-titleView">缩略图处理策略：</view>
-				<input class="input" type="text" v-model="oss_qiniu_thumbnail_style_rule"
-					placeholder="间隔标识符+图片处理版本名称,一般为后台展示所用" />
-			</view>
-			
-			
-			
-			
-			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '阿里云'">
-				<view class="view-input-titleView">绑定域名协议：</view>
-				<view class="input">
-					<picker @change="ossAliDomainProtocolChange" :value="oss_ali_domain_protocolIndex"
-						:range="oss_ali_domain_protocolText">
-						<view>{{oss_ali_domain_protocolText[oss_ali_domain_protocolIndex]}}</view>
-					</picker>
+				
+			<view v-if="attachment_typeText[attachment_typeIndex] === 'SM.MS'">
+				<view class="view-input">
+					<view class="view-input-titleView">Secret Token：</view>
+					<input class="input" type="text" v-model="smms_api_secret_token" placeholder="需要到 sm.ms 官网注册后获取" />
 				</view>
 			</view>
 			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '阿里云'">
-				<view class="view-input-titleView">绑定域名：</view>
-				<input class="input" type="text" v-model="oss_ali_domain" placeholder="如不填写,路径根域名将为 Bucket + EndPoint" />
-			</view>
-			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '阿里云'">
-				<view class="view-input-titleView">Bucket：</view>
-				<input class="input" type="text" v-model="oss_ali_bucket_name" placeholder="存储空间名称" />
-			</view>
-			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '阿里云'">
-				<view class="view-input-titleView">EndPoint(地域节点)：</view>
-				<input class="input" type="text" v-model="oss_ali_endpoint"/>
-			</view>
-			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '阿里云'">
-				<view class="view-input-titleView">Access Key：</view>
-				<input class="input" type="text" v-model="oss_ali_access_key" password />
-			</view>
-			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '阿里云'">
-				<view class="view-input-titleView">Access Secret：</view>
-				<input class="input" type="text" v-model="oss_ali_access_secret" password />
-			</view>
-			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '阿里云'">
-				<view class="view-input-titleView">文件目录：</view>
-				<input class="input" type="text" v-model="oss_ali_source" placeholder="不写则上传到根目录" />
-			</view>
-			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '阿里云'">
-				<view class="view-input-titleView">图片处理策略：</view>
-				<input class="input" type="text" v-model="oss_ali_style_rule" placeholder="请到阿里云控制台的图片处理获取" />
-			</view>
-			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '阿里云'">
-				<view class="view-input-titleView">缩略图处理策略：</view>
-				<input class="input" type="text" v-model="oss_ali_thumbnail_style_rule"
-					placeholder="请到阿里云控制台的图片处理获取,一般为后台展示所用" />
-			</view>
-			
-			
-			
-			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '百度云'">
-				<view class="view-input-titleView">绑定域名协议：</view>
-				<view class="input">
-					<picker @change="bosBaiduDomainProtocolChange" :value="bos_baidu_domain_protocolIndex"
-						:range="bos_baidu_domain_protocolText">
-						<view>{{bos_baidu_domain_protocolText[bos_baidu_domain_protocolIndex]}}</view>
-					</picker>
+
+			<view v-if="attachment_typeText[attachment_typeIndex] === '又拍云'">
+				<view class="view-input">
+					<view class="view-input-titleView">绑定域名协议：</view>
+					<view class="input">
+						<picker @change="ossUpyunDomainProtocolChange" :value="oss_upyun_domain_protocolIndex"
+							:range="oss_upyun_domain_protocolText">
+							<view>{{oss_upyun_domain_protocolText[oss_upyun_domain_protocolIndex]}}</view>
+						</picker>
+					</view>
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">绑定域名：</view>
+					<input class="input" type="text" v-model="oss_upyun_domain" placeholder="无需再加上 http:// 或者 https://" />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">空间名称：</view>
+					<input class="input" type="text" v-model="oss_upyun_bucket" />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">操作员名称：</view>
+					<input class="input" type="text" v-model="oss_upyun_operator" />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">操作员密码：</view>
+					<input class="input" type="text" password v-model="oss_upyun_password" />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">文件目录：</view>
+					<input class="input" type="text" v-model="oss_upyun_source" />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">图片处理策略：</view>
+					<input class="input" type="text" v-model="oss_upyun_style_rule" placeholder="间隔标识符+图片处理版本名称" />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">缩略图处理策略：</view>
+					<input class="input" type="text" v-model="oss_upyun_thumbnail_style_rule"
+						placeholder="间隔标识符+图片处理版本名称,一般为后台展示所用" />
 				</view>
 			</view>
 			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '百度云'">
-				<view class="view-input-titleView">绑定域名：</view>
-				<input class="input" type="text" v-model="bos_baidu_domain" placeholder="如不填写,路径根域名将为 Bucket + EndPoint" />
+			
+			<view  v-if="attachment_typeText[attachment_typeIndex] === '七牛云'">
+				<view class="view-input">
+					<view class="view-input-titleView">绑定域名协议：</view>
+					<view class="input">
+						<picker @change="ossQiniuDomainProtocolChange" :value="oss_qiniu_domain_protocolIndex"
+							:range="oss_qiniu_domain_protocolText">
+							<view>{{oss_qiniu_domain_protocolText[oss_qiniu_domain_protocolIndex]}}</view>
+						</picker>
+					</view>
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">绑定域名：</view>
+					<input class="input" type="text" v-model="oss_qiniu_domain" placeholder="无需再加上 http:// 或者 https://" />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">区域：</view>
+					<view class="input">
+						<picker @change="ossQiniuZoneChange" :value="oss_qiniu_zoneIndex" :range="oss_qiniu_zoneText">
+							<view>{{oss_qiniu_zoneText[oss_qiniu_zoneIndex]}}</view>
+						</picker>
+					</view>
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">Access Key：</view>
+					<input class="input" type="text" v-model="oss_qiniu_access_key" password />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">Secret Key：</view>
+					<input class="input" type="text" v-model="oss_qiniu_secret_key" password />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">文件目录：</view>
+					<input class="input" type="text" v-model="oss_qiniu_source" placeholder="不写则上传到根目录" />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">Bucket：</view>
+					<input class="input" type="text" v-model="oss_qiniu_bucket" placeholder="存储空间名称" />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">图片处理策略：</view>
+					<input class="input" type="text" v-model="oss_qiniu_style_rule" placeholder="间隔标识符+图片处理版本名称" />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">缩略图处理策略：</view>
+					<input class="input" type="text" v-model="oss_qiniu_thumbnail_style_rule"
+						placeholder="间隔标识符+图片处理版本名称,一般为后台展示所用" />
+				</view>
 			</view>
+
 			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '百度云'">
-				<view class="view-input-titleView">Bucket：</view>
-				<input class="input" type="text" v-model="bos_baidu_bucket_name" placeholder="存储空间名称" />
-			</view>
-			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '百度云'">
-				<view class="view-input-titleView">EndPoint(地域节点)：</view>
-				<input class="input" type="text" v-model="bos_baidu_endpoint"/>
-			</view>
-			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '百度云'">
-				<view class="view-input-titleView">Access Key：</view>
-				<input class="input" type="text" v-model="bos_baidu_access_key" password />
-			</view>
-			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '百度云'">
-				<view class="view-input-titleView">Secret Key：</view>
-				<input class="input" type="text" v-model="bos_baidu_secret_key" password />
-			</view>
-			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '百度云'">
-				<view class="view-input-titleView">图片处理策略：</view>
-				<input class="input" type="text" v-model="bos_baidu_style_rule" placeholder="请到百度云控制台的图片处理获取" />
-			</view>
-			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '百度云'">
-				<view class="view-input-titleView">缩略图处理策略：</view>
-				<input class="input" type="text" v-model="bos_baidu_thumbnail_style_rule"
-					placeholder="请到百度云控制台的图片处理获取,一般为后台展示所用" />
-			</view>
-			
-			
-			
-			
-			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '腾讯云'">
-				<view class="view-input-titleView">绑定域名协议：</view>
-				<view class="input">
-					<picker @change="cosTencentDomainProtocolChange" :value="cos_tencent_domain_protocolIndex"
-						:range="cos_tencent_domain_protocolText">
-						<view>{{cos_tencent_domain_protocolText[cos_tencent_domain_protocolIndex]}}</view>
-					</picker>
+			<view v-if="attachment_typeText[attachment_typeIndex] === '阿里云'">
+				<view class="view-input">
+					<view class="view-input-titleView">绑定域名协议：</view>
+					<view class="input">
+						<picker @change="ossAliDomainProtocolChange" :value="oss_ali_domain_protocolIndex"
+							:range="oss_ali_domain_protocolText">
+							<view>{{oss_ali_domain_protocolText[oss_ali_domain_protocolIndex]}}</view>
+						</picker>
+					</view>
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">绑定域名：</view>
+					<input class="input" type="text" v-model="oss_ali_domain" placeholder="如不填写,路径根域名将为 Bucket + EndPoint" />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">Bucket：</view>
+					<input class="input" type="text" v-model="oss_ali_bucket_name" placeholder="存储空间名称" />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">EndPoint(地域节点)：</view>
+					<input class="input" type="text" v-model="oss_ali_endpoint"/>
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">Access Key：</view>
+					<input class="input" type="text" v-model="oss_ali_access_key" password />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">Access Secret：</view>
+					<input class="input" type="text" v-model="oss_ali_access_secret" password />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">文件目录：</view>
+					<input class="input" type="text" v-model="oss_ali_source" placeholder="不写则上传到根目录" />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">图片处理策略：</view>
+					<input class="input" type="text" v-model="oss_ali_style_rule" placeholder="请到阿里云控制台的图片处理获取" />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">缩略图处理策略：</view>
+					<input class="input" type="text" v-model="oss_ali_thumbnail_style_rule"
+						placeholder="请到阿里云控制台的图片处理获取,一般为后台展示所用" />
 				</view>
 			</view>
 			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '腾讯云'">
-				<view class="view-input-titleView">绑定域名：</view>
-				<input class="input" type="text" v-model="cos_tencent_domain" placeholder="如不填写,路径根域名将为 Bucket + EndPoint" />
-			</view>
 			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '腾讯云'">
-				<view class="view-input-titleView">Bucket：</view>
-				<input class="input" type="text" v-model="cos_tencent_bucket_name" placeholder="存储桶名称" />
-			</view>
-			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '腾讯云'">
-				<view class="view-input-titleView">区域：</view>
-				<view class="input">
-					<picker @change="cosTencentRegionChange" :value="cos_tencent_regionIndex" :range="cos_tencent_regionText">
-						<view>{{cos_tencent_regionText[cos_tencent_regionIndex]}}</view>
-					</picker>
+			<view v-if="attachment_typeText[attachment_typeIndex] === '百度云'">
+				<view class="view-input">
+					<view class="view-input-titleView">绑定域名协议：</view>
+					<view class="input">
+						<picker @change="bosBaiduDomainProtocolChange" :value="bos_baidu_domain_protocolIndex"
+							:range="bos_baidu_domain_protocolText">
+							<view>{{bos_baidu_domain_protocolText[bos_baidu_domain_protocolIndex]}}</view>
+						</picker>
+					</view>
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">绑定域名：</view>
+					<input class="input" type="text" v-model="bos_baidu_domain" placeholder="如不填写,路径根域名将为 Bucket + EndPoint" />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">Bucket：</view>
+					<input class="input" type="text" v-model="bos_baidu_bucket_name" placeholder="存储空间名称" />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">EndPoint(地域节点)：</view>
+					<input class="input" type="text" v-model="bos_baidu_endpoint"/>
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">Access Key：</view>
+					<input class="input" type="text" v-model="bos_baidu_access_key" password />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">Secret Key：</view>
+					<input class="input" type="text" v-model="bos_baidu_secret_key" password />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">图片处理策略：</view>
+					<input class="input" type="text" v-model="bos_baidu_style_rule" placeholder="请到百度云控制台的图片处理获取" />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">缩略图处理策略：</view>
+					<input class="input" type="text" v-model="bos_baidu_thumbnail_style_rule"
+						placeholder="请到百度云控制台的图片处理获取,一般为后台展示所用" />
 				</view>
 			</view>
 			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '腾讯云'">
-				<view class="view-input-titleView">Secret Id：</view>
-				<input class="input" type="text" v-model="cos_tencent_secret_id" password />
+			
+			
+			<view v-if="attachment_typeText[attachment_typeIndex] === '腾讯云'">
+				<view class="view-input">
+					<view class="view-input-titleView">绑定域名协议：</view>
+					<view class="input">
+						<picker @change="cosTencentDomainProtocolChange" :value="cos_tencent_domain_protocolIndex"
+							:range="cos_tencent_domain_protocolText">
+							<view>{{cos_tencent_domain_protocolText[cos_tencent_domain_protocolIndex]}}</view>
+						</picker>
+					</view>
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">绑定域名：</view>
+					<input class="input" type="text" v-model="cos_tencent_domain" placeholder="如不填写,路径根域名将为 Bucket + EndPoint" />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">Bucket：</view>
+					<input class="input" type="text" v-model="cos_tencent_bucket_name" placeholder="存储桶名称" />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">区域：</view>
+					<view class="input">
+						<picker @change="cosTencentRegionChange" :value="cos_tencent_regionIndex" :range="cos_tencent_regionText">
+							<view>{{cos_tencent_regionText[cos_tencent_regionIndex]}}</view>
+						</picker>
+					</view>
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">Secret Id：</view>
+					<input class="input" type="text" v-model="cos_tencent_secret_id" password />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">Secret Key：</view>
+					<input class="input" type="text" v-model="cos_tencent_secret_key" password />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">文件目录：</view>
+					<input class="input" type="text" v-model="cos_tencent_source"/>
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">图片处理策略：</view>
+					<input class="input" type="text" v-model="cos_tencent_style_rule" placeholder="请到腾讯云控制台的图片处理获取" />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">缩略图处理策略：</view>
+					<input class="input" type="text" v-model="cos_tencent_thumbnail_style_rule"
+						placeholder="请到腾讯云控制台的图片处理获取,一般为后台展示所用" />
+				</view>
 			</view>
+
 			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '腾讯云'">
-				<view class="view-input-titleView">Secret Key：</view>
-				<input class="input" type="text" v-model="cos_tencent_secret_key" password />
-			</view>
-			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '腾讯云'">
-				<view class="view-input-titleView">文件目录：</view>
-				<input class="input" type="text" v-model="cos_tencent_source"/>
-			</view>
-			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '腾讯云'">
-				<view class="view-input-titleView">图片处理策略：</view>
-				<input class="input" type="text" v-model="cos_tencent_style_rule" placeholder="请到腾讯云控制台的图片处理获取" />
-			</view>
-			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '腾讯云'">
-				<view class="view-input-titleView">缩略图处理策略：</view>
-				<input class="input" type="text" v-model="cos_tencent_thumbnail_style_rule"
-					placeholder="请到腾讯云控制台的图片处理获取,一般为后台展示所用" />
-			</view>
-			
-			
-			
-			
-			
-			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '华为云'">
-				<view class="view-input-titleView">绑定域名协议：</view>
-				<view class="input">
-					<picker @change="obsHhuaweiDomainProtocolChange" :value="obs_huawei_domain_protocolIndex"
-						:range="obs_huawei_domain_protocolText">
-						<view>{{obs_huawei_domain_protocolText[obs_huawei_domain_protocolIndex]}}</view>
-					</picker>
+			<view v-if="attachment_typeText[attachment_typeIndex] === '华为云'">
+				<view class="view-input">
+					<view class="view-input-titleView">绑定域名协议：</view>
+					<view class="input">
+						<picker @change="obsHhuaweiDomainProtocolChange" :value="obs_huawei_domain_protocolIndex"
+							:range="obs_huawei_domain_protocolText">
+							<view>{{obs_huawei_domain_protocolText[obs_huawei_domain_protocolIndex]}}</view>
+						</picker>
+					</view>
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">绑定域名：</view>
+					<input class="input" type="text" v-model="obs_huawei_domain" placeholder="如不填写,路径根域名将为 Bucket + EndPoint" />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">Bucket：</view>
+					<input class="input" type="text" v-model="obs_huawei_bucket_name" placeholder="桶名称" />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">EndPoint(终端节点)：</view>
+					<input class="input" type="text" v-model="obs_huawei_endpoint" placeholder="Endpoint"/>
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">Access Key：</view>
+					<input class="input" type="text" v-model="obs_huawei_access_key" password />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">Access Secret：</view>
+					<input class="input" type="text" v-model="obs_huawei_access_secret" password />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">文件目录：</view>
+					<input class="input" type="text" v-model="obs_huawei_source" placeholder="不填写则上传到根目录"/>
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">图片处理策略：</view>
+					<input class="input" type="text" v-model="obs_huawei_style_rule" placeholder="请到华为云控制台的图片处理获取" />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">缩略图处理策略：</view>
+					<input class="input" type="text" v-model="obs_huawei_thumbnail_style_rule"
+						placeholder="请到华为云控制台的图片处理获取,一般为后台展示所用" />
 				</view>
 			</view>
 			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '华为云'">
-				<view class="view-input-titleView">绑定域名：</view>
-				<input class="input" type="text" v-model="obs_huawei_domain" placeholder="如不填写,路径根域名将为 Bucket + EndPoint" />
+			
+			
+			<view v-if="attachment_typeText[attachment_typeIndex] === 'MinIO'">
+				<view class="view-input">
+					<view class="view-input-titleView">EndPoint(终端节点)：</view>
+					<input class="input" type="text" v-model="minio_endpoint" placeholder="Endpoint"/>
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">Bucket（桶名称）：</view>
+					<input class="input" type="text" v-model="minio_bucket_name" placeholder="桶名称" />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">Region（区域）：</view>
+					<input class="input" type="text" v-model="minio_region" placeholder="区域" />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">Access Key：</view>
+					<input class="input" type="text" v-model="minio_access_key" password />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">Access Secret：</view>
+					<input class="input" type="text" v-model="minio_access_secret" password />
+				</view>
+				
+				<view class="view-input">
+					<view class="view-input-titleView">文件目录：</view>
+					<input class="input" type="text" v-model="minio_source" placeholder="不填写则上传到根目录"/>
+				</view>
 			</view>
 			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '华为云'">
-				<view class="view-input-titleView">Bucket：</view>
-				<input class="input" type="text" v-model="obs_huawei_bucket_name" placeholder="桶名称" />
-			</view>
-			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '华为云'">
-				<view class="view-input-titleView">EndPoint(终端节点)：</view>
-				<input class="input" type="text" v-model="obs_huawei_endpoint" placeholder="Endpoint"/>
-			</view>
-			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '华为云'">
-				<view class="view-input-titleView">Access Key：</view>
-				<input class="input" type="text" v-model="obs_huawei_access_key" password />
-			</view>
-			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '华为云'">
-				<view class="view-input-titleView">Access Secret：</view>
-				<input class="input" type="text" v-model="obs_huawei_access_secret" password />
-			</view>
-			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '华为云'">
-				<view class="view-input-titleView">文件目录：</view>
-				<input class="input" type="text" v-model="obs_huawei_source" placeholder="不填写则上传到根目录"/>
-			</view>
-			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '华为云'">
-				<view class="view-input-titleView">图片处理策略：</view>
-				<input class="input" type="text" v-model="obs_huawei_style_rule" placeholder="请到华为云控制台的图片处理获取" />
-			</view>
-			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === '华为云'">
-				<view class="view-input-titleView">缩略图处理策略：</view>
-				<input class="input" type="text" v-model="obs_huawei_thumbnail_style_rule"
-					placeholder="请到华为云控制台的图片处理获取,一般为后台展示所用" />
-			</view>
-			
-			
-			
-			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === 'MinIO'">
-				<view class="view-input-titleView">EndPoint(终端节点)：</view>
-				<input class="input" type="text" v-model="minio_endpoint" placeholder="Endpoint"/>
-			</view>
-			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === 'MinIO'">
-				<view class="view-input-titleView">Bucket（桶名称）：</view>
-				<input class="input" type="text" v-model="minio_bucket_name" placeholder="桶名称" />
-			</view>
-			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === 'MinIO'">
-				<view class="view-input-titleView">Region（区域）：</view>
-				<input class="input" type="text" v-model="minio_region" placeholder="区域" />
-			</view>
-			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === 'MinIO'">
-				<view class="view-input-titleView">Access Key：</view>
-				<input class="input" type="text" v-model="minio_access_key" password />
-			</view>
-			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === 'MinIO'">
-				<view class="view-input-titleView">Access Secret：</view>
-				<input class="input" type="text" v-model="minio_access_secret" password />
-			</view>
-			
-			<view class="view-input" v-if="attachment_typeText[attachment_typeIndex] === 'MinIO'">
-				<view class="view-input-titleView">文件目录：</view>
-				<input class="input" type="text" v-model="minio_source" placeholder="不填写则上传到根目录"/>
-			</view>
 
 			<button class="button save-button" type="primary" @click="saving">保存</button>
 		</view>
@@ -922,47 +925,124 @@
 				}
 				
 				
-				// let json = {
-				// 	"comment_gravatar_default": this.comment_gravatar_defaultValue[this
-				// 		.comment_gravatar_defaultIndex],
-				// 	"comment_new_need_check": this.comment_new_need_check,
-				// 	"comment_new_notice": this.comment_new_notice,
-				// 	"comment_reply_notice": this.comment_reply_notice,
-				// 	"comment_api_enabled": this.comment_api_enabled,
-				// 	"comment_internal_plugin_js": this.comment_internal_plugin_js,
-				// 	"gravatar_source": this.gravatar_source,
-				// 	"comment_page_size": this.comment_page_size,
-				// 	"comment_content_placeholder": this.comment_content_placeholder
-				// }
-				// let that = this
-				// uni.request({
-				// 	method: "POST",
-				// 	dataType: "json",
-				// 	url: this.url + "/api/admin/options/map_view/saving",
-				// 	header: {
-				// 		"Content-Type": "application/json",
-				// 		"ADMIN-Authorization": this.accessToken
-				// 	},
-				// 	data: json,
-				// 	success: function(res) {
-				// 		if (res.statusCode !== 200) {
-				// 			that.popup("保存失败：" + res.statusCode)
-				// 			// 登录过期
-				// 			if (res.message === undefined || res.message === "Token 已过期或不存在") {
-				// 				that.popup("保存失败，登录已过期，请重新登陆")
-				// 			}
-				// 			return
-				// 		}
-				// 		that.popup("保存成功", "success")
-				// 		that.refreshData()
-				// 	},
-				// 	fail: function(e) {
-				// 		uni.showModal({
-				// 			title: "保存数据失败",
-				// 			content: e.message
-				// 		})
-				// 	}
-				// })
+				let json = {
+					"attachment_upload_image_preview_enable": this.attachment_upload_image_preview_enable,
+					"attachment_upload_max_files": this.attachment_upload_max_files,
+					"attachment_upload_max_parallel_uploads":this.attachment_upload_max_parallel_uploads,
+					
+					"attachment_type": 
+						this.attachment_typeValue[this.attachment_typeIndex],
+					
+				
+					"smms_api_secret_token": this.smms_api_secret_token,
+					
+					"oss_upyun_domain_protocol": 
+					this.oss_upyun_domain_protocolValue[this.oss_upyun_domain_protocolIndex],
+					"oss_upyun_domain": this.oss_upyun_domain,
+					"oss_upyun_bucket": this.oss_upyun_bucket,
+					"oss_upyun_operator": this.oss_upyun_operator,
+					"oss_upyun_password": this.oss_upyun_password,
+					"oss_upyun_source": this.oss_upyun_source,
+					"oss_upyun_style_rule": this.oss_upyun_style_rule,
+					"oss_upyun_thumbnail_style_rule": this.oss_upyun_thumbnail_style_rule,
+					
+					
+					"oss_qiniu_domain_protocol": 
+						this.oss_qiniu_domain_protocolValue[this.oss_qiniu_domain_protocolIndex],
+					"oss_qiniu_domain": this.oss_qiniu_domain,
+					"oss_qiniu_zone": 
+						this.oss_qiniu_zoneValue[this.oss_qiniu_zoneIndex],
+					"oss_qiniu_access_key": this.oss_qiniu_access_key,
+					"oss_qiniu_secret_key": this.oss_qiniu_secret_key,
+					"oss_qiniu_source": this.oss_qiniu_source,
+					"oss_qiniu_bucket": this.oss_qiniu_bucket,
+					"oss_qiniu_style_rule": this.oss_qiniu_style_rule,
+					"oss_qiniu_thumbnail_style_rule": this.oss_qiniu_thumbnail_style_rule,
+					
+					
+					"oss_ali_domain_protocol": 
+						this.oss_ali_domain_protocolValue[this.oss_ali_domain_protocolIndex],
+					"oss_ali_domain": this.oss_ali_domain,
+					"oss_ali_bucket_name": this.oss_ali_bucket_name,
+					"oss_ali_endpoint": this.oss_ali_endpoint,
+					"oss_ali_access_key": this.oss_ali_access_key,
+					"oss_ali_access_secret": this.oss_ali_access_secret,
+					"oss_ali_source": this.oss_ali_source,
+					"oss_ali_style_rule": this.oss_ali_style_rule,
+					"oss_ali_thumbnail_style_rule": this.oss_ali_thumbnail_style_rule,
+					
+								
+					"bos_baidu_domain_protocol": 
+						this.bos_baidu_domain_protocolValue[this.bos_baidu_domain_protocolIndex],
+					"bos_baidu_domain": this.bos_baidu_domain,
+					"bos_baidu_bucket_name": this.bos_baidu_bucket_name,
+					"bos_baidu_endpoint": this.bos_baidu_endpoint,
+					"bos_baidu_access_key": this.bos_baidu_access_key,
+					"bos_baidu_secret_key": this.bos_baidu_secret_key,
+					"bos_baidu_style_rule": this.bos_baidu_style_rule,
+					"bos_baidu_thumbnail_style_rule": this.bos_baidu_thumbnail_style_rule,
+					
+					
+					"cos_tencent_domain_protocol": 
+						this.cos_tencent_domain_protocolValue[this.cos_tencent_domain_protocolIndex],
+					"cos_tencent_domain": this.cos_tencent_domain,
+					"cos_tencent_bucket_name": this.cos_tencent_bucket_name,
+					"cos_tencent_region": 
+						this.cos_tencent_regionValue[this.cos_tencent_regionIndex],
+					"cos_tencent_secret_id": this.cos_tencent_secret_id,
+					"cos_tencent_secret_key": this.cos_tencent_secret_key,
+					"cos_tencent_source": this.cos_tencent_source,
+					"cos_tencent_style_rule": this.cos_tencent_style_rule,
+					"cos_tencent_thumbnail_style_rule": this.cos_tencent_thumbnail_style_rule,
+					
+					
+					"obs_huawei_domain_protocol": 
+						this.obs_huawei_domain_protocolValue[this.obs_huawei_domain_protocolIndex],
+					"obs_huawei_domain": this.obs_huawei_domain,
+					"obs_huawei_bucket_name": this.obs_huawei_bucket_name,
+					"obs_huawei_endpoint": this.obs_huawei_endpoint,
+					"obs_huawei_access_key": this.obs_huawei_access_key,
+					"obs_huawei_access_secret": this.obs_huawei_access_secret,
+					"obs_huawei_source": this.obs_huawei_source,
+					"obs_huawei_style_rule": this.obs_huawei_style_rule,
+					"obs_huawei_thumbnail_style_rule": this.obs_huawei_thumbnail_style_rule,
+					
+					"minio_endpoint": this.minio_endpoint,
+					"minio_bucket_name": this.minio_bucket_name,
+					"minio_region": this.minio_region,
+					"minio_access_key": this.minio_access_key,
+					"minio_access_secret": this.minio_access_secret,
+					"minio_source": this.minio_source,
+				}
+				let that = this
+				uni.request({
+					method: "POST",
+					dataType: "json",
+					url: this.url + "/api/admin/options/map_view/saving",
+					header: {
+						"Content-Type": "application/json",
+						"ADMIN-Authorization": this.accessToken
+					},
+					data: json,
+					success: function(res) {
+						if (res.statusCode !== 200) {
+							that.popup("保存失败：" + res.statusCode)
+							// 登录过期
+							if (res.message === undefined || res.message === "Token 已过期或不存在") {
+								that.popup("保存失败，登录已过期，请重新登陆")
+							}
+							return
+						}
+						that.popup("保存成功", "success")
+						that.refreshData()
+					},
+					fail: function(e) {
+						uni.showModal({
+							title: "保存数据失败",
+							content: e.message
+						})
+					}
+				})
 			},
 
 
