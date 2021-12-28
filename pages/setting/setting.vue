@@ -1,12 +1,12 @@
 <template>
 	<view>
-		<view class="block gitee">
+		<view class="block gitee" @click="gitee">
 			<image src="/static/images/gitee.png"></image>
 			<text>前往Gitee开源页面</text>
 			<image src='https://gitee.com/luodachui/halo-mobile-app/badge/star.svg?theme=white' >
 			</image>
 		</view>
-		<view class="block github">
+		<view class="block github" @click="github">
 			<image src="/static/images/github.png"></image>
 			<text>前往Github开源页面</text>
 		</view>
@@ -21,7 +21,19 @@
 			}
 		},
 		methods: {
-
+			/**
+			 * 前往gitee页面单击事件
+			 */
+			gitee: function() {
+				this.openURL("https://gitee.com/luodachui/halo-mobile-app")
+			},
+			
+			/**
+			 * 前往github页面单击事件
+			 */
+			github: function() {
+				this.openURL("https://github.com/LuodachuiXG/halo-mobile-app")
+			}
 		}
 	}
 </script>
