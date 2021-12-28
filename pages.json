@@ -93,6 +93,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/blogSetting_pages/other/other",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "其他设置",
+                "enablePullDownRefresh": true
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
