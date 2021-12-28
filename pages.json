@@ -52,7 +52,7 @@
             "path" : "pages/blogSetting_pages/seo/seo",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "SEO设置",
+                "navigationBarTitleText": "SEO 设置",
                 "enablePullDownRefresh": true
             }
             
@@ -80,6 +80,15 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "附件设置",
+                "enablePullDownRefresh": true
+            }
+            
+        }
+        ,{
+            "path" : "pages/blogSetting_pages/smtp/smtp",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "SMTP 服务",
                 "enablePullDownRefresh": true
             }
             

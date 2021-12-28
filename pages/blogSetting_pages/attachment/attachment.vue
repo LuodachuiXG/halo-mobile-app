@@ -31,7 +31,7 @@
 				
 			<view v-if="attachment_typeText[attachment_typeIndex] === 'SM.MS'">
 				<view class="view-input">
-					<view class="view-input-titleView">Secret Token：</view>
+					<view class="view-input-titleView"><text style="color: red;">*</text>Secret Token：</view>
 					<input class="input" type="text" v-model="smms_api_secret_token" placeholder="需要到 sm.ms 官网注册后获取" />
 				</view>
 			</view>
@@ -49,27 +49,27 @@
 				</view>
 				
 				<view class="view-input">
-					<view class="view-input-titleView">绑定域名：</view>
+					<view class="view-input-titleView"><text style="color: red;">*</text>绑定域名：</view>
 					<input class="input" type="text" v-model="oss_upyun_domain" placeholder="无需再加上 http:// 或者 https://" />
 				</view>
 				
 				<view class="view-input">
-					<view class="view-input-titleView">空间名称：</view>
+					<view class="view-input-titleView"><text style="color: red;">*</text>空间名称：</view>
 					<input class="input" type="text" v-model="oss_upyun_bucket" />
 				</view>
 				
 				<view class="view-input">
-					<view class="view-input-titleView">操作员名称：</view>
+					<view class="view-input-titleView"><text style="color: red;">*</text>操作员名称：</view>
 					<input class="input" type="text" v-model="oss_upyun_operator" />
 				</view>
 				
 				<view class="view-input">
-					<view class="view-input-titleView">操作员密码：</view>
+					<view class="view-input-titleView"><text style="color: red;">*</text>操作员密码：</view>
 					<input class="input" type="text" password v-model="oss_upyun_password" />
 				</view>
 				
 				<view class="view-input">
-					<view class="view-input-titleView">文件目录：</view>
+					<view class="view-input-titleView"><text style="color: red;">*</text>文件目录：</view>
 					<input class="input" type="text" v-model="oss_upyun_source" />
 				</view>
 				
@@ -98,7 +98,7 @@
 				</view>
 				
 				<view class="view-input">
-					<view class="view-input-titleView">绑定域名：</view>
+					<view class="view-input-titleView"><text style="color: red;">*</text>绑定域名：</view>
 					<input class="input" type="text" v-model="oss_qiniu_domain" placeholder="无需再加上 http:// 或者 https://" />
 				</view>
 				
@@ -112,12 +112,12 @@
 				</view>
 				
 				<view class="view-input">
-					<view class="view-input-titleView">Access Key：</view>
+					<view class="view-input-titleView"><text style="color: red;">*</text>Access Key：</view>
 					<input class="input" type="text" v-model="oss_qiniu_access_key" password />
 				</view>
 				
 				<view class="view-input">
-					<view class="view-input-titleView">Secret Key：</view>
+					<view class="view-input-titleView"><text style="color: red;">*</text>Secret Key：</view>
 					<input class="input" type="text" v-model="oss_qiniu_secret_key" password />
 				</view>
 				
@@ -127,7 +127,7 @@
 				</view>
 				
 				<view class="view-input">
-					<view class="view-input-titleView">Bucket：</view>
+					<view class="view-input-titleView"><text style="color: red;">*</text>Bucket：</view>
 					<input class="input" type="text" v-model="oss_qiniu_bucket" placeholder="存储空间名称" />
 				</view>
 				
@@ -161,22 +161,22 @@
 				</view>
 				
 				<view class="view-input">
-					<view class="view-input-titleView">Bucket：</view>
+					<view class="view-input-titleView"><text style="color: red;">*</text>Bucket：</view>
 					<input class="input" type="text" v-model="oss_ali_bucket_name" placeholder="存储空间名称" />
 				</view>
 				
 				<view class="view-input">
-					<view class="view-input-titleView">EndPoint(地域节点)：</view>
+					<view class="view-input-titleView"><text style="color: red;">*</text>EndPoint(地域节点)：</view>
 					<input class="input" type="text" v-model="oss_ali_endpoint"/>
 				</view>
 				
 				<view class="view-input">
-					<view class="view-input-titleView">Access Key：</view>
+					<view class="view-input-titleView"><text style="color: red;">*</text>Access Key：</view>
 					<input class="input" type="text" v-model="oss_ali_access_key" password />
 				</view>
 				
 				<view class="view-input">
-					<view class="view-input-titleView">Access Secret：</view>
+					<view class="view-input-titleView"><text style="color: red;">*</text>Access Secret：</view>
 					<input class="input" type="text" v-model="oss_ali_access_secret" password />
 				</view>
 				
@@ -215,22 +215,22 @@
 				</view>
 				
 				<view class="view-input">
-					<view class="view-input-titleView">Bucket：</view>
+					<view class="view-input-titleView"><text style="color: red;">*</text>Bucket：</view>
 					<input class="input" type="text" v-model="bos_baidu_bucket_name" placeholder="存储空间名称" />
 				</view>
 				
 				<view class="view-input">
-					<view class="view-input-titleView">EndPoint(地域节点)：</view>
+					<view class="view-input-titleView"><text style="color: red;">*</text>EndPoint(地域节点)：</view>
 					<input class="input" type="text" v-model="bos_baidu_endpoint"/>
 				</view>
 				
 				<view class="view-input">
-					<view class="view-input-titleView">Access Key：</view>
+					<view class="view-input-titleView"><text style="color: red;">*</text>Access Key：</view>
 					<input class="input" type="text" v-model="bos_baidu_access_key" password />
 				</view>
 				
 				<view class="view-input">
-					<view class="view-input-titleView">Secret Key：</view>
+					<view class="view-input-titleView"><text style="color: red;">*</text>Secret Key：</view>
 					<input class="input" type="text" v-model="bos_baidu_secret_key" password />
 				</view>
 				
@@ -265,7 +265,7 @@
 				</view>
 				
 				<view class="view-input">
-					<view class="view-input-titleView">Bucket：</view>
+					<view class="view-input-titleView"><text style="color: red;">*</text>Bucket：</view>
 					<input class="input" type="text" v-model="cos_tencent_bucket_name" placeholder="存储桶名称" />
 				</view>
 				
@@ -279,12 +279,12 @@
 				</view>
 				
 				<view class="view-input">
-					<view class="view-input-titleView">Secret Id：</view>
+					<view class="view-input-titleView"><text style="color: red;">*</text>Secret Id：</view>
 					<input class="input" type="text" v-model="cos_tencent_secret_id" password />
 				</view>
 				
 				<view class="view-input">
-					<view class="view-input-titleView">Secret Key：</view>
+					<view class="view-input-titleView"><text style="color: red;">*</text>Secret Key：</view>
 					<input class="input" type="text" v-model="cos_tencent_secret_key" password />
 				</view>
 				
@@ -323,22 +323,22 @@
 				</view>
 				
 				<view class="view-input">
-					<view class="view-input-titleView">Bucket：</view>
+					<view class="view-input-titleView"><text style="color: red;">*</text>Bucket：</view>
 					<input class="input" type="text" v-model="obs_huawei_bucket_name" placeholder="桶名称" />
 				</view>
 				
 				<view class="view-input">
-					<view class="view-input-titleView">EndPoint(终端节点)：</view>
+					<view class="view-input-titleView"><text style="color: red;">*</text>EndPoint(终端节点)：</view>
 					<input class="input" type="text" v-model="obs_huawei_endpoint" placeholder="Endpoint"/>
 				</view>
 				
 				<view class="view-input">
-					<view class="view-input-titleView">Access Key：</view>
+					<view class="view-input-titleView"><text style="color: red;">*</text>Access Key：</view>
 					<input class="input" type="text" v-model="obs_huawei_access_key" password />
 				</view>
 				
 				<view class="view-input">
-					<view class="view-input-titleView">Access Secret：</view>
+					<view class="view-input-titleView"><text style="color: red;">*</text>Access Secret：</view>
 					<input class="input" type="text" v-model="obs_huawei_access_secret" password />
 				</view>
 				
@@ -363,12 +363,12 @@
 			
 			<view v-if="attachment_typeText[attachment_typeIndex] === 'MinIO'">
 				<view class="view-input">
-					<view class="view-input-titleView">EndPoint(终端节点)：</view>
+					<view class="view-input-titleView"><text style="color: red;">*</text>EndPoint(终端节点)：</view>
 					<input class="input" type="text" v-model="minio_endpoint" placeholder="Endpoint"/>
 				</view>
 				
 				<view class="view-input">
-					<view class="view-input-titleView">Bucket（桶名称）：</view>
+					<view class="view-input-titleView"><text style="color: red;">*</text>Bucket（桶名称）：</view>
 					<input class="input" type="text" v-model="minio_bucket_name" placeholder="桶名称" />
 				</view>
 				
@@ -378,12 +378,12 @@
 				</view>
 				
 				<view class="view-input">
-					<view class="view-input-titleView">Access Key：</view>
+					<view class="view-input-titleView"><text style="color: red;">*</text>Access Key：</view>
 					<input class="input" type="text" v-model="minio_access_key" password />
 				</view>
 				
 				<view class="view-input">
-					<view class="view-input-titleView">Access Secret：</view>
+					<view class="view-input-titleView"><text style="color: red;">*</text>Access Secret：</view>
 					<input class="input" type="text" v-model="minio_access_secret" password />
 				</view>
 				

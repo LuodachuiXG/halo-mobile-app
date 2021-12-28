@@ -12,7 +12,7 @@
 			</view>
 			<view class="item" @click="onOptionClick(1)">
 				<image src="/static/images/earth.png"></image>
-				<text>SEO设置</text>
+				<text>SEO 设置</text>
 				<view class="item-sign"></view>
 			</view>
 			<view class="item" @click="onOptionClick(2)">
@@ -32,7 +32,7 @@
 			</view>
 			<view class="item" @click="onOptionClick(5)">
 				<image src="/static/images/email.png"></image>
-				<text>SMTP服务</text>
+				<text>SMTP 服务</text>
 				<view class="item-sign"></view>
 			</view>
 			<view class="item" @click="onOptionClick(6)">
@@ -100,6 +100,10 @@
 					// 附件设置
 					case 4:	
 						url = "../blogSetting_pages/attachment/attachment"
+						break;
+					// SMTP服务
+					case 5:	
+						url = "../blogSetting_pages/smtp/smtp"
 						break;
 				}
 				uni.navigateTo({

@@ -56,6 +56,7 @@
 		padding-left: 10px;
 		padding-right: 10px;
 		border-radius: 4px;
+		color: #595959;
 	}
 	
 	.input:hover{
