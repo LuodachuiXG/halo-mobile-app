@@ -172,38 +172,27 @@
 		color: #616255;
 	}
 	
-	// 带按钮input
-	.button-input {
+	// 右边带按钮input
+	.right-button-input{
 		position: relative;
 	}
 	
-	.button-input view:first-child {
-		display: inline-block;
-		width: 90%;
-		vertical-align: top;
+	.right-button-input input{
+		padding-right: 70rpx;
 	}
-	.button-input view:last-child {
-		width: 9.6%;
-		position: relative;
-		display: inline-block;
-		background-color: #FAFAFA;
-		border: 1px solid #D9D9D9;
-		border-left: none;
-		border-top-right-radius: 4px;
-		border-bottom-right-radius: 4px;
-		text-align: center;
-		vertical-align: top;
-		padding-top: 5px;
-		padding-bottom: 5px;
+	
+	.right-button-input image{
+		width: 45rpx;
+		height: 45rpx;
+		position: absolute;
+		top: calc(50% - 22.5rpx);
+		right: 15rpx;
 	}
-	.button-input image {
-		width: 20px;
-		height: 20px;
-		vertical-align: middle;
-	}
-	.button-input input {
-		border-top-right-radius: 0px;
-		border-bottom-right-radius: 0px;
+	
+	// 输入框下面的灰色提示小字
+	.view-input-text {
+		color: #9d9d9d;
+		font-size: .8em;
 	}
 	
 </style>

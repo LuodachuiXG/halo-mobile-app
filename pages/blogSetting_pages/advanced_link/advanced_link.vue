@@ -320,8 +320,4 @@
 		margin: 20rpx;
 		margin-bottom: 30rpx;
 	}
-	.view-input-text {
-		color: #9d9d9d;
-		font-size: .8em;
-	}
 </style>

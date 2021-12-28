@@ -111,6 +111,24 @@
             }
             
         }
+        ,{
+            "path" : "pages/blogSetting_pages/advanced_api/advanced_api",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "API 设置",
+                "enablePullDownRefresh": true
+            }
+            
+        }
+        ,{
+            "path" : "pages/blogSetting_pages/advanced_other/advanced_other",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "其他设置",
+                "enablePullDownRefresh": true
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",

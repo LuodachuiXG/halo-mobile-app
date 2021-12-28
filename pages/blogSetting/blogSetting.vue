@@ -113,6 +113,14 @@
 					case 7:	
 						url = "../blogSetting_pages/advanced_link/advanced_link"
 						break;
+					// 高级设置-APi设置
+					case 8:	
+						url = "../blogSetting_pages/advanced_api/advanced_api"
+						break;
+					// 高级设置-其他设置
+					case 9:	
+						url = "../blogSetting_pages/advanced_other/advanced_other"
+						break;
 				}
 				uni.navigateTo({
 					url: url
