@@ -102,6 +102,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/blogSetting_pages/advanced_link/advanced_link",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "固定链接",
+                "enablePullDownRefresh": true
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",

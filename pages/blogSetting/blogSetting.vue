@@ -85,7 +85,7 @@
 					case 0:
 						url = "../blogSetting_pages/general/general"
 						break;
-					// SEO设置
+					// SEO 设置
 					case 1:	
 						url = "../blogSetting_pages/seo/seo"
 						break;
@@ -101,9 +101,17 @@
 					case 4:	
 						url = "../blogSetting_pages/attachment/attachment"
 						break;
-					// SMTP服务
+					// SMTP 服务
 					case 5:	
 						url = "../blogSetting_pages/smtp/smtp"
+						break;
+					// 其他设置
+					case 6:	
+						url = "../blogSetting_pages/other/other"
+						break;
+					// 高级设置-固定链接
+					case 7:	
+						url = "../blogSetting_pages/advanced_link/advanced_link"
 						break;
 				}
 				uni.navigateTo({
