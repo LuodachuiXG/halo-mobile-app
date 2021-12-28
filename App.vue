@@ -45,9 +45,9 @@
 	}
 	
 	* {
-		// transition-property: all;
-		// transition-duration: .2s;
-		// transition-timing-function: ease;
+		transition-property: background-color;
+		transition-duration: .2s;
+		transition-timing-function: ease-out;
 	}
 	
 	.input {

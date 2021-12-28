@@ -415,11 +415,18 @@
 			 */
 			onOptionClick: function(i) {
 				switch (i) {
+					// 博客设置
 					case 0:
 						uni.navigateTo({
 							url: "../blogSetting/blogSetting"
 						})
 						break
+					// 设置
+					case 3:
+						uni.navigateTo({
+							url: "../setting/setting"
+						})
+					
 				}
 			},
 
