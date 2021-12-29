@@ -88,6 +88,7 @@
 			return {
 				accessToken: "",
 				url: "",
+				isGuest: "",
 				
 				post_permalink_type: "",
 				post_permalink_typeText: ["默认", "年份型", "年月型", "年月日型", "ID 型", "ID 别名型"],
@@ -119,6 +120,7 @@
 		mounted() {
 			this.url = this.getData("url")
 			this.accessToken = this.getData("access_token")
+			this.isGuest = this.getData("isGuest")
 			this.refreshData()
 		},
 
@@ -134,6 +136,11 @@
 			 * 刷新数据
 			 */
 			refreshData: function() {
+				// 游客模式不加载数据
+				if (this.isGuest === "true") {
+					return
+				}
+				
 				let array = ["post_permalink_type", "archives_prefix", "categories_prefix",
 					"tags_prefix", "sheet_permalink_type", "sheet_prefix",
 					"links_prefix", "photos_prefix", "journals_prefix", "path_suffix"

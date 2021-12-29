@@ -5,7 +5,7 @@
 		</uni-popup>
 		<view class="block">
 			<view class="view-input">
-				<view class="view-input-titleView">屏蔽搜索引擎：</view>
+				<view class="view-input-titleView">全局绝对路径：</view>
 				<switch :checked="global_absolute_path_enabled" @change="switchChange" style="margin-bottom: 10rpx;" />
 				<br><text class="view-input-text">* 对网站上面的所有页面路径、本地附件路径、以及主题中的静态资源路径有效。</text>
 			</view>
@@ -20,6 +20,7 @@
 			return {
 				accessToken: "",
 				url: "",
+				isGuest: "",
 
 				global_absolute_path_enabled: "",
 
@@ -31,6 +32,7 @@
 		mounted() {
 			this.url = this.getData("url")
 			this.accessToken = this.getData("access_token")
+			this.isGuest = this.getData("isGuest")
 			this.refreshData()
 		},
 
@@ -46,6 +48,11 @@
 			 * 刷新数据
 			 */
 			refreshData: function() {
+				// 游客模式不加载数据
+				if (this.isGuest === "true") {
+					return
+				}
+				
 				let array = ["global_absolute_path_enabled"]
 				let that = this
 				uni.request({

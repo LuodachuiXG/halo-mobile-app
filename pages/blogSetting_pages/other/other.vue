@@ -33,6 +33,7 @@
 			return {
 				accessToken: "",
 				url: "",
+				isGuest: "",
 
 				blog_custom_head: "",
 				blog_custom_content_head: "",
@@ -46,6 +47,7 @@
 		mounted() {
 			this.url = this.getData("url")
 			this.accessToken = this.getData("access_token")
+			this.isGuest = this.getData("isGuest")
 			this.refreshData()
 		},
 
@@ -61,6 +63,11 @@
 			 * 刷新数据
 			 */
 			refreshData: function() {
+				// 游客模式不加载数据
+				if (this.isGuest === "true") {
+					return
+				}
+				
 				let array = ["blog_custom_head", "blog_custom_content_head", "blog_statistics_code"]
 				let that = this
 				uni.request({

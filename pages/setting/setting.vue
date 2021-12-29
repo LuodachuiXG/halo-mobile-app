@@ -10,6 +10,11 @@
 			<image src="/static/images/github.png"></image>
 			<text>前往Github开源页面</text>
 		</view>
+		
+		<view class="block halo" @click="halo">
+			<image src="/static/images/halo.png"></image>
+			<text>前往Halo 官网</text>
+		</view>
 	</view>
 </template>
 
@@ -33,6 +38,13 @@
 			 */
 			github: function() {
 				this.openURL("https://github.com/LuodachuiXG/halo-mobile-app")
+			},
+			
+			/**
+			 * 前往halo页面单击事件
+			 */
+			halo: function() {
+				this.openURL("https://halo.run")
 			}
 		}
 	}
@@ -80,5 +92,13 @@
 
 	.github:hover {
 		background-color: #323232;
+	}
+	
+	.halo {
+		background-color: #0069e1;
+	}
+	
+	.halo:hover {
+		background-color: #0051ad;
 	}
 </style>

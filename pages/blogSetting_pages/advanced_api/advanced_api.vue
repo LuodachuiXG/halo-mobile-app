@@ -28,6 +28,7 @@
 			return {
 				accessToken: "",
 				url: "",
+				isGuest: "",
 
 				api_enabled: false,
 				api_access_key: "",
@@ -40,6 +41,7 @@
 		mounted() {
 			this.url = this.getData("url")
 			this.accessToken = this.getData("access_token")
+			this.isGuest = this.getData("isGuest")
 			this.refreshData()
 		},
 
@@ -55,6 +57,11 @@
 			 * 刷新数据
 			 */
 			refreshData: function() {
+				// 游客模式不加载数据
+				if (this.isGuest === "true") {
+					return
+				}
+				
 				let array = ["api_enabled", "api_access_key"]
 				let that = this
 				uni.request({

@@ -64,6 +64,12 @@ Vue.prototype.getData = function(key) {
  * 未登录或登录过期都返回true
  */
 Vue.prototype.isExpired = function() {
+	// 判断当前是否是游客模式
+	let isGuest = this.getData("isGuest")
+	if (isGuest === "true") {
+		return false
+	}
+	
 	// 判断是否登录
 	let isLogin = this.getData("isLogin") === null ? "" : this.getData("isLogin")
 	if (isLogin === "" || isLogin === "false") {

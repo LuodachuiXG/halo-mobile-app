@@ -69,6 +69,7 @@
 			return {
 				accessToken: "",
 				url: "",
+				isGuest: "",
 				
 				comment_gravatar_default: "",
 				comment_gravatar_defaultText: ["默认", "匿名者", "抽象几何图形", "小怪物", "Wavatar", "复古", "机器人", "不显示头像"],
@@ -92,6 +93,7 @@
 		mounted() {
 			this.url = this.getData("url")
 			this.accessToken = this.getData("access_token")
+			this.isGuest = this.getData("isGuest")
 			this.refreshData()
 		},
 
@@ -107,6 +109,11 @@
 			 * 刷新数据
 			 */
 			refreshData: function() {
+				// 游客模式不加载数据
+				if (this.isGuest === "true") {
+					return
+				}
+				
 				let array = ["comment_gravatar_default", "comment_new_need_check", "comment_new_notice",
 					"comment_reply_notice", "comment_api_enabled", "comment_internal_plugin_js",
 					"gravatar_source", "comment_page_size", "comment_content_placeholder"

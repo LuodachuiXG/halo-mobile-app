@@ -30,6 +30,7 @@
 			return {
 				accessToken: "",
 				url: "",
+				isGuest: "",
 
 				seo_spider_disabled: "",
 				seo_keywords: "",
@@ -43,6 +44,7 @@
 		mounted() {
 			this.url = this.getData("url")
 			this.accessToken = this.getData("access_token")
+			this.isGuest = this.getData("isGuest")
 			this.refreshData()
 		},
 
@@ -58,6 +60,11 @@
 			 * 刷新数据
 			 */
 			refreshData: function() {
+				// 游客模式不加载数据
+				if (this.isGuest === "true") {
+					return
+				}
+				
 				let array = ["seo_spider_disabled", "seo_keywords", "seo_description"]
 				let that = this
 				uni.request({

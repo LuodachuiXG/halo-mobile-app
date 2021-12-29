@@ -26,6 +26,12 @@
 				<input class="input" id="password" v-model="password" password="true" placeholder="密码" :disabled="disable" />
 			</view>
 			<button class="button" type="primary" @click="login" id="login" :disabled="disable" :loading="disable">登录</button>
+			
+			<!-- 微信小程序体验登录按钮 -->
+			<!--  #ifdef MP-WEIXIN -->
+				<button v-if="" class="button" @click="guest" :loading="disable">游客登录</button>
+			<!--  #endif -->
+	
 		</view>
 
 		<view class="view-me" v-else>
@@ -410,7 +416,7 @@
 			},
 
 			/**
-			 * 选项点击事件
+			 * 登录后个人页面选项点击事件
 			 * @param {Object} i
 			 */
 			onOptionClick: function(i) {
@@ -429,7 +435,27 @@
 					
 				}
 			},
-
+			
+			/**
+			 * 微信游客登录
+			 */
+			guest: function() {
+				let that = this
+				uni.showModal({
+					title: "游客登录",
+					content: "由于小程序限制，此小程序仅用于体验展示，游客登录后部分功能异常属于正常情况。" + 
+						"部分组件、样式也与APP有出入。体验功能请使用APP。",
+					success: function(res) {
+						if (res.confirm) {
+							that.setData("isLogin", "true")
+							that.setData("url", "https://baidu.com")
+							that.setData("access_token", "")
+							that.setData("isGuest", "true")
+							that.isLogin = true
+						}
+					}
+				})
+			},
 
 			/**
 			 * popup弹出层

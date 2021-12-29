@@ -103,6 +103,7 @@
 			return {
 				accessToken: "",
 				url: "",
+				isGuest: "",
 
 				email_enabled: true,
 				email_host: "",
@@ -129,6 +130,7 @@
 		mounted() {
 			this.url = this.getData("url")
 			this.accessToken = this.getData("access_token")
+			this.isGuest = this.getData("isGuest")
 			this.refreshData()
 		},
 
@@ -144,6 +146,11 @@
 			 * 刷新数据
 			 */
 			refreshData: function() {
+				// 游客模式不加载数据
+				if (this.isGuest === "true") {
+					return
+				}
+				
 				let array = ["email_enabled", "email_host", "email_protocol", "email_ssl_port",
 					"email_username", "email_password", "email_from_name"]
 				let that = this
