@@ -287,6 +287,7 @@
 						// 登录成功，更改状态，并加载个人数据
 						that.isLogin = true
 						that.setData("isLogin", "true")
+						that.setData("isGuest", false)
 						that.loadAdminInfo()
 					},
 					fail: function(e) {

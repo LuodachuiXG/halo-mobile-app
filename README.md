@@ -1,16 +1,33 @@
 # halo-mobile-app
+
 📱[Halo](https://halo.run/) admin app client
 📱一个[Halo](https://halo.run/)博客的移动端后台管理程序
 
 ### 开发框架
+
 - [Uni-App](https://uniapp.dcloud.io/)
 
 ### 使用的HaloApi
 - [HaloApi](https://api.halo.run/admin-api.html)
 
 ### 进度
-目前还是刚刚开始，也顺便练练手
+
+目前还只是刚刚开始，也顺便练练手
 已经完成开发的功能看发行版更新信息~~
+
+2021年12月29日：
+
+目前部分代码有些臃肿，将首先优化代码，而后再进行主线开发
+
+### 微信小程序体验
+
+由于微信小程序有request限制，所以小程序上没有实际功能，仅用于体验预览。
+
+体验完整功能请下载发行版APP。
+
+<img src="https://ldc-1251523367.cos.ap-beijing.myqcloud.com/luodachui/wxqr_1640776160974.jpg" width = "300"  alt="screenshot_1"  />
+
+
 
 ### 部分截图
 
