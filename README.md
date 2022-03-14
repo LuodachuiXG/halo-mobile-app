@@ -3,6 +3,10 @@
 📱[Halo](https://halo.run/) admin app client
 📱一个[Halo](https://halo.run/)博客的移动端后台管理程序
 
+Github：[LuodachuiXG/halo-mobile-app: 📱Halo博客 APP/小程序端后台管理 (github.com)](https://github.com/LuodachuiXG/halo-mobile-app)
+
+Gitee：[halo-mobile-app: 📱Halo博客 APP/小程序端后台管理 (gitee.com)](https://gitee.com/luodachui/halo-mobile-app)
+
 ### 开发框架
 
 - [Uni-App](https://uniapp.dcloud.io/)
@@ -14,10 +18,6 @@
 ### 进度
 
 > 最近比较忙，预计4月中下旬恢复开发
-
-目前还只是刚刚开始，也顺便练练手
-
-
 
 由于我前端技术不扎实，部分功能可能实现的方法并不专业且代码冗余，还望各位大佬多多批评指导
 
