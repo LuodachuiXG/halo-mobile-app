@@ -77,7 +77,6 @@
 			return {
 				accessToken: "",
 				url: "",
-				isGuest: "",
 
 				post_index_sort: "",
 				post_index_sortText: ["创建时间", "最后编辑时间", "点击量"],
@@ -110,7 +109,6 @@
 		mounted() {
 			this.url = this.getData("url")
 			this.accessToken = this.getData("access_token")
-			this.isGuest = this.getData("isGuest")
 			this.refreshData()
 		},
 
@@ -126,11 +124,6 @@
 			 * 刷新数据
 			 */
 			refreshData: function() {
-				// 游客模式不加载数据
-				if (this.isGuest === "true") {
-					return
-				}
-				
 				let array = ["post_index_sort", "post_index_page_size", "post_archives_page_size",
 					"rss_content_type", "rss_page_size", "post_summary_length", "recycled_post_cleaning_enabled",
 					"recycled_post_retention_time", "recycled_post_retention_timeunit"
@@ -150,7 +143,7 @@
 						if (res.statusCode !== 200) {
 							that.popup("获取数据失败")
 							// 登录过期
-							if (res.message === undefined || res.message === "Token 已过期或不存在") {
+							if (that.isExpiredByRequest(res)) {
 								that.setData("isLogin", "false")
 								uni.reLaunch({
 									url: "../../me/me"
@@ -250,7 +243,7 @@
 						if (res.statusCode !== 200) {
 							that.popup("保存失败：" + res.statusCode)
 							// 登录过期
-							if (res.message === undefined || res.message === "Token 已过期或不存在") {
+							if (that.isExpiredByRequest(res)) {
 								that.popup("保存失败，登录已过期，请重新登陆")
 							}
 							return

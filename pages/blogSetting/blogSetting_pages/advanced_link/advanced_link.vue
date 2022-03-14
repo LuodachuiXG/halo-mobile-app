@@ -88,7 +88,6 @@
 			return {
 				accessToken: "",
 				url: "",
-				isGuest: "",
 				
 				post_permalink_type: "",
 				post_permalink_typeText: ["默认", "年份型", "年月型", "年月日型", "ID 型", "ID 别名型"],
@@ -120,7 +119,6 @@
 		mounted() {
 			this.url = this.getData("url")
 			this.accessToken = this.getData("access_token")
-			this.isGuest = this.getData("isGuest")
 			this.refreshData()
 		},
 
@@ -136,11 +134,6 @@
 			 * 刷新数据
 			 */
 			refreshData: function() {
-				// 游客模式不加载数据
-				if (this.isGuest === "true") {
-					return
-				}
-				
 				let array = ["post_permalink_type", "archives_prefix", "categories_prefix",
 					"tags_prefix", "sheet_permalink_type", "sheet_prefix",
 					"links_prefix", "photos_prefix", "journals_prefix", "path_suffix"
@@ -160,7 +153,7 @@
 						if (res.statusCode !== 200) {
 							that.popup("获取数据失败")
 							// 登录过期
-							if (res.message === undefined || res.message === "Token 已过期或不存在") {
+							if (that.isExpiredByRequest(res)) {
 								that.setData("isLogin", "false")
 								uni.reLaunch({
 									url: "../../me/me"
@@ -285,7 +278,7 @@
 						if (res.statusCode !== 200) {
 							that.popup("保存失败：" + res.statusCode)
 							// 登录过期
-							if (res.message === undefined || res.message === "Token 已过期或不存在") {
+							if (that.isExpiredByRequest(res)) {
 								that.popup("保存失败，登录已过期，请重新登陆")
 							}
 							return

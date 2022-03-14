@@ -5,18 +5,26 @@
 		</uni-popup>
 		<view class="block">
 			<view class="view-input">
-				<view class="view-input-titleView">屏蔽搜索引擎：</view>
-				<switch :checked="seo_spider_disabled" @change="switchChange" />
+				<view class="view-input-titleView">创建时间：{{this.format(createTime)}}</view>
+				<view class="view-input-titleView">修改时间：{{this.format(updateTime)}}</view>
 			</view>
-
+			
 			<view class="view-input">
-				<view class="view-input-titleView">关键词：</view>
-				<input class="input" type="text" v-model="seo_keywords" placeholder="多个关键词以英文状态下的逗号隔开" />
+				<view class="view-input-titleView"><text style="color: red;">*</text>用户名：</view>
+				<input class="input" type="text" v-model="username"/>
 			</view>
-
 			<view class="view-input">
-				<view class="view-input-titleView">博客描述：</view>
-				<textarea class="input" v-model="seo_description"></textarea>
+				<view class="view-input-titleView"><text style="color: red;">*</text>昵称：</view>
+				<input class="input" type="text" v-model="nickname"/>
+			</view>
+			<view class="view-input">
+				<view class="view-input-titleView"><text style="color: red;">*</text>电子邮箱：</view>
+				<input class="input" type="text" v-model="email"/>
+				<text class="view-input-text">* 登录后台系统的邮箱</text>
+			</view>
+			<view class="view-input">
+				<view class="view-input-titleView">个人说明：</view>
+				<textarea class="input" v-model="description"></textarea>
 			</view>
 
 			<button class="button save-button" type="primary" @click="saving">保存</button>
@@ -30,58 +38,50 @@
 			return {
 				accessToken: "",
 				url: "",
-				isGuest: "",
-
-				seo_spider_disabled: "",
-				seo_keywords: "",
-				seo_description: "",
-
+				
+				username: "",
+				nickname: "",
+				email: "",
+				description: "",
+				createTime: "",
+				updateTime: "",
+				
 				popupType: "",
 				popupMessage: ""
 			}
 		},
-
 		mounted() {
 			this.url = this.getData("url")
 			this.accessToken = this.getData("access_token")
-			this.isGuest = this.getData("isGuest")
 			this.refreshData()
 		},
-
+		
 		/**
 		 * 下拉刷新事件
 		 */
 		onPullDownRefresh() {
 			this.refreshData()
 		},
-
 		methods: {
 			/**
 			 * 刷新数据
 			 */
 			refreshData: function() {
-				// 游客模式不加载数据
-				if (this.isGuest === "true") {
-					return
-				}
-				
-				let array = ["seo_spider_disabled", "seo_keywords", "seo_description"]
 				let that = this
 				uni.request({
-					method: "POST",
+					method: "GET",
 					dataType: "json",
-					url: this.url + "/api/admin/options/map_view/keys",
+					url: this.url + "/api/admin/statistics/user",
 					header: {
 						"Content-Type": "application/json",
 						"ADMIN-Authorization": this.accessToken
 					},
-					data: array,
 					success: function(res) {
 						uni.stopPullDownRefresh()
 						if (res.statusCode !== 200) {
 							that.popup("获取数据失败")
 							// 登录过期
-							if (res.message === undefined || res.message === "Token 已过期或不存在") {
+							if (that.isExpiredByRequest(res)) {
 								that.setData("isLogin", "false")
 								uni.reLaunch({
 									url: "../../me/me"
@@ -89,10 +89,14 @@
 							}
 							return
 						}
-						let data = res.data.data
-						that.seo_spider_disabled = data.seo_spider_disabled
-						that.seo_keywords = data.seo_keywords
-						that.seo_description = data.seo_description
+			
+						let user = res.data.data.user;
+						that.username = user.username;
+						that.nickname = user.nickname;
+						that.email = user.email;
+						that.description = user.description;
+						that.createTime = user.createTime;
+						that.updateTime = user.updateTime;
 					},
 					fail: function(e) {
 						uni.stopPullDownRefresh()
@@ -104,29 +108,26 @@
 				})
 			},
 			
-			/**
-			 * 屏蔽搜索引擎switch改变事件
-			 * @param {Object} e
-			 */
-			switchChange: function(e) {
-				this.seo_spider_disabled = e.detail.value
-			},
-			
 			
 			/**
 			 * 保存按钮事件
 			 */
 			saving: function() {
+				if (this.username.length <= 0 || this.nickname.length <= 0 || this.email.length <= 0) {
+					this.popup("请将必填项填写完整");
+					return ;
+				}
 				let json = {
-					"seo_spider_disabled": this.seo_spider_disabled,
-					"seo_keywords": this.seo_keywords,
-					"seo_description": this.seo_description
+					"username": this.username,
+					"nickname": this.nickname,
+					"email": this.email,
+					"description": this.description
 				}
 				let that = this
 				uni.request({
-					method: "POST",
+					method: "PUT",
 					dataType: "json",
-					url: this.url + "/api/admin/options/map_view/saving",
+					url: this.url + "/api/admin/users/profiles",
 					header: {
 						"Content-Type": "application/json",
 						"ADMIN-Authorization": this.accessToken
@@ -136,7 +137,7 @@
 						if (res.statusCode !== 200) {
 							that.popup("保存失败：" + res.statusCode)
 							// 登录过期
-							if (res.message === undefined || res.message === "Token 已过期或不存在") {
+							if (that.isExpiredByRequest(res)) {
 								that.popup("保存失败，登录已过期，请重新登陆")
 							}
 							return
@@ -153,7 +154,7 @@
 				})
 			},
 			
-
+			
 			/**
 			 * popup弹出层
 			 */
@@ -161,7 +162,7 @@
 				this.popupMessage = message
 				this.popupType = type
 				this.$refs.popup.open()
-			},
+			}
 		}
 	}
 </script>

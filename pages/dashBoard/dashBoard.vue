@@ -286,6 +286,9 @@
 		background-color: #F0F2F5;
 		padding: 30rpx;
 	}
+	.uni-collapse {
+		margin-bottom: 150rpx;
+	}
 
 	.view-block {
 		width: 100%;

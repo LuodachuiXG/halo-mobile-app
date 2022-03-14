@@ -83,43 +83,43 @@
 				switch(i) {
 					// 常规设置
 					case 0:
-						url = "../blogSetting_pages/general/general"
+						url = "../blogSetting/blogSetting_pages/general/general"
 						break;
 					// SEO 设置
 					case 1:	
-						url = "../blogSetting_pages/seo/seo"
+						url = "../blogSetting/blogSetting_pages/seo/seo"
 						break;
 					// 文章设置
 					case 2:	
-						url = "../blogSetting_pages/post/post"
+						url = "../blogSetting/blogSetting_pages/post/post"
 						break;	
 					// 评论设置
 					case 3:	
-						url = "../blogSetting_pages/comment/comment"
+						url = "../blogSetting/blogSetting_pages/comment/comment"
 						break;
 					// 附件设置
 					case 4:	
-						url = "../blogSetting_pages/attachment/attachment"
+						url = "../blogSetting/blogSetting_pages/attachment/attachment"
 						break;
 					// SMTP 服务
 					case 5:	
-						url = "../blogSetting_pages/smtp/smtp"
+						url = "../blogSetting/blogSetting_pages/smtp/smtp"
 						break;
 					// 其他设置
 					case 6:	
-						url = "../blogSetting_pages/other/other"
+						url = "../blogSetting/blogSetting_pages/other/other"
 						break;
 					// 高级设置-固定链接
 					case 7:	
-						url = "../blogSetting_pages/advanced_link/advanced_link"
+						url = "../blogSetting/blogSetting_pages/advanced_link/advanced_link"
 						break;
 					// 高级设置-APi设置
 					case 8:	
-						url = "../blogSetting_pages/advanced_api/advanced_api"
+						url = "../blogSetting/blogSetting_pages/advanced_api/advanced_api"
 						break;
 					// 高级设置-其他设置
 					case 9:	
-						url = "../blogSetting_pages/advanced_other/advanced_other"
+						url = "../blogSetting/blogSetting_pages/advanced_other/advanced_other"
 						break;
 				}
 				uni.navigateTo({

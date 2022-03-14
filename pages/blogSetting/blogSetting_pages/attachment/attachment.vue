@@ -405,7 +405,6 @@
 			return {
 				accessToken: "",
 				url: "",
-				isGuest: "",
 
 				attachment_upload_image_preview_enable: "",
 				attachment_upload_max_files: "",
@@ -524,7 +523,6 @@
 		mounted() {
 			this.url = this.getData("url")
 			this.accessToken = this.getData("access_token")
-			this.isGuest = this.getData("isGuest")
 			this.refreshData()
 		},
 
@@ -540,11 +538,6 @@
 			 * 刷新数据
 			 */
 			refreshData: function() {
-				// 游客模式不加载数据
-				if (this.isGuest === "true") {
-					return
-				}
-				
 				let array = ["attachment_upload_image_preview_enable", "attachment_upload_max_files",
 					"attachment_upload_max_parallel_uploads", "attachment_type", "smms_api_secret_token",
 					"oss_upyun_domain_protocol", "oss_upyun_domain", "oss_upyun_bucket",
@@ -586,7 +579,7 @@
 						if (res.statusCode !== 200) {
 							that.popup("获取数据失败")
 							// 登录过期
-							if (res.message === undefined || res.message === "Token 已过期或不存在") {
+							if (that.isExpiredByRequest(res)) {
 								that.setData("isLogin", "false")
 								uni.reLaunch({
 									url: "../../me/me"
@@ -1035,7 +1028,7 @@
 						if (res.statusCode !== 200) {
 							that.popup("保存失败：" + res.statusCode)
 							// 登录过期
-							if (res.message === undefined || res.message === "Token 已过期或不存在") {
+							if (that.isExpiredByRequest(res)) {
 								that.popup("保存失败，登录已过期，请重新登陆")
 							}
 							return

@@ -31,7 +31,7 @@
             
         }
         ,{
-            "path" : "pages/blogSetting_pages/general/general",
+            "path" : "pages/blogSetting/blogSetting_pages/general/general",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "常规设置",
@@ -49,7 +49,7 @@
             
         }
         ,{
-            "path" : "pages/blogSetting_pages/seo/seo",
+            "path" : "pages/blogSetting/blogSetting_pages/seo/seo",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "SEO 设置",
@@ -58,7 +58,7 @@
             
         }
         ,{
-            "path" : "pages/blogSetting_pages/post/post",
+            "path" : "pages/blogSetting/blogSetting_pages/post/post",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "文章设置",
@@ -67,7 +67,7 @@
             
         }
         ,{
-            "path" : "pages/blogSetting_pages/comment/comment",
+            "path" : "pages/blogSetting/blogSetting_pages/comment/comment",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "评论设置",
@@ -76,7 +76,7 @@
             
         }
         ,{
-            "path" : "pages/blogSetting_pages/attachment/attachment",
+            "path" : "pages/blogSetting/blogSetting_pages/attachment/attachment",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "附件设置",
@@ -85,7 +85,7 @@
             
         }
         ,{
-            "path" : "pages/blogSetting_pages/smtp/smtp",
+            "path" : "pages/blogSetting/blogSetting_pages/smtp/smtp",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "SMTP 服务",
@@ -94,7 +94,7 @@
             
         }
         ,{
-            "path" : "pages/blogSetting_pages/other/other",
+            "path" : "pages/blogSetting/blogSetting_pages/other/other",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "其他设置",
@@ -103,7 +103,7 @@
             
         }
         ,{
-            "path" : "pages/blogSetting_pages/advanced_link/advanced_link",
+            "path" : "pages/blogSetting/blogSetting_pages/advanced_link/advanced_link",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "固定链接",
@@ -112,7 +112,7 @@
             
         }
         ,{
-            "path" : "pages/blogSetting_pages/advanced_api/advanced_api",
+            "path" : "pages/blogSetting/blogSetting_pages/advanced_api/advanced_api",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "API 设置",
@@ -121,7 +121,7 @@
             
         }
         ,{
-            "path" : "pages/blogSetting_pages/advanced_other/advanced_other",
+            "path" : "pages/blogSetting/blogSetting_pages/advanced_other/advanced_other",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "其他设置",
@@ -135,6 +135,24 @@
             {
                 "navigationBarTitleText": "设置",
                 "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/setting/setting_pages/about/about",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "关于",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/userProfile/userProfile",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "个人资料",
+                "enablePullDownRefresh": true
             }
             
         }

@@ -124,7 +124,7 @@
 						if (res.statusCode !== 200) {
 							that.popup("获取数据失败")
 							// 登录过期
-							if (res.data.message === undefined || res.data.message === "Token 已过期或不存在") {
+							if (that.isExpiredByRequest(res)) {
 								that.setData("isLogin", "false")
 								uni.reLaunch({
 									url: "../../me/me"

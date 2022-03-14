@@ -18,25 +18,23 @@
 
 			<view class="login-view">
 				<label for="username">用户名/邮箱</label>
-				<input class="input" id="username" v-model="username" type="text" placeholder="用户名/邮箱" :disabled="disable" />
+				<input class="input" id="username" v-model="username" type="text" placeholder="用户名/邮箱"
+					:disabled="disable" />
 			</view>
 
 			<view class="login-view">
 				<label for="username">密码</label>
-				<input class="input" id="password" v-model="password" password="true" placeholder="密码" :disabled="disable" />
+				<input class="input" id="password" v-model="password" password="true" placeholder="密码"
+					:disabled="disable" />
 			</view>
-			<button class="button" type="primary" @click="login" id="login" :disabled="disable" :loading="disable">登录</button>
-			
-			<!-- 微信小程序体验登录按钮 -->
-			<!--  #ifdef MP-WEIXIN -->
-				<button v-if="" class="button" @click="guest" :loading="disable">游客登录</button>
-			<!--  #endif -->
-	
+			<button class="button" type="primary" @click="login" id="login" :disabled="disable"
+				:loading="disable">登录</button>
+
 		</view>
 
 		<view class="view-me" v-else>
 			<view class="view-me-head block">
-				<image class="view-me-avatar" :src="avatar"></image>
+				<image class="view-me-avatar" :src="avatar" @click="previewAvatar"></image>
 				<text class="view-me-text-name">{{ nickname }}</text>
 				<text class="view-me-text-description">{{ description }}</text>
 				<view class="view-me-view-link">
@@ -287,7 +285,6 @@
 						// 登录成功，更改状态，并加载个人数据
 						that.isLogin = true
 						that.setData("isLogin", "true")
-						that.setData("isGuest", false)
 						that.loadAdminInfo()
 					},
 					fail: function(e) {
@@ -331,7 +328,12 @@
 						}
 
 						// 设置个人数据到变量
-						that.avatar = that.url + data.data.avatar
+						if (data.data.avatar.indexOf("http") != -1) {
+							// 检查 avatar 是否是绝对地址
+							that.avatar = data.data.avatar
+						} else {
+							that.avatar = that.url + data.data.avatar
+						}
 						that.username = data.data.username
 						that.nickname = data.data.nickname
 						that.email = data.data.email
@@ -356,6 +358,16 @@
 							showCancel: false
 						})
 					}
+				})
+			},
+
+			/**
+			 * 点击头像预览图片
+			 */
+			previewAvatar: function() {
+				uni.previewImage({
+					current: "0",
+					urls: [this.avatar]
 				})
 			},
 
@@ -427,35 +439,21 @@
 						uni.navigateTo({
 							url: "../blogSetting/blogSetting"
 						})
-						break
+						break;
+					// 个人资料
+					case 1:
+						uni.navigateTo({
+							url: "../userProfile/userProfile"
+						})
+						break;
 					// 设置
 					case 3:
 						uni.navigateTo({
 							url: "../setting/setting"
 						})
-					
+						break;
+
 				}
-			},
-			
-			/**
-			 * 微信游客登录
-			 */
-			guest: function() {
-				let that = this
-				uni.showModal({
-					title: "游客登录",
-					content: "由于小程序限制，此小程序仅用于体验展示，游客登录后部分功能异常属于正常情况。" + 
-						"部分组件、样式也与APP有出入。体验功能请使用APP。",
-					success: function(res) {
-						if (res.confirm) {
-							that.setData("isLogin", "true")
-							that.setData("url", "https://baidu.com")
-							that.setData("access_token", "")
-							that.setData("isGuest", "true")
-							that.isLogin = true
-						}
-					}
-				})
 			},
 
 			/**
@@ -574,5 +572,9 @@
 		margin-left: 5px;
 		color: #595959;
 		font-size: 0.9em;
+	}
+
+	.view-me-app-option {
+		margin-bottom: 150rpx;
 	}
 </style>

@@ -5,10 +5,36 @@
 		</uni-popup>
 		<view class="block">
 			<view class="view-input">
-				<view class="view-input-titleView">全局绝对路径：</view>
-				<switch :checked="global_absolute_path_enabled" @change="switchChange" style="margin-bottom: 10rpx;" />
-				<br><text class="view-input-text">* 对网站上面的所有页面路径、本地附件路径、以及主题中的静态资源路径有效。</text>
+				<view class="view-input-titleView"><text style="color: red;">*</text>博客标题：</view>
+				<input class="input" type="text" v-model="blog_title" />
 			</view>
+
+			<view class="view-input">
+				<view class="view-input-titleView"><text style="color: red;">*</text>博客地址：</view>
+				<input class="input" type="text" v-model="blog_url" placeholder="如:https://halo.run" />
+			</view>
+
+			<view class="view-input">
+				<view class="view-input-titleView">Logo：</view>
+				<view class="right-button-input">
+					<input class="input" type="text" v-model="blog_logo" />
+					<image src="/static/images/picture.png" @click="selectAttachment('blog_logo')"></image>
+				</view>
+			</view>
+			
+			<view class="view-input">
+				<view class="view-input-titleView">Favicon：</view>
+				<view class="right-button-input">
+					<input class="input" type="text" v-model="blog_favicon" />
+					<image src="/static/images/picture.png" @click="selectAttachment('blog_favicon')"></image>
+				</view>
+			</view>
+
+			<view class="view-input">
+				<view class="view-input-titleView">页脚消息：</view>
+				<textarea class="input" v-model="blog_footer_info" placeholder="支持HTML格式的文本"></textarea>
+			</view>
+
 			<button class="button save-button" type="primary" @click="saving">保存</button>
 		</view>
 	</view>
@@ -20,9 +46,12 @@
 			return {
 				accessToken: "",
 				url: "",
-				isGuest: "",
 
-				global_absolute_path_enabled: "",
+				blog_title: "",
+				blog_url: "",
+				blog_logo: "",
+				blog_favicon: "",
+				blog_footer_info: "",
 
 				popupType: "",
 				popupMessage: ""
@@ -32,7 +61,6 @@
 		mounted() {
 			this.url = this.getData("url")
 			this.accessToken = this.getData("access_token")
-			this.isGuest = this.getData("isGuest")
 			this.refreshData()
 		},
 
@@ -48,12 +76,7 @@
 			 * 刷新数据
 			 */
 			refreshData: function() {
-				// 游客模式不加载数据
-				if (this.isGuest === "true") {
-					return
-				}
-				
-				let array = ["global_absolute_path_enabled"]
+				let array = ["blog_title", "blog_url", "blog_logo", "blog_favicon", "blog_footer_info"]
 				let that = this
 				uni.request({
 					method: "POST",
@@ -69,7 +92,7 @@
 						if (res.statusCode !== 200) {
 							that.popup("获取数据失败")
 							// 登录过期
-							if (res.message === undefined || res.message === "Token 已过期或不存在") {
+							if (that.isExpiredByRequest(res)) {
 								that.setData("isLogin", "false")
 								uni.reLaunch({
 									url: "../../me/me"
@@ -78,7 +101,11 @@
 							return
 						}
 						let data = res.data.data
-						that.global_absolute_path_enabled = data.global_absolute_path_enabled
+						that.blog_title = data.blog_title
+						that.blog_url = data.blog_url
+						that.blog_logo = data.blog_logo
+						that.blog_favicon = data.blog_favicon
+						that.blog_footer_info = data.blog_footer_info
 					},
 					fail: function(e) {
 						uni.stopPullDownRefresh()
@@ -91,22 +118,33 @@
 			},
 			
 			/**
-			 * 全局绝对路径switch改变事件
-			 * @param {Object} e
+			 * 打开新窗口选择附件
+			 * @param {Object} attrName 当前页面的变量，传递给附件选择页，用于选择附件后修改的变量
 			 */
-			switchChange: function(e) {
-				this.global_absolute_path_enabled = e.detail.value
+			selectAttachment: function(attrName) {
+				uni.navigateTo({
+					url: "../../attachment/selectAttachment/selectAttachment?attrName=" + attrName
+				})
 			},
-			
 			
 			/**
 			 * 保存按钮事件
 			 */
 			saving: function() {
+				if (this.blog_title.length <= 0 || this.blog_url <= 0) {
+					this.popup("请将必填内容填写完整")
+					return 
+				}
+				
 				let json = {
-					"global_absolute_path_enabled": this.global_absolute_path_enabled
+					"blog_title": this.blog_title,
+					"blog_url": this.blog_url,
+					"blog_logo": this.blog_logo,
+					"blog_favicon": this.blog_favicon,
+					"blog_footer_info": this.blog_footer_info
 				}
 				let that = this
+				
 				uni.request({
 					method: "POST",
 					dataType: "json",
@@ -120,7 +158,7 @@
 						if (res.statusCode !== 200) {
 							that.popup("保存失败：" + res.statusCode)
 							// 登录过期
-							if (res.message === undefined || res.message === "Token 已过期或不存在") {
+							if (that.isExpiredByRequest(res)) {
 								that.popup("保存失败，登录已过期，请重新登陆")
 							}
 							return

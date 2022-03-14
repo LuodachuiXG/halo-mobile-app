@@ -5,6 +5,7 @@ import {
 	encrypt,
 	decrypt
 } from './utils/encryp.js';
+import Network from './network/Network.js';
 
 
 Vue.config.productionTip = false
@@ -31,8 +32,10 @@ export function createApp() {
 // #endif
 
 
-Vue.prototype.encrypt = encrypt
-Vue.prototype.decrypt = decrypt
+Vue.prototype.encrypt = encrypt;
+Vue.prototype.decrypt = decrypt;
+Vue.prototype.$network = new Network();
+
 
 Vue.prototype.toast = function(mTitle, mIcon = "none", mPosition = "bottom") {
 	uni.showToast({
@@ -64,12 +67,6 @@ Vue.prototype.getData = function(key) {
  * 未登录或登录过期都返回true
  */
 Vue.prototype.isExpired = function() {
-	// 判断当前是否是游客模式
-	let isGuest = this.getData("isGuest")
-	if (isGuest === "true") {
-		return false
-	}
-	
 	// 判断是否登录
 	let isLogin = this.getData("isLogin") === null ? "" : this.getData("isLogin")
 	if (isLogin === "" || isLogin === "false") {
@@ -107,10 +104,14 @@ Vue.prototype.format = function(time) {
 	var h = time.getHours();
 	var mm = time.getMinutes();
 	// var s = time.getSeconds();
-	return y + '-' + add0(m) + '-' + add0(d) + ' ' + add0(h) + ':' + add0(mm) ;
+	return y + '-' + add0(m) + '-' + add0(d) + ' ' + add0(h) + ':' + add0(mm);
 	// + ':' + add0(s);
 }
 
+/**
+ * 打开网址
+ * @param {Object} url
+ */
 Vue.prototype.openURL = function(url) {
 	// #ifdef APP-PLUS
 	plus.runtime.openURL(url);
@@ -123,4 +124,17 @@ Vue.prototype.openURL = function(url) {
 		data: url
 	});
 	// #endif
+}
+
+/**
+ * 根据网络请求返回的信息判断 Token 是否过期
+ * @param {Object} res
+ */
+Vue.prototype.isExpiredByRequest = function(res) {
+	if (res.message === undefined || res.message === "Token 已过期或不存在") {
+		// token已经过期，将本地登录状态更改
+		this.setData("isLogin", "false")
+		return true;
+	}
+	return false;
 }

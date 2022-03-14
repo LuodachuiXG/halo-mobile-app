@@ -5,18 +5,10 @@
 		</uni-popup>
 		<view class="block">
 			<view class="view-input">
-				<view class="view-input-titleView">API服务：</view>
-				<switch :checked="api_enabled" @change="switchChange" />
+				<view class="view-input-titleView">全局绝对路径：</view>
+				<switch :checked="global_absolute_path_enabled" @change="switchChange" style="margin-bottom: 10rpx;" />
+				<br><text class="view-input-text">* 对网站上面的所有页面路径、本地附件路径、以及主题中的静态资源路径有效。</text>
 			</view>
-
-			<view class="view-input">
-				<view class="view-input-titleView">
-					<text style="color: red;" v-if="api_enabled">*</text>
-					Access Key：
-				</view>
-				<uni-easyinput type="password" v-model="api_access_key"></uni-easyinput>
-			</view>
-
 			<button class="button save-button" type="primary" @click="saving">保存</button>
 		</view>
 	</view>
@@ -28,10 +20,8 @@
 			return {
 				accessToken: "",
 				url: "",
-				isGuest: "",
 
-				api_enabled: false,
-				api_access_key: "",
+				global_absolute_path_enabled: "",
 
 				popupType: "",
 				popupMessage: ""
@@ -41,7 +31,6 @@
 		mounted() {
 			this.url = this.getData("url")
 			this.accessToken = this.getData("access_token")
-			this.isGuest = this.getData("isGuest")
 			this.refreshData()
 		},
 
@@ -57,12 +46,7 @@
 			 * 刷新数据
 			 */
 			refreshData: function() {
-				// 游客模式不加载数据
-				if (this.isGuest === "true") {
-					return
-				}
-				
-				let array = ["api_enabled", "api_access_key"]
+				let array = ["global_absolute_path_enabled"]
 				let that = this
 				uni.request({
 					method: "POST",
@@ -78,7 +62,7 @@
 						if (res.statusCode !== 200) {
 							that.popup("获取数据失败")
 							// 登录过期
-							if (res.message === undefined || res.message === "Token 已过期或不存在") {
+							if (that.isExpiredByRequest(res)) {
 								that.setData("isLogin", "false")
 								uni.reLaunch({
 									url: "../../me/me"
@@ -87,8 +71,7 @@
 							return
 						}
 						let data = res.data.data
-						that.api_enabled = data.api_enabled
-						that.api_access_key = data.api_access_key
+						that.global_absolute_path_enabled = data.global_absolute_path_enabled
 					},
 					fail: function(e) {
 						uni.stopPullDownRefresh()
@@ -101,11 +84,11 @@
 			},
 			
 			/**
-			 * APi服务switch改变事件
+			 * 全局绝对路径switch改变事件
 			 * @param {Object} e
 			 */
 			switchChange: function(e) {
-				this.api_enabled = e.detail.value
+				this.global_absolute_path_enabled = e.detail.value
 			},
 			
 			
@@ -114,8 +97,7 @@
 			 */
 			saving: function() {
 				let json = {
-					"api_enabled": this.api_enabled,
-					"api_access_key": this.api_access_key
+					"global_absolute_path_enabled": this.global_absolute_path_enabled
 				}
 				let that = this
 				uni.request({
@@ -131,7 +113,7 @@
 						if (res.statusCode !== 200) {
 							that.popup("保存失败：" + res.statusCode)
 							// 登录过期
-							if (res.message === undefined || res.message === "Token 已过期或不存在") {
+							if (that.isExpiredByRequest(res)) {
 								that.popup("保存失败，登录已过期，请重新登陆")
 							}
 							return

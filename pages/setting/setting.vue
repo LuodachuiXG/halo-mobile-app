@@ -1,19 +1,11 @@
 <template>
 	<view>
-		<view class="block gitee" @click="gitee">
-			<image src="/static/images/gitee.png"></image>
-			<text>前往Gitee开源页面</text>
-			<image src='https://gitee.com/luodachui/halo-mobile-app/badge/star.svg?theme=white' >
-			</image>
-		</view>
-		<view class="block github" @click="github">
-			<image src="/static/images/github.png"></image>
-			<text>前往Github开源页面</text>
-		</view>
-		
-		<view class="block halo" @click="halo">
-			<image src="/static/images/halo.png"></image>
-			<text>前往Halo 官网</text>
+		<view class="block">
+			<view class="item" @click="onOptionClick(0)">
+				<image src="/static/images/about.png"></image>
+				<text>关于</text>
+				<view class="item-sign"></view>
+			</view>
 		</view>
 	</view>
 </template>
@@ -27,78 +19,23 @@
 		},
 		methods: {
 			/**
-			 * 前往gitee页面单击事件
+			 * 选项点击事件
+			 * @param {Object} i
 			 */
-			gitee: function() {
-				this.openURL("https://gitee.com/luodachui/halo-mobile-app")
+			onOptionClick: function(i) {
+				switch (i) {
+					// 关于
+					case 0:
+						uni.navigateTo({
+							url: '../setting/setting_pages/about/about'
+						})
+						break;
+				}
 			},
-			
-			/**
-			 * 前往github页面单击事件
-			 */
-			github: function() {
-				this.openURL("https://github.com/LuodachuiXG/halo-mobile-app")
-			},
-			
-			/**
-			 * 前往halo页面单击事件
-			 */
-			halo: function() {
-				this.openURL("https://halo.run")
-			}
 		}
 	}
 </script>
 
 <style>
-	.block {
-		padding: 20rpx;
-		line-height: 20rpx;
-	}
 
-	.block image {
-		width: 50rpx;
-		height: 50rpx;
-		vertical-align: middle;
-	}
-
-	.block text {
-		margin-left: 20rpx;
-		vertical-align: middle;
-		font-size: .9em;
-		color: #f0f0f0;
-	}
-
-	.gitee {
-		background-color: #C71D23;
-		position: relative;
-	}
-
-	.gitee:hover {
-		background-color: #af1824;
-	}
-	
-	.gitee image:last-child {
-		width: 140rpx;
-		height: 40rpx;
-		position: absolute;
-		right: 30rpx;
-		top: calc(50% - 20rpx);
-	}
-
-	.github {
-		background-color: #000000;
-	}
-
-	.github:hover {
-		background-color: #323232;
-	}
-	
-	.halo {
-		background-color: #0069e1;
-	}
-	
-	.halo:hover {
-		background-color: #0051ad;
-	}
 </style>
