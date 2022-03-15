@@ -156,6 +156,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/themes/themes",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "主题",
+                "enablePullDownRefresh": true
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",

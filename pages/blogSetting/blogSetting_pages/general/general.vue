@@ -123,7 +123,7 @@
 			 */
 			selectAttachment: function(attrName) {
 				uni.navigateTo({
-					url: "../../attachment/selectAttachment/selectAttachment?attrName=" + attrName
+					url: "../../../attachment/selectAttachment/selectAttachment?attrName=" + attrName
 				})
 			},
 			

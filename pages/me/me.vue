@@ -440,13 +440,19 @@
 							url: "../blogSetting/blogSetting"
 						})
 						break;
-					// 个人资料
+						// 个人资料
 					case 1:
 						uni.navigateTo({
 							url: "../userProfile/userProfile"
 						})
 						break;
-					// 设置
+					// 主题管理
+					case 2:
+						uni.navigateTo({
+							url: "../themes/themes"
+						})
+						break;
+						// 设置
 					case 3:
 						uni.navigateTo({
 							url: "../setting/setting"

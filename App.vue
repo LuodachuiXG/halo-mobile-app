@@ -28,7 +28,8 @@
 		width: 100%;
 		height: 100%;
 		--primaryColor: #007AFF;
-		--textPrimaryColor: #616255
+		--textPrimaryColor: #616255;
+		--activatedColor: #e2e2e2;
 	}
 
 	page {
@@ -196,4 +197,15 @@
 		font-size: .8em;
 	}
 	
+	// 蓝色背景圆角小提示
+	.tips {
+		font-size: .8em;
+		color: white;
+		padding-right: 20rpx;
+		padding-left: 20rpx;
+		display: inline;
+		height: 20px;
+		border-radius: 999999px;
+		background-color: var(--primaryColor);
+	}
 </style>
