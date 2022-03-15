@@ -183,6 +183,24 @@
             }
             
         }
+        ,{
+            "path" : "pages/categories/categories",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "分类目录",
+                "enablePullDownRefresh": true
+            }
+            
+        }
+        ,{
+            "path" : "pages/categories/updateCategory/updateCategory",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",

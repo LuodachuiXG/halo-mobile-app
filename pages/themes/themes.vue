@@ -106,7 +106,7 @@
 						uni.stopPullDownRefresh()
 						uni.showModal({
 							title: "获取数据失败",
-							content: e.message
+							content: e.errMsg
 						})
 					}
 				})
@@ -155,7 +155,7 @@
 						uni.stopPullDownRefresh()
 						uni.showModal({
 							title: "启用主题失败",
-							content: e.message
+							content: e.errMsg
 						})
 					}
 				})
@@ -215,7 +215,7 @@
 													uni.stopPullDownRefresh()
 													uni.showModal({
 														title: "删除主题失败",
-														content: e.message
+														content: e.errMsg
 													})
 												}
 											})

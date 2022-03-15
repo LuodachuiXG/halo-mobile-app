@@ -164,7 +164,7 @@
 						uni.hideLoading()
 						uni.showModal({
 							title: "获取数据失败",
-							content: e.message
+							content: e.errMsg
 						})
 					}
 				})

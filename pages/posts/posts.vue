@@ -219,7 +219,7 @@
 						uni.hideLoading()
 						uni.showModal({
 							title: "获取数据失败",
-							content: e.message
+							content: e.errMsg
 						})
 					}
 				})
@@ -268,7 +268,7 @@
 										uni.stopPullDownRefresh()
 										uni.showModal({
 											title: "删除失败",
-											content: e.message
+											content: e.errMsg
 										})
 									}
 								})
@@ -345,7 +345,7 @@
 										uni.stopPullDownRefresh()
 										uni.showModal({
 											title: "发布失败",
-											content: e.message
+											content: e.errMsg
 										})
 									}
 								})
@@ -387,7 +387,7 @@
 										uni.stopPullDownRefresh()
 										uni.showModal({
 											title: "放入回收站失败",
-											content: e.message
+											content: e.errMsg
 										})
 									}
 								})

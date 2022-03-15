@@ -2,8 +2,8 @@
     "name" : "Halo",
     "appid" : "__UNI__96B3944",
     "description" : "Halo移动端程序",
-    "versionName" : "0.0.2-beta.1",
-    "versionCode" : 400,
+    "versionName" : "0.0.2-beta.2",
+    "versionCode" : 500,
     "transformPx" : false,
     "app-plus" : {
         /* 5+App特有相关 */

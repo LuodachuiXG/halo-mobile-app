@@ -77,7 +77,7 @@
 						uni.stopPullDownRefresh()
 						uni.showModal({
 							title: "获取数据失败",
-							content: e.message
+							content: e.errMsg
 						})
 					}
 				})
@@ -124,7 +124,7 @@
 					fail: function(e) {
 						uni.showModal({
 							title: "保存数据失败",
-							content: e.message
+							content: e.errMsg
 						})
 					}
 				})

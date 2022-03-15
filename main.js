@@ -131,7 +131,7 @@ Vue.prototype.openURL = function(url) {
  * @param {Object} res
  */
 Vue.prototype.isExpiredByRequest = function(res) {
-	if (res.message === undefined || res.message === "Token 已过期或不存在") {
+	if (res.data.message === undefined || res.data.message === "Token 已过期或不存在") {
 		// token已经过期，将本地登录状态更改
 		this.setData("isLogin", "false")
 		return true;

@@ -15,7 +15,7 @@
 								<text class="view-block-text">{{ postCount }}</text>
 							</view>
 						</uni-col>
-						<uni-col :span="10" :push="2">
+						<uni-col :span="10" :push="2" @click="onClick(1)">
 							<view class="view-block-view">
 								<text class="view-block-title">评论</text>
 								<uni-icons class="view-block-icon" type="list" color="#2F54EB" size="20"></uni-icons>
@@ -43,14 +43,14 @@
 
 					<uni-row class="row">
 						<uni-col :span="10">
-							<view class="view-block-view">
+							<view class="view-block-view" @click="onClick(2)">
 								<text class="view-block-title">分类</text>
 								<uni-icons class="view-block-icon" type="info" color="#2F54EB" size="20"></uni-icons>
 								<text class="view-block-text">{{ categoryCount }}</text>
 							</view>
 						</uni-col>
 						<uni-col :span="10" :push="2">
-							<view class="view-block-view">
+							<view class="view-block-view" @click="onClick(3)">
 								<text class="view-block-title">标签</text>
 								<uni-icons class="view-block-icon" type="info" color="#2F54EB" size="20"></uni-icons>
 								<text class="view-block-text">{{ tagCount }}</text>
@@ -61,7 +61,7 @@
 					<uni-row class="row">
 						<uni-col :span="10">
 							<view class="view-block-view">
-								<text class="view-block-title">日志</text>
+								<text class="view-block-title" @click="onClick(4)">日志</text>
 								<uni-icons class="view-block-icon" type="info" color="#2F54EB" size="20"></uni-icons>
 								<text class="view-block-text">{{ journalCount }}</text>
 							</view>
@@ -78,7 +78,7 @@
 					<uni-row class="row">
 						<uni-col :span="10">
 							<view class="view-block-view">
-								<text class="view-block-title">链接</text>
+								<text class="view-block-title" @click="onClick(5)">链接</text>
 								<uni-icons class="view-block-icon" type="link" color="#2F54EB" size="20"></uni-icons>
 								<text class="view-block-text">{{ linkCount }}</text>
 							</view>
@@ -279,7 +279,13 @@
 					case 0:
 						uni.navigateTo({
 							url: '../posts/posts'
-						})
+						});
+						break;
+					 // 分类
+					 case 2:
+						uni.navigateTo({
+							url: '../categories/categories'
+						});
 						break;
 						
 				}
