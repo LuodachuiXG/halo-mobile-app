@@ -30,6 +30,9 @@
 		--primaryColor: #007AFF;
 		--textPrimaryColor: #616255;
 		--activatedColor: #e2e2e2;
+		--warningColor: #f3a73f;
+		--errorColor: #e43d33;
+		--successColor: #18bc37;
 	}
 
 	page {
@@ -198,7 +201,7 @@
 	}
 	
 	// 蓝色背景圆角小提示
-	.tips {
+	.tips-info, .tips-warning{
 		font-size: .8em;
 		color: white;
 		padding-right: 20rpx;
@@ -207,5 +210,9 @@
 		height: 20px;
 		border-radius: 999999px;
 		background-color: var(--primaryColor);
+	}
+	
+	.tips-warning{
+		background-color: var(--warningColor);
 	}
 </style>

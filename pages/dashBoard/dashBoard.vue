@@ -9,7 +9,7 @@
 				<view class="view-block">
 					<uni-row class="row">
 						<uni-col :span="10">
-							<view class="view-block-view" style="width: 100%;">
+							<view class="view-block-view" style="width: 100%;" @click="onClick(0)">
 								<text class="view-block-title">文章</text>
 								<uni-icons class="view-block-icon" type="plus" color="#2F54EB" size="20"></uni-icons>
 								<text class="view-block-text">{{ postCount }}</text>
@@ -260,9 +260,29 @@
 				})
 			},
 			
+			/**
+			 * 最近文章中的每个文章的点击事件，打开网址
+			 * @param {Object} i
+			 */
 			selectPost: function(i) {
 				let url = this.url + this.posts[i].fullPath
 				this.openURL(url)
+			},
+			
+			/**
+			 * 总览中方块点击事件
+			 * @param {Object} i
+			 */
+			onClick: function(i) {
+				switch(i) {
+					// 文章
+					case 0:
+						uni.navigateTo({
+							url: '../posts/posts'
+						})
+						break;
+						
+				}
 			},
 
 			/**

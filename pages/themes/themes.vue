@@ -6,7 +6,7 @@
 		<view class="block" v-for="(theme, i) in themes">
 			<view class="block-name">
 				{{ theme.name }}
-				<view class="currentTheme tips" v-if="theme.activated">当前启用</view>
+				<view class="currentTheme tips-info" v-if="theme.activated">当前启用</view>
 			</view>
 			<view class="block-screenshots">
 				<image :src="url + theme.screenshots"></image>
@@ -226,6 +226,18 @@
 						};
 					}
 				});
+			},
+			
+			
+			/**
+			 * 设置单击事件
+			 * @param {Object} i
+			 */
+			onSettingClick: function(i) {
+				// uni.navigateTo({
+				// 	url: "./themeSetting/themeSetting?id=" + this.themes[i].id
+				// })
+				this.popup("暂不支持主题设置，请前往 Web 端设置")
 			},
 
 			/**

@@ -165,6 +165,24 @@
             }
             
         }
+        ,{
+            "path" : "pages/themes/themeSetting/themeSetting",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "主题设置",
+                "enablePullDownRefresh": true
+            }
+            
+        }
+        ,{
+            "path" : "pages/posts/posts",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "博客文章",
+                "enablePullDownRefresh": true
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
