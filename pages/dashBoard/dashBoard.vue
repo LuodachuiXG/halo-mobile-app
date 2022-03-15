@@ -28,14 +28,14 @@
 						<uni-col :span="10">
 							<view class="view-block-view">
 								<text class="view-block-title">阅读量</text>
-								<uni-icons class="view-block-icon" type="info" color="#2F54EB" size="20"></uni-icons>
+								<!-- <uni-icons class="view-block-icon" type="info" color="#2F54EB" size="20"></uni-icons> -->
 								<text class="view-block-text">{{ visitCount }}</text>
 							</view>
 						</uni-col>
 						<uni-col :span="10" :push="2">
 							<view class="view-block-view">
 								<text class="view-block-title">建立天数</text>
-								<uni-icons class="view-block-icon" type="info" color="#2F54EB" size="20"></uni-icons>
+								<!-- <uni-icons class="view-block-icon" type="info" color="#2F54EB" size="20"></uni-icons> -->
 								<text class="view-block-text">{{ establishDays }}</text>
 							</view>
 						</uni-col>
@@ -69,7 +69,7 @@
 						<uni-col :span="10" :push="2">
 							<view class="view-block-view">
 								<text class="view-block-title">点赞</text>
-								<uni-icons class="view-block-icon" type="info" color="#2F54EB" size="20"></uni-icons>
+								<!-- <uni-icons class="view-block-icon" type="info" color="#2F54EB" size="20"></uni-icons> -->
 								<text class="view-block-text">{{ likeCount }}</text>
 							</view>
 						</uni-col>

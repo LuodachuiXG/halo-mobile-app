@@ -5,29 +5,44 @@
 		</uni-popup>
 		
 		<view class="block" v-for="(post, i) in posts">
+			<!-- 文章名 -->
 			<view class="block-name">
 				<text>{{ post.title }}</text>
 			</view>
+			
+			<!-- 缩略图 -->
 			<view class="block-thumbnail">
 				<!-- 判断缩略图是否是绝对地址 -->
 				<image v-if="post.thumbnail" :src="post.thumbnail.indexOf('http') < 0  ? 
 					url + post.thumbnail : post.thumbnail"></image>
 			</view>
+			
+			<!-- 文章总结 -->
 			<view class="block-summary">
 				<text>{{ post.summary }}</text>
 			</view>
+			
+			<!-- 文章分类标签 -->
 			<view class="block-tag" v-if="post.categories.length > 0">
 				<uni-tag class="block-tag-item" type="primary" :inverted="true"
 					v-for="(categorie, j) in post.categories" :text="categorie.name"></uni-tag>
 			</view>
+			
+			<!-- 文章标签 -->
 			<view class="block-tag" v-if="post.tags.length > 0">
 				<uni-tag class="block-tag-item" type="success" :inverted="true"
 					v-for="(tag, j) in post.tags" :text="tag.name"></uni-tag>
 			</view>
+			
+			<!-- 显示文章状态 -->
 			<view class="block-status">
-				<view class="block-status-point"></view>
+				<!-- 根据回收站、草稿、公开、私密四个状态，设置不同的颜色和文字提示 -->
+				<view class="block-status-point" 
+					v-if="post.status == 'PUBLISHED' || post.status == 'INTIMATE'"></view>
+				<view class="block-status-point background-error" v-if="post.status == 'RECYCLE'"></view>
+				<view class="block-status-point background-warning" v-if="post.status == 'DRAFT'"></view>
 				<text>
-					{{ post.status == 'INTIMATE' ? '私密' : ''}}{{ post.status == 'PUBLISHED' ? '已发布' : ''}}
+					{{ post.status == 'DRAFT' ? '草稿' : ''}}{{ post.status == 'RECYCLE' ? '回收站' : ''}}{{ post.status == 'INTIMATE' ? '私密' : ''}}{{ post.status == 'PUBLISHED' ? '已发布' : ''}}
 				</text>
 				<view class="block-status-time">
 					<image src="../../static/images/clock.png"></image>
@@ -35,13 +50,17 @@
 				</view>
 			</view>
 			
+			<!-- 操作按钮 -->
 			<view class="block-action">
 				<uni-row>
 					<uni-col :span="6">
-						<view class="block-action-item" @click="onActivatedClick(i)">
-							<image src="../../static/images/edit.png"
+						<view class="block-action-item" @click="onEditClick(i)">
+							<!-- 如果当前文章在回收站，就将编辑改为 删除 ，且垃圾桶颜色改为红色 -->
+							<image :src="post.status == 'RECYCLE' ? '../../static/images/trash_red.png' : '../../static/images/edit.png'"
 								style="width: 30rpx;height: 30rpx;top: 5rpx;margin-top: -5rpx;margin-right: 5rpx;"></image>
-							编辑
+							<text :class="post.status == 'RECYCLE' ? 'color-error' : ''">
+								{{ post.status == "RECYCLE" ? '删除' : '编辑'}}
+							</text>
 						</view>
 					</uni-col>
 					<uni-col :span="6">
@@ -52,24 +71,35 @@
 						</view>
 					</uni-col>
 					<uni-col :span="6">
-						<view class="block-action-item border" @click="onMoreClick(i)">
+						<view class="block-action-item border" @click="onPostDataClick(i)">
 							<image src="../../static/images/data.png"
 								style="width: 35rpx; height: 35rpx;top: 8rpx;margin-top: -8rpx;"></image>
 							数据
 						</view>
 					</uni-col>
 					<uni-col :span="6">
-						<view class="block-action-item border" @click="onMoreClick(i)">
-							<image src="../../static/images/trash.png"
+						<view class="block-action-item border" @click="onDeleteClick(i)">
+							<!-- 如果当前文章在回收站，就将文字改为 还原 ，且垃圾桶颜色改为黄色 -->
+							<image :src="post.status == 'RECYCLE' ? '../../static/images/trash_yellow.png' : '../../static/images/trash.png'"
 								style="width: 35rpx; height: 35rpx;top: 7rpx;margin-top: -7rpx;"></image>
-							删除
+							<text :class="post.status == 'RECYCLE' ? 'color-warning' : ''">
+								{{ post.status == "RECYCLE" ? '还原' : '回收'}}
+							</text>
 						</view>
 					</uni-col>
 				</uni-row>
 			</view>
-			
-			
 		</view>
+		
+		<view class="view-sizeSelect block">
+			<picker @change="sizesChange" :value="sizesIndex" :range="sizes">
+				<view>{{sizes[sizesIndex]}}</view>
+			</picker>
+		</view>
+		<uni-pagination style="padding-bottom: 80rpx;margin-left: 20rpx;margin-right: 20rpx;" title="文章" 
+		:pageSize="size" :total="total" :current="page + 1" @change="pageChange"></uni-pagination>
+		
+		
 	</view>
 </template>
 
@@ -177,7 +207,8 @@
 						// 保存文章总数
 						that.total = res.data.data.total;
 						// 保存总页数
-						that.pages = res.data.data.pages
+						that.pages = res.data.data.pages;
+						console.log(that.pages);
 						
 						
 						uni.stopPullDownRefresh()
@@ -194,6 +225,219 @@
 				})
 			},
 			
+			
+			/**
+			 * 文章编辑按钮，当文章在回收站时，该按钮充当删除功能
+			 * @param {Object} i
+			 */
+			onEditClick: function(i) {
+				let that = this;
+				let post = this.posts[i];
+				if (post.status == "RECYCLE") {
+					// 文章在回收站，充当删除功能
+					uni.showModal({
+						title: '提示',
+						content: '确定要永久删除【' + that.posts[i].title + '】文章吗？此操作不可逆。',
+						success: function(res) {
+							if (res.confirm) {
+								uni.request({
+									method: "DELETE",
+									dataType: "json",
+									url: that.url + 
+										"/api/admin/posts/" + post.id,
+									header: {
+										"Content-Type": "application/json",
+										"ADMIN-Authorization": that.accessToken
+									},
+									success: function(res) {
+										if (res.statusCode !== 200) {
+											that.popup("删除失败")
+											// 登录过期
+											if (that.isExpiredByRequest(res)) {
+												that.setData("isLogin","false")
+												uni.reLaunch({
+													url: "../../me/me"
+												});
+											}
+											return;
+										}
+										that.popup("删除成功", "success");
+										that.refreshData();
+									},
+									fail: function(e) {
+										uni.stopPullDownRefresh()
+										uni.showModal({
+											title: "删除失败",
+											content: e.message
+										})
+									}
+								})
+							}
+						}
+					});
+				} else {
+					// 编辑文章
+				}
+			},
+			
+			/**
+			 * 文章数据单击事件
+			 * @param {Object} i
+			 */
+			onPostDataClick: function(i) {
+				let that = this;
+				let post = this.posts[i];
+				uni.showModal({
+					showCancel: false,
+					content: "文章ID：" + post.id + "\n" + 
+						"文章标题：" + post.title + "\n" +
+						"文章别名：" + post.slug + "\n" + 
+						"编辑类型：" + post.editorType + "\n" + 
+						"更新时间：" + that.format(post.updateTime) + "\n" + 
+						"创建时间：" + that.format(post.createTime) + "\n" + 
+						"编辑时间：" + that.format(post.editTime) + "\n" + 
+						"浏览次数：" + post.visits + "\n" + 
+						"喜欢次数：" + post.likes + "\n" +
+						"全部字数：" + post.wordCount + "\n" + 
+						"评论数量：" + post.commentCount + "\n" + 
+						"是否置顶：" + (post.topped ? "是" : "否")
+				})
+			},
+			
+			/**
+			 * 将文章回收单击事件
+			 * @param {Object} i
+			 */
+			onDeleteClick: function(i) {
+				let that = this;
+				if (this.posts[i].status == "RECYCLE") {
+					// 当前文章在回收站，准备还原
+					uni.showModal({
+						title: '提示',
+						content: '确定要发布【' + that.posts[i].title + '】文章吗？',
+						success: function(res) {
+							if (res.confirm) {
+								uni.request({
+									method: "PUT",
+									dataType: "json",
+									url: that.url + 
+										"/api/admin/posts/" + that.posts[i].id + "/status/PUBLISHED",
+									header: {
+										"Content-Type": "application/json",
+										"ADMIN-Authorization": that.accessToken
+									},
+									success: function(res) {
+										if (res.statusCode !== 200) {
+											that.popup("发布失败")
+											// 登录过期
+											if (that.isExpiredByRequest(res)) {
+												that.setData("isLogin","false")
+												uni.reLaunch({
+													url: "../../me/me"
+												});
+											}
+											return;
+										}
+										that.popup("发布成功", "success");
+										that.refreshData();
+									},
+									fail: function(e) {
+										uni.stopPullDownRefresh()
+										uni.showModal({
+											title: "发布失败",
+											content: e.message
+										})
+									}
+								})
+							}
+						}
+					});
+				} else {
+					// 当前文章是正常状态，准备删除
+					uni.showModal({
+						title: '提示',
+						content: '确定要将【' + that.posts[i].title + '】放入回收站吗？',
+						success: function(res) {
+							if (res.confirm) {
+								uni.request({
+									method: "PUT",
+									dataType: "json",
+									url: that.url + 
+										"/api/admin/posts/" + that.posts[i].id + "/status/RECYCLE",
+									header: {
+										"Content-Type": "application/json",
+										"ADMIN-Authorization": that.accessToken
+									},
+									success: function(res) {
+										if (res.statusCode !== 200) {
+											that.popup("放入回收站失败")
+											// 登录过期
+											if (that.isExpiredByRequest(res)) {
+												that.setData("isLogin","false")
+												uni.reLaunch({
+													url: "../../me/me"
+												});
+											}
+											return;
+										}
+										that.popup("成功放入回收站", "success");
+										that.refreshData();
+									},
+									fail: function(e) {
+										uni.stopPullDownRefresh()
+										uni.showModal({
+											title: "放入回收站失败",
+											content: e.message
+										})
+									}
+								})
+							}
+						}
+					});
+				}
+			},
+			
+			/**
+			 * 改变页面事件
+			 */
+			pageChange: function(e) {
+				let current = e.current
+				this.page = current - 1
+				this.refreshData()
+			},
+			
+			/**
+			 * 更改每页显示条数事件
+			 * @param {Object} e
+			 */
+			sizesChange: function(e) {
+				let i = e.detail.value
+				this.sizesIndex = i
+				this.page = 0
+				switch(i) {
+					case 0:
+						this.size = 4
+						break;
+					case 1:
+						this.size = 8
+						break;
+					case 2:
+						this.size = 16
+						break;
+					case 3:
+						this.size = 24
+						break;
+					case 4:
+						this.size = 48
+						break;
+					case 5:
+						this.size = 96
+						break;	
+				}
+				// 将每页几条数据设置保存到本地
+				this.setData("posts_sizesIndex", this.sizesIndex)
+				this.refreshData()
+			},
 			
 			
 			/**
@@ -315,6 +559,18 @@
 		border-radius: 9999px;
 		display: inline-block;
 	}
+	.background-error {
+		background-color: var(--errorColor);
+	}
+	.background-warning {
+		background-color: var(--warningColor);
+	}
+	.color-error {
+		color: var(--errorColor);
+	}
+	.color-warning {
+		color: var(--warningColor);
+	}
 	
 	.block-status text {
 		margin-left: 10rpx;
@@ -334,5 +590,12 @@
 		left: -30rpx;
 		width: 25rpx;
 		height: 25rpx;
+	}
+	
+	.view-sizeSelect {
+		margin: 30rpx;
+		margin-bottom: 40rpx;
+		padding: 20rpx;
+		color: #616255;
 	}
 </style>

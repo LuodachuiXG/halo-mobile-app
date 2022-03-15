@@ -4,12 +4,6 @@
 			<uni-popup-message :type="popupType" :message="popupMessage"></uni-popup-message>
 		</uni-popup>
 
-		<view class="view-sizeSelect block">
-			<picker @change="sizesChange" :value="sizesIndex" :range="sizes">
-				<view>{{sizes[sizesIndex]}}</view>
-			</picker>
-		</view>
-
 		<uni-row class="view-images">
 			<uni-col :span="6" v-for="(item, i) in content">
 				<view class="view-image">
@@ -19,8 +13,15 @@
 				</view>
 			</uni-col>
 		</uni-row>
-		<uni-pagination style="margin-left: 10rpx;margin-right: 10rpx;" title="附件" :pageSize="size" :total="total"
+		
+		<view class="view-sizeSelect block">
+			<picker @change="sizesChange" :value="sizesIndex" :range="sizes">
+				<view>{{sizes[sizesIndex]}}</view>
+			</picker>
+		</view>
+		<uni-pagination style="padding-bottom: 80rpx;margin-left: 10rpx;margin-right: 10rpx;" title="附件" :pageSize="size" :total="total"
 			:current="currentPage + 1" @change="pageChange"></uni-pagination>
+			
 	</view>
 </template>
 
