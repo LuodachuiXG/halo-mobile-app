@@ -6,7 +6,13 @@
 				<text>关于</text>
 				<view class="item-sign"></view>
 			</view>
+			<view class="item" @click="onOptionClick(1)">
+				<image src="/static/images/earth.png"></image>
+				<text>用到的开源框架及插件</text>
+				<view class="item-sign"></view>
+			</view>
 		</view>
+		
 	</view>
 </template>
 
@@ -28,6 +34,12 @@
 					case 0:
 						uni.navigateTo({
 							url: '../setting/setting_pages/about/about'
+						})
+						break;
+					// 开源框架及插件
+					case 1:
+						uni.navigateTo({
+							url: '../setting/setting_pages/frameUsed/frameUsed'
 						})
 						break;
 				}

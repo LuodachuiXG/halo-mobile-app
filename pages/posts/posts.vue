@@ -5,21 +5,23 @@
 		</uni-popup>
 		
 		<view class="block" v-for="(post, i) in posts">
-			<!-- 文章名 -->
-			<view class="block-name">
-				<text>{{ post.title }}</text>
-			</view>
-			
-			<!-- 缩略图 -->
-			<view class="block-thumbnail">
-				<!-- 判断缩略图是否是绝对地址 -->
-				<image v-if="post.thumbnail" :src="post.thumbnail.indexOf('http') < 0  ? 
-					url + post.thumbnail : post.thumbnail"></image>
-			</view>
-			
-			<!-- 文章总结 -->
-			<view class="block-summary">
-				<text>{{ post.summary }}</text>
+			<view @click="onPostClick(i)">
+				<!-- 文章名 -->
+				<view class="block-name">
+					<text>{{ post.title }}</text>
+				</view>
+				
+				<!-- 缩略图 -->
+				<view class="block-thumbnail">
+					<!-- 判断缩略图是否是绝对地址 -->
+					<image v-if="post.thumbnail" :src="post.thumbnail.indexOf('http') < 0  ? 
+						url + post.thumbnail : post.thumbnail"></image>
+				</view>
+				
+				<!-- 文章总结 -->
+				<view class="block-summary">
+					<text>{{ post.summary }}</text>
+				</view>
 			</view>
 			
 			<!-- 文章分类标签 -->
@@ -208,7 +210,6 @@
 						that.total = res.data.data.total;
 						// 保存总页数
 						that.pages = res.data.data.pages;
-						console.log(that.pages);
 						
 						
 						uni.stopPullDownRefresh()
@@ -437,6 +438,16 @@
 				// 将每页几条数据设置保存到本地
 				this.setData("posts_sizesIndex", this.sizesIndex)
 				this.refreshData()
+			},
+			
+			/**
+			 * 查看文章点击事件
+			 * @param {Object} i
+			 */
+			onPostClick: function(i) {
+				uni.navigateTo({
+					url: './detail/detail?id=' + this.posts[i].id
+				})
 			},
 			
 			

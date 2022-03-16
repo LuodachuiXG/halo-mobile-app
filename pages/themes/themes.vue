@@ -175,11 +175,7 @@
 							case 0:
 								// 如果当前删除的是启用的主题就报错
 								if (i == 0) {
-									uni.showToast({
-										title: "无法删除启用的主题",
-										icon: "none",
-										position: "bottom"
-									})
+									that.toast("无法删除启用的主题");
 									return;
 								}
 								uni.showModal({

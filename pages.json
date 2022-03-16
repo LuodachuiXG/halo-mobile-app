@@ -201,6 +201,35 @@
             }
             
         }
+        ,{
+            "path" : "pages/posts/detail/detail",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "文章简述",
+                "enablePullDownRefresh": false,
+				"app-plus": {
+					"titleNView": {
+						"buttons": [
+							{
+								"color": "#FFFFFF",
+								"float": "right",
+								"text": "🌍"
+							}
+						]
+					}
+				}
+            }
+            
+        }
+        ,{
+            "path" : "pages/setting/setting_pages/frameUsed/frameUsed",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "用到的框架及插件",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
