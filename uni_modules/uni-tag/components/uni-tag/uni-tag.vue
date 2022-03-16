@@ -1,5 +1,7 @@
 <template>
-	<text class="uni-tag" v-if="text" :class="classes" :style="customStyle" @click="onClick">{{text}}</text>
+	<view style="display: inline-block;" class="uni-tag-view">
+		<text class="uni-tag" v-if="text" :class="classes" :style="customStyle" @click="onClick">{{text}}</text>
+	</view>
 </template>
 
 <script>
@@ -120,7 +122,7 @@
 
 	.uni-tag {
 		line-height: 14px;
-		font-size: 12px;
+		font-size: 1em;
 		font-weight: 200;
 		padding: $tag-default-pd;
 		color: #fff;
@@ -249,4 +251,8 @@
 			font-size: 12px;
 		}
 	}
+	.uni-tag-view {
+		margin-top: 30rpx;
+	}
+
 </style>

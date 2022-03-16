@@ -230,6 +230,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/posts/setting/setting",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "文章设置",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",

@@ -135,7 +135,7 @@
 		margin-top: 20rpx;
 		margin-bottom: -20rpx;
 		position: relative;
-		z-index: 99999;
+		z-index: 10;
 	}
 	
 	.block-title text {

@@ -450,6 +450,17 @@
 				})
 			},
 			
+			/**
+			 * 文章设置点击事件
+			 * @param {Object} i
+			 */
+			onSettingClick: function(i) {
+				let postId = this.posts[i].id;
+				uni.navigateTo({
+					url:'./setting/setting?id=' + postId
+				})
+			},
+			
 			
 			/**
 			 * popup弹出层
@@ -547,13 +558,15 @@
 		font-size: .8em;
 	}
 	.block-tag {
+		margin-top: -20rpx;
 		padding-left: 30rpx;
 		padding-right: 30rpx;
 		padding-bottom: 20rpx;
 	}
 	.block-tag-item {
-		margin-left: 20rpx;
+		margin-right: 20rpx;
 		font-weight: bold;
+		
 	}
 	.block-tag-item:first-child {
 		margin-left: 0rpx;

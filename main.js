@@ -103,8 +103,8 @@ Vue.prototype.format = function(time) {
 	var d = time.getDate();
 	var h = time.getHours();
 	var mm = time.getMinutes();
-	// var s = time.getSeconds();
-	return y + '-' + add0(m) + '-' + add0(d) + ' ' + add0(h) + ':' + add0(mm);
+	var s = time.getSeconds();
+	return y + '-' + add0(m) + '-' + add0(d) + ' ' + add0(h) + ':' + add0(mm) + ':' + add0(s);
 	// + ':' + add0(s);
 }
 
@@ -138,3 +138,15 @@ Vue.prototype.isExpiredByRequest = function(res) {
 	}
 	return false;
 }
+
+/**
+ * 删除数组中指定元素并返回修改后的数组
+ * @param {Object} val
+ */
+Vue.prototype.arrayRemove = function(array, value) {
+	var index = array.indexOf(value);
+	if (index > -1) {
+		array.splice(index, 1);
+	}
+	return array;
+};
