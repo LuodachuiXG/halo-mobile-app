@@ -264,11 +264,6 @@
 			this.refreshPostData();
 		},
 
-		// 下拉刷新事件
-		onPullDownRefresh() {
-			this.refreshPostData();
-		},
-
 		methods: {
 			/**
 			 * 刷新文章数据
