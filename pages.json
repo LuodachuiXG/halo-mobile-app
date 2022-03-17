@@ -12,234 +12,184 @@
 			"enablePullDownRefresh": false
 		}
 
-	}    ,{
-            "path" : "pages/dashBoard/dashBoard",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "仪表盘",
-                "enablePullDownRefresh": true
-            }
-            
-        }
-        ,{
-            "path" : "pages/blogSetting/blogSetting",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "博客设置",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/blogSetting/blogSetting_pages/general/general",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "常规设置",
-                "enablePullDownRefresh": true
-            }
-            
-        }
-        ,{
-            "path" : "pages/attachment/selectAttachment/selectAttachment",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "选择图片",
-                "enablePullDownRefresh": true
-            }
-            
-        }
-        ,{
-            "path" : "pages/blogSetting/blogSetting_pages/seo/seo",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "SEO 设置",
-                "enablePullDownRefresh": true
-            }
-            
-        }
-        ,{
-            "path" : "pages/blogSetting/blogSetting_pages/post/post",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "文章设置",
-                "enablePullDownRefresh": true
-            }
-            
-        }
-        ,{
-            "path" : "pages/blogSetting/blogSetting_pages/comment/comment",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "评论设置",
-                "enablePullDownRefresh": true
-            }
-            
-        }
-        ,{
-            "path" : "pages/blogSetting/blogSetting_pages/attachment/attachment",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "附件设置",
-                "enablePullDownRefresh": true
-            }
-            
-        }
-        ,{
-            "path" : "pages/blogSetting/blogSetting_pages/smtp/smtp",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "SMTP 服务",
-                "enablePullDownRefresh": true
-            }
-            
-        }
-        ,{
-            "path" : "pages/blogSetting/blogSetting_pages/other/other",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "其他设置",
-                "enablePullDownRefresh": true
-            }
-            
-        }
-        ,{
-            "path" : "pages/blogSetting/blogSetting_pages/advanced_link/advanced_link",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "固定链接",
-                "enablePullDownRefresh": true
-            }
-            
-        }
-        ,{
-            "path" : "pages/blogSetting/blogSetting_pages/advanced_api/advanced_api",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "API 设置",
-                "enablePullDownRefresh": true
-            }
-            
-        }
-        ,{
-            "path" : "pages/blogSetting/blogSetting_pages/advanced_other/advanced_other",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "其他设置",
-                "enablePullDownRefresh": true
-            }
-            
-        }
-        ,{
-            "path" : "pages/setting/setting",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "设置",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/setting/setting_pages/about/about",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "关于",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/userProfile/userProfile",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "个人资料",
-                "enablePullDownRefresh": true
-            }
-            
-        }
-        ,{
-            "path" : "pages/themes/themes",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "主题",
-                "enablePullDownRefresh": true
-            }
-            
-        }
-        ,{
-            "path" : "pages/themes/themeSetting/themeSetting",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "主题设置",
-                "enablePullDownRefresh": true
-            }
-            
-        }
-        ,{
-            "path" : "pages/posts/posts",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "博客文章",
-                "enablePullDownRefresh": true
-            }
-            
-        }
-        ,{
-            "path" : "pages/categories/categories",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "分类目录",
-                "enablePullDownRefresh": true
-            }
-            
-        }
-        ,{
-            "path" : "pages/categories/updateCategory/updateCategory",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/posts/detail/detail",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "文章简述",
-                "enablePullDownRefresh": false,
-				"app-plus": {
-					"titleNView": {
-						"buttons": [
-							{
-								"color": "#FFFFFF",
-								"float": "right",
-								"text": "🌍"
-							}
-						]
-					}
+	}, {
+		"path": "pages/dashBoard/dashBoard",
+		"style": {
+			"navigationBarTitleText": "仪表盘",
+			"enablePullDownRefresh": true
+		}
+
+	}, {
+		"path": "pages/blogSetting/blogSetting",
+		"style": {
+			"navigationBarTitleText": "博客设置",
+			"enablePullDownRefresh": false
+		}
+
+	}, {
+		"path": "pages/blogSetting/blogSetting_pages/general/general",
+		"style": {
+			"navigationBarTitleText": "常规设置",
+			"enablePullDownRefresh": true
+		}
+
+	}, {
+		"path": "pages/attachment/selectAttachment/selectAttachment",
+		"style": {
+			"navigationBarTitleText": "选择图片",
+			"enablePullDownRefresh": true
+		}
+
+	}, {
+		"path": "pages/blogSetting/blogSetting_pages/seo/seo",
+		"style": {
+			"navigationBarTitleText": "SEO 设置",
+			"enablePullDownRefresh": true
+		}
+
+	}, {
+		"path": "pages/blogSetting/blogSetting_pages/post/post",
+		"style": {
+			"navigationBarTitleText": "文章设置",
+			"enablePullDownRefresh": true
+		}
+
+	}, {
+		"path": "pages/blogSetting/blogSetting_pages/comment/comment",
+		"style": {
+			"navigationBarTitleText": "评论设置",
+			"enablePullDownRefresh": true
+		}
+
+	}, {
+		"path": "pages/blogSetting/blogSetting_pages/attachment/attachment",
+		"style": {
+			"navigationBarTitleText": "附件设置",
+			"enablePullDownRefresh": true
+		}
+
+	}, {
+		"path": "pages/blogSetting/blogSetting_pages/smtp/smtp",
+		"style": {
+			"navigationBarTitleText": "SMTP 服务",
+			"enablePullDownRefresh": true
+		}
+
+	}, {
+		"path": "pages/blogSetting/blogSetting_pages/other/other",
+		"style": {
+			"navigationBarTitleText": "其他设置",
+			"enablePullDownRefresh": true
+		}
+
+	}, {
+		"path": "pages/blogSetting/blogSetting_pages/advanced_link/advanced_link",
+		"style": {
+			"navigationBarTitleText": "固定链接",
+			"enablePullDownRefresh": true
+		}
+
+	}, {
+		"path": "pages/blogSetting/blogSetting_pages/advanced_api/advanced_api",
+		"style": {
+			"navigationBarTitleText": "API 设置",
+			"enablePullDownRefresh": true
+		}
+
+	}, {
+		"path": "pages/blogSetting/blogSetting_pages/advanced_other/advanced_other",
+		"style": {
+			"navigationBarTitleText": "其他设置",
+			"enablePullDownRefresh": true
+		}
+
+	}, {
+		"path": "pages/setting/setting",
+		"style": {
+			"navigationBarTitleText": "设置",
+			"enablePullDownRefresh": false
+		}
+
+	}, {
+		"path": "pages/setting/setting_pages/about/about",
+		"style": {
+			"navigationBarTitleText": "关于",
+			"enablePullDownRefresh": false
+		}
+
+	}, {
+		"path": "pages/userProfile/userProfile",
+		"style": {
+			"navigationBarTitleText": "个人资料",
+			"enablePullDownRefresh": true
+		}
+
+	}, {
+		"path": "pages/themes/themes",
+		"style": {
+			"navigationBarTitleText": "主题",
+			"enablePullDownRefresh": true
+		}
+
+	}, {
+		"path": "pages/themes/themeSetting/themeSetting",
+		"style": {
+			"navigationBarTitleText": "主题设置",
+			"enablePullDownRefresh": true
+		}
+
+	}, {
+		"path": "pages/posts/posts",
+		"style": {
+			"navigationBarTitleText": "博客文章",
+			"enablePullDownRefresh": true
+		}
+
+	}, {
+		"path": "pages/categories/categories",
+		"style": {
+			"navigationBarTitleText": "分类目录",
+			"enablePullDownRefresh": true
+		}
+
+	}, {
+		"path": "pages/categories/updateCategory/updateCategory",
+		"style": {
+			"navigationBarTitleText": "",
+			"enablePullDownRefresh": false
+		}
+
+	}, {
+		"path": "pages/posts/detail/detail",
+		"style": {
+			"navigationBarTitleText": "文章简述",
+			"enablePullDownRefresh": false,
+			"app-plus": {
+				"titleNView": {
+					"buttons": [{
+						"color": "#FFFFFF",
+						"float": "right",
+						"text": "🌍"
+					}]
 				}
-            }
-            
-        }
-        ,{
-            "path" : "pages/setting/setting_pages/frameUsed/frameUsed",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "用到的框架及插件",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/posts/setting/setting",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "文章设置",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-    ],
+			}
+		}
+
+	}, {
+		"path": "pages/setting/setting_pages/frameUsed/frameUsed",
+		"style": {
+			"navigationBarTitleText": "用到的框架及插件",
+			"enablePullDownRefresh": false
+		}
+
+	}, {
+		"path": "pages/posts/setting/setting",
+		"style": {
+			"navigationBarTitleText": "文章设置",
+			"enablePullDownRefresh": false
+		}
+
+	}],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
 		"navigationBarTitleText": "uni-app",
@@ -249,33 +199,34 @@
 			"background": "#efeff4",
 			"bounce": "none",
 			"pullToRefresh": {
-				"color":"#007AFF"
+				"color": "#007AFF"
 			}
 		}
 	},
-	
+
 	"tabBar": {
-	    "color": "#7A7E83",
-	    "selectedColor": "#007AFF",
-	    "borderStyle": "black",
-	    "backgroundColor": "#ffffff",
-	    "list": [{
-	        "pagePath": "pages/home/home",
-	        "iconPath": "static/images/home.png",
-	        "selectedIconPath": "static/images/home_selected.png",
-	        "text": "主页"
-	    },
-		{
-		    "pagePath": "pages/dashBoard/dashBoard",
-		    "iconPath": "static/images/dashBoard.png",
-		    "selectedIconPath": "static/images/dashBoard_selected.png",
-		    "text": "仪表盘"
-		}, {
-	        "pagePath": "pages/me/me",
-	        "iconPath": "static/images/me.png",
-	        "selectedIconPath": "static/images/me_selected.png",
-	        "text": "我"
-	    }]
+		"color": "#7A7E83",
+		"selectedColor": "#007AFF",
+		"borderStyle": "black",
+		"backgroundColor": "#ffffff",
+		"list": [{
+				"pagePath": "pages/home/home",
+				"iconPath": "static/images/home.png",
+				"selectedIconPath": "static/images/home_selected.png",
+				"text": "主页"
+			},
+			{
+				"pagePath": "pages/dashBoard/dashBoard",
+				"iconPath": "static/images/dashBoard.png",
+				"selectedIconPath": "static/images/dashBoard_selected.png",
+				"text": "仪表盘"
+			}, {
+				"pagePath": "pages/me/me",
+				"iconPath": "static/images/me.png",
+				"selectedIconPath": "static/images/me_selected.png",
+				"text": "我"
+			}
+		]
 	}
-	
+
 }

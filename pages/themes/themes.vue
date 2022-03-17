@@ -1,8 +1,6 @@
 <template>
 	<view class="main">
-		<uni-popup ref="popup" type="message">
-			<uni-popup-message :type="popupType" :message="popupMessage"></uni-popup-message>
-		</uni-popup>
+		<u-notify ref="popup"></u-notify>
 		<view class="block" v-for="(theme, i) in themes">
 			<view class="block-name">
 				{{ theme.name }}
@@ -45,9 +43,6 @@
 		data() {
 			return {
 				themes: null,
-
-				popupType: "",
-				popupMessage: ""
 			}
 		},
 		mounted() {
@@ -132,7 +127,7 @@
 					},
 					success: function(res) {
 						if (res.statusCode !== 200) {
-							that.popup("启用主题失败")
+							that.popup("启用主题失败");
 							// 登录过期
 							if (that.isExpiredByRequest(res)) {
 								that.setData("isLogin", "false")
@@ -189,8 +184,9 @@
 													"Content-Type": "application/json",
 													"ADMIN-Authorization": thatt.getAccessToken()
 												},
-												success: function(res) {											if (res.statusCode !== 200) {
-														thatt.popup("删除失败")
+												success: function(res) {											
+													if (res.statusCode !== 200) {
+														thatt.$refs.popup.error("删除失败");
 														// 登录过期
 														if (thatt.isExpiredByRequest(res)) {
 															thatt.setData("isLogin","false")
@@ -200,7 +196,7 @@
 														}
 														return;
 													}
-													thatt.popup("删除成功", "success");
+													that.popup("删除成功", "success");
 													thatt.refreshData();
 												},
 												fail: function(e) {
@@ -229,17 +225,20 @@
 				// uni.navigateTo({
 				// 	url: "./themeSetting/themeSetting?id=" + this.themes[i].id
 				// })
-				this.popup("暂不支持主题设置，请前往 Web 端设置")
+				this.popup("暂不支持主题设置，请前往 Web 端设置");
 			},
-
+			
 			/**
 			 * popup弹出层
 			 */
 			popup: function(message, type = "error") {
-				this.popupMessage = message
-				this.popupType = type
-				this.$refs.popup.open()
-			}
+				if (type === "error") {
+					this.$refs.popup.error(message);
+				} else {
+					this.$refs.popup.success(message);
+				}
+			},
+			
 		}
 	}
 </script>

@@ -1,8 +1,6 @@
 <template>
 	<view>
-		<uni-popup ref="popup" type="message">
-			<uni-popup-message :type="popupType" :message="popupMessage"></uni-popup-message>
-		</uni-popup>
+		<u-notify ref="popup"></u-notify>
 		<view class="block">
 			<view class="view-input">
 				<view class="view-input-titleView"><text style="color: red;">*</text>博客标题：</view>
@@ -175,9 +173,11 @@
 			 * popup弹出层
 			 */
 			popup: function(message, type = "error") {
-				this.popupMessage = message
-				this.popupType = type
-				this.$refs.popup.open()
+				if (type === "error") {
+					this.$refs.popup.error(message);
+				} else {
+					this.$refs.popup.success(message);
+				}
 			},
 		}
 	}

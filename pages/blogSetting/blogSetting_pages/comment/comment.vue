@@ -247,9 +247,11 @@
 			 * popup弹出层
 			 */
 			popup: function(message, type = "error") {
-				this.popupMessage = message
-				this.popupType = type
-				this.$refs.popup.open()
+				if (type === "error") {
+					this.$refs.popup.error(message);
+				} else {
+					this.$refs.popup.success(message);
+				}
 			},
 		}
 	}

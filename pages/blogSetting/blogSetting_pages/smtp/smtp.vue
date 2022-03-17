@@ -1,9 +1,6 @@
 <template>
 	<view>
-		<uni-popup ref="popup" type="message">
-			<uni-popup-message :type="popupType" :message="popupMessage"></uni-popup-message>
-		</uni-popup>
-
+		<u-notify ref="popup"></u-notify>
 		<uni-segmented-control :current="current" :values="items" @clickItem="onSegmentedClickItem" styleType="button"
 			activeColor="#007AFF" class="segmented"></uni-segmented-control>
 		<view class="content">
@@ -319,9 +316,11 @@
 			 * popup弹出层
 			 */
 			popup: function(message, type = "error") {
-				this.popupMessage = message
-				this.popupType = type
-				this.$refs.popup.open()
+				if (type === "error") {
+					this.$refs.popup.error(message);
+				} else {
+					this.$refs.popup.success(message);
+				}
 			},
 		}
 	}

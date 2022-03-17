@@ -1,8 +1,6 @@
 <template>
 	<view class="container">
-		<uni-popup ref="popup" type="message">
-			<uni-popup-message :type="popupType" :message="popupMessage"></uni-popup-message>
-		</uni-popup>
+		<u-notify ref="popup"></u-notify>
 		<view class="block">
 			<view class="view-input">
 				<view class="view-input-titleView">上传图片时预览：</view>
@@ -510,10 +508,7 @@
 				minio_region: "",
 				minio_access_key: "",
 				minio_access_secret: "",
-				minio_source: "",
-
-				popupType: "",
-				popupMessage: ""
+				minio_source: ""
 			}
 		},
 
@@ -1045,9 +1040,11 @@
 			 * popup弹出层
 			 */
 			popup: function(message, type = "error") {
-				this.popupMessage = message
-				this.popupType = type
-				this.$refs.popup.open()
+				if (type === "error") {
+					this.$refs.popup.error(message);
+				} else {
+					this.$refs.popup.success(message);
+				}
 			},
 		}
 	}

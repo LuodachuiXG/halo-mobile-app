@@ -1,8 +1,6 @@
 <template>
 	<view class="container">
-		<uni-popup ref="popup" type="message">
-			<uni-popup-message :type="popupType" :message="popupMessage"></uni-popup-message>
-		</uni-popup>
+		<u-notify ref="popup"></u-notify>
 
 		<uni-collapse accordion class="uni-collapse">
 			<uni-collapse-item title="总览" open>
@@ -12,14 +10,16 @@
 							<view class="view-block-view" style="width: 100%;" @click="onClick(0)">
 								<text class="view-block-title">文章</text>
 								<uni-icons class="view-block-icon" type="plus" color="#2F54EB" size="20"></uni-icons>
-								<text class="view-block-text">{{ postCount }}</text>
+								<u-count-to class="view-block-text" :startVal="0" 
+									:endVal="postCount" color="#000000" fontSize="2em"></u-count-to>
 							</view>
 						</uni-col>
 						<uni-col :span="10" :push="2" @click="onClick(1)">
 							<view class="view-block-view">
 								<text class="view-block-title">评论</text>
 								<uni-icons class="view-block-icon" type="list" color="#2F54EB" size="20"></uni-icons>
-								<text class="view-block-text">{{ commentCount }}</text>
+								<u-count-to class="view-block-text" :startVal="0"
+									:endVal="commentCount" color="#000000" fontSize="2em"></u-count-to>
 							</view>
 						</uni-col>
 					</uni-row>
@@ -29,14 +29,16 @@
 							<view class="view-block-view">
 								<text class="view-block-title">阅读量</text>
 								<!-- <uni-icons class="view-block-icon" type="info" color="#2F54EB" size="20"></uni-icons> -->
-								<text class="view-block-text">{{ visitCount }}</text>
+								<u-count-to class="view-block-text" :startVal="0"
+									:endVal="visitCount" color="#000000" fontSize="2em"></u-count-to>
 							</view>
 						</uni-col>
 						<uni-col :span="10" :push="2">
 							<view class="view-block-view">
 								<text class="view-block-title">建立天数</text>
 								<!-- <uni-icons class="view-block-icon" type="info" color="#2F54EB" size="20"></uni-icons> -->
-								<text class="view-block-text">{{ establishDays }}</text>
+								<u-count-to class="view-block-text" :startVal="0"
+									:endVal="establishDays" color="#000000" fontSize="2em"></u-count-to>
 							</view>
 						</uni-col>
 					</uni-row>
@@ -46,14 +48,16 @@
 							<view class="view-block-view" @click="onClick(2)">
 								<text class="view-block-title">分类</text>
 								<uni-icons class="view-block-icon" type="info" color="#2F54EB" size="20"></uni-icons>
-								<text class="view-block-text">{{ categoryCount }}</text>
+								<u-count-to class="view-block-text" :startVal="0"
+									:endVal="categoryCount" color="#000000" fontSize="2em"></u-count-to>
 							</view>
 						</uni-col>
 						<uni-col :span="10" :push="2">
 							<view class="view-block-view" @click="onClick(3)">
 								<text class="view-block-title">标签</text>
 								<uni-icons class="view-block-icon" type="info" color="#2F54EB" size="20"></uni-icons>
-								<text class="view-block-text">{{ tagCount }}</text>
+								<u-count-to class="view-block-text" :startVal="0"
+									:endVal="tagCount" color="#000000" fontSize="2em"></u-count-to>
 							</view>
 						</uni-col>
 					</uni-row>
@@ -63,14 +67,16 @@
 							<view class="view-block-view">
 								<text class="view-block-title" @click="onClick(4)">日志</text>
 								<uni-icons class="view-block-icon" type="info" color="#2F54EB" size="20"></uni-icons>
-								<text class="view-block-text">{{ journalCount }}</text>
+								<u-count-to class="view-block-text" :startVal="0"
+									:endVal="journalCount" color="#000000" fontSize="2em"></u-count-to>
 							</view>
 						</uni-col>
 						<uni-col :span="10" :push="2">
 							<view class="view-block-view">
 								<text class="view-block-title">点赞</text>
 								<!-- <uni-icons class="view-block-icon" type="info" color="#2F54EB" size="20"></uni-icons> -->
-								<text class="view-block-text">{{ likeCount }}</text>
+								<u-count-to class="view-block-text" :startVal="0"
+									:endVal="likeCount" color="#000000" fontSize="2em"></u-count-to>
 							</view>
 						</uni-col>
 					</uni-row>
@@ -80,7 +86,8 @@
 							<view class="view-block-view">
 								<text class="view-block-title" @click="onClick(5)">链接</text>
 								<uni-icons class="view-block-icon" type="link" color="#2F54EB" size="20"></uni-icons>
-								<text class="view-block-text">{{ linkCount }}</text>
+								<u-count-to class="view-block-text" :startVal="0"
+									:endVal="linkCount" color="#000000" fontSize="2em"></u-count-to>
 							</view>
 						</uni-col>
 					</uni-row>
@@ -101,13 +108,6 @@
 				</view>
 			</uni-collapse-item>
 		</uni-collapse>
-
-
-
-
-
-
-
 	</view>
 </template>
 
@@ -289,9 +289,11 @@
 			 * popup弹出层
 			 */
 			popup: function(message, type = "error") {
-				this.popupMessage = message
-				this.popupType = type
-				this.$refs.popup.open()
+				if (type === "error") {
+					this.$refs.popup.error(message);
+				} else {
+					this.$refs.popup.success(message);
+				}
 			},
 
 			a: function() {
@@ -342,18 +344,9 @@
 	}
 
 	.view-block-text {
-		display: block;
 		margin-left: 20rpx;
 		margin-top: 20rpx;
-		font-size: 2em;
 		margin-bottom: 10rpx;
-	}
-
-	.view-block-text-date {
-		display: block;
-		margin-left: 20rpx;
-		margin-top: 20rpx;
-		font-size: 1em;
 	}
 
 	.row {

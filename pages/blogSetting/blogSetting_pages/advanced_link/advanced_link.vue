@@ -1,8 +1,6 @@
 <template>
 	<view class="container">
-		<uni-popup ref="popup" type="message">
-			<uni-popup-message :type="popupType" :message="popupMessage"></uni-popup-message>
-		</uni-popup>
+		<u-notify ref="popup"></u-notify>
 		<view class="block">
 			<view class="view-input">
 				<view class="view-input-titleView">文章固定链接类型：</view>
@@ -42,7 +40,7 @@
 					</picker>
 				</view>
 				<text class="view-input-text">
-					{{ (sheet_permalink_typeIndex === 0 ? etUrl() + "/" + sheet_prefix + "/{slug}" : 
+					{{ (sheet_permalink_typeIndex === 0 ? getUrl() + "/" + sheet_prefix + "/{slug}" : 
 						getUrl() +  "/{slug}") + path_suffix}}
 				</text>
 			</view>
@@ -107,9 +105,6 @@
 				photos_prefix: "",
 				journals_prefix: "",
 				path_suffix: "",
-
-				popupType: "",
-				popupMessage: ""
 			}
 		},
 
@@ -146,7 +141,7 @@
 					success: function(res) {
 						uni.stopPullDownRefresh()
 						if (res.statusCode !== 200) {
-							that.popup("获取数据失败")
+							that.popup("获取数据失败");
 							// 登录过期
 							if (that.isExpiredByRequest(res)) {
 								that.setData("isLogin", "false")
@@ -271,14 +266,14 @@
 					data: json,
 					success: function(res) {
 						if (res.statusCode !== 200) {
-							that.popup("保存失败：" + res.statusCode)
+							that.popup("保存失败：" + res.statusCode);
 							// 登录过期
 							if (that.isExpiredByRequest(res)) {
-								that.popup("保存失败，登录已过期，请重新登陆")
+								that.popup("保存失败，登录已过期，请重新登陆");
 							}
 							return
 						}
-						that.popup("保存成功", "success")
+						that.popup("保存成功", "success");
 						that.refreshData()
 					},
 					fail: function(e) {
@@ -289,15 +284,16 @@
 					}
 				})
 			},
-
-
+			
 			/**
 			 * popup弹出层
 			 */
 			popup: function(message, type = "error") {
-				this.popupMessage = message
-				this.popupType = type
-				this.$refs.popup.open()
+				if (type === "error") {
+					this.$refs.popup.error(message);
+				} else {
+					this.$refs.popup.success(message);
+				}
 			},
 		}
 	}

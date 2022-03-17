@@ -1,8 +1,6 @@
 <template>
 	<view>
-		<uni-popup ref="popup" type="message">
-			<uni-popup-message :type="popupType" :message="popupMessage"></uni-popup-message>
-		</uni-popup>
+		<u-notify ref="popup"></u-notify>
 		<view class="block">
 			<view class="view-input">
 				<view class="view-input-titleView">API服务：</view>
@@ -28,9 +26,6 @@
 			return {
 				api_enabled: false,
 				api_access_key: "",
-
-				popupType: "",
-				popupMessage: ""
 			}
 		},
 
@@ -64,7 +59,7 @@
 					success: function(res) {
 						uni.stopPullDownRefresh()
 						if (res.statusCode !== 200) {
-							that.popup("获取数据失败")
+							that.popup('获取数据失败');
 							// 登录过期
 							if (that.isExpiredByRequest(res)) {
 								that.setData("isLogin", "false")
@@ -101,6 +96,10 @@
 			 * 保存按钮事件
 			 */
 			saving: function() {
+				if (this.api_access_key.length <= 0) {
+					this.popup("Access Key 不能为空");
+					return ;
+				}
 				let json = {
 					"api_enabled": this.api_enabled,
 					"api_access_key": this.api_access_key
@@ -118,14 +117,14 @@
 					data: json,
 					success: function(res) {
 						if (res.statusCode !== 200) {
-							that.popup("保存失败：" + res.statusCode)
+							that.popup("保存失败：" + res.statusCode);
 							// 登录过期
 							if (that.isExpiredByRequest(res)) {
-								that.popup("保存失败，登录已过期，请重新登陆")
+								that.popup("保存失败，登录已过期，请重新登录");
 							}
 							return
 						}
-						that.popup("保存成功", "success")
+						that.popup("保存成功", "success");
 						that.refreshData()
 					},
 					fail: function(e) {
@@ -137,14 +136,15 @@
 				})
 			},
 			
-
 			/**
 			 * popup弹出层
 			 */
 			popup: function(message, type = "error") {
-				this.popupMessage = message
-				this.popupType = type
-				this.$refs.popup.open()
+				if (type === "error") {
+					this.$refs.popup.error(message);
+				} else {
+					this.$refs.popup.success(message);
+				}
 			},
 		}
 	}

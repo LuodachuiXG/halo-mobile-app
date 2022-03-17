@@ -1,8 +1,6 @@
 <template>
 	<view>
-		<uni-popup ref="popup" type="message">
-			<uni-popup-message :type="popupType" :message="popupMessage"></uni-popup-message>
-		</uni-popup>
+		<u-notify ref="popup"></u-notify>
 		<view class="block">
 			<view class="view-input">
 				<view class="view-input-titleView">全局绝对路径：</view>
@@ -19,9 +17,6 @@
 		data() {
 			return {
 				global_absolute_path_enabled: "",
-
-				popupType: "",
-				popupMessage: ""
 			}
 		},
 
@@ -55,7 +50,8 @@
 					success: function(res) {
 						uni.stopPullDownRefresh()
 						if (res.statusCode !== 200) {
-							that.popup("获取数据失败")
+							that.popup('获取数据失败');
+							
 							// 登录过期
 							if (that.isExpiredByRequest(res)) {
 								that.setData("isLogin", "false")
@@ -106,14 +102,14 @@
 					data: json,
 					success: function(res) {
 						if (res.statusCode !== 200) {
-							that.popup("保存失败：" + res.statusCode)
+							that.popup('保存失败：' + res.statusCode);
 							// 登录过期
 							if (that.isExpiredByRequest(res)) {
-								that.popup("保存失败，登录已过期，请重新登陆")
+								that.popup('保存失败，登录已过期，请重新登陆');
 							}
 							return
 						}
-						that.popup("保存成功", "success")
+						that.popup("保存成功", "success");
 						that.refreshData()
 					},
 					fail: function(e) {
@@ -125,15 +121,17 @@
 				})
 			},
 			
-
 			/**
 			 * popup弹出层
 			 */
 			popup: function(message, type = "error") {
-				this.popupMessage = message
-				this.popupType = type
-				this.$refs.popup.open()
+				if (type === "error") {
+					this.$refs.popup.error(message);
+				} else {
+					this.$refs.popup.success(message);
+				}
 			},
+		
 		}
 	}
 </script>

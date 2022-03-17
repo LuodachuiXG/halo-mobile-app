@@ -1,8 +1,6 @@
 <template>
 	<view class="container">
-		<uni-popup ref="popup" type="message">
-			<uni-popup-message :type="popupType" :message="popupMessage"></uni-popup-message>
-		</uni-popup>
+		<u-notify ref="popup"></u-notify>
 		<uni-popup ref="popupCode" type="dialog">
 			<uni-popup-dialog mode="input" title="请输入两步验证码" placeholder="验证码" :duration="2000" :before-close="false"
 				@confirm="popupCodeConfirm"></uni-popup-dialog>
@@ -13,7 +11,7 @@
 			<image class="view-login-image" src="/static/images/halo.png"></image>
 			<view class="login-view">
 				<label for="url">站点地址</label>
-				<input class="input" id="url" v-model="url" type="text" placeholder="https://域名" :disabled="disable" />
+				<input class="input" id="url" v-model="mUrl" type="text" placeholder="https://域名" :disabled="disable" />
 			</view>
 
 			<view class="login-view">
@@ -23,7 +21,7 @@
 			</view>
 
 			<view class="login-view">
-				<label for="username">密码</label>
+				<label for="password">密码</label>
 				<input class="input" id="password" v-model="password" password="true" placeholder="密码"
 					:disabled="disable" />
 			</view>
@@ -39,7 +37,7 @@
 				<text class="view-me-text-description">{{ description }}</text>
 				<view class="view-me-view-link">
 					<uni-icons type="link" class="view-me-email-icon"></uni-icons>
-					<uni-link color="#4368F1" :href="url" :text="url"></uni-link>
+					<uni-link color="#4368F1" :href="mUrl" :text="mUrl"></uni-link>
 				</view>
 				<view class="view-me-view-email">
 					<uni-icons class="view-me-email-icon" type="email"></uni-icons>
@@ -82,7 +80,6 @@
 				</view>
 			</view>
 		</view>
-
 	</view>
 </template>
 
@@ -90,17 +87,14 @@
 	export default {
 		data() {
 			return {
-				url: "",
-				username: "",
+				mUrl: "",
 				password: "",
 				// 是否禁止编辑框和登录按钮
 				disable: false,
-				// popup弹窗类型和信息
-				popupType: 'error',
-				popupMessage: '',
+
 				// 当前是否是登录状态
 				isLogin: false,
-
+				
 				// 个人资料变量
 				accessToken: "",
 				avatar: "",
@@ -110,13 +104,15 @@
 				createTime: "",
 				createdDay: "",
 				updateTime: "",
-				description: ""
+				description: "",
+				
+				
 			}
 		},
 
 		mounted: function() {
 			// 恢复之前保存的数据
-			this.url = this.getUrl();
+			this.mUrl = this.getUrl();
 			this.username = this.getData("username");
 			this.password = this.getData("password");
 
@@ -128,7 +124,7 @@
 				this.loadAdminInfo()
 			} else {
 				// token已经过期，留在登录view，并提示用户
-				this.popup("信息过期，请重新登录", "error")
+				this.popup('信息过期，请重新登录');
 			}
 		},
 
@@ -140,7 +136,7 @@
 				this.isLogin = false
 				setTimeout(function() {
 					// 延迟执行popup，防止组件还没加载完成导致此处报错
-					that.popup("信息过期，请重新登录", "error")
+					that.popup('信息过期，请重新登录');
 				}, 500)
 			}
 		},
@@ -157,19 +153,20 @@
 				this.loadAdminInfo()
 			} else {
 				// token已经过期，留在登录view，并提示用户
-				this.popup("信息过期，请重新登录", "error")
+				this.popup('信息过期，请重新登录');
+				uni.stopPullDownRefresh();
 			}
 		},
 
 		methods: {
 			login: function() {
-				if (this.url === "" || this.username === "" || this.password === "") {
-					this.popup("请将内容输入完整")
+				if (this.mUrl == "" || this.username == "" || this.password == "") {
+					this.popup('请将内容输入完整');
 					return;
 				}
 
 				// 将信息存储到本地
-				this.setData("url", this.url)
+				this.setData("url", this.mUrl)
 				this.setData("username", this.username)
 				this.setData("password", this.password)
 
@@ -193,7 +190,7 @@
 				uni.request({
 					method: "POST",
 					dataType: "json",
-					url: this.url + "/api/admin/login/precheck",
+					url: this.mUrl + "/api/admin/login/precheck",
 					header: {
 						"Content-Type": "application/json"
 					},
@@ -204,7 +201,7 @@
 
 						// 状态不是200的话就返回错误信息
 						if (res.statusCode != "200") {
-							that.popup(res.data.message)
+							that.popup(res.data.message);
 							return
 						}
 
@@ -246,7 +243,7 @@
 				uni.request({
 					method: "POST",
 					dataType: "json",
-					url: this.url + "/api/admin/login",
+					url: this.mUrl + "/api/admin/login",
 					header: {
 						"Content-Type": "application/json"
 					},
@@ -257,7 +254,7 @@
 
 						// 状态不是200的话就返回错误信息
 						if (res.statusCode != "200") {
-							that.popup(res.data.message)
+							that.popup(res.data.message);
 							return
 						}
 
@@ -268,7 +265,7 @@
 							var expiredIn = mData.expired_in
 							var refreshToken = mData.refresh_token
 							if (accessToken === "" || expiredIn === "") {
-								that.popup("登陆失败，未知错误")
+								that.popup("登陆失败，未知错误");
 								return
 							}
 
@@ -311,7 +308,7 @@
 				uni.request({
 					method: "GET",
 					dataType: "json",
-					url: this.url + "/api/admin/users/profiles",
+					url: this.mUrl + "/api/admin/users/profiles",
 					header: {
 						"Content-Type": "*/*",
 						"ADMIN-Authorization": accessToken
@@ -319,7 +316,7 @@
 					success: function(res) {
 						let data = res.data
 						if (res.statusCode !== 200) {
-							that.popup("获取个人资料失败\n" + data.message)
+							that.popup("获取个人资料失败\n" + data.message);
 							if (data.message === "Token 已过期或不存在") {
 								that.isLogin = false
 								that.setData("isLogin", "false")
@@ -332,7 +329,7 @@
 							// 检查 avatar 是否是绝对地址
 							that.avatar = data.data.avatar
 						} else {
-							that.avatar = that.url + data.data.avatar
+							that.avatar = that.getUrl() + data.data.avatar
 						}
 						that.username = data.data.username
 						that.nickname = data.data.nickname
@@ -347,7 +344,7 @@
 						that.createdDay = Math.floor(createdTime / 86400)
 						// 停止下拉刷新
 						uni.stopPullDownRefresh()
-						that.popup("欢迎回来，" + that.nickname, "success")
+						that.popup('欢迎回来', 'success')
 					},
 					fail: function(e) {
 						// 停止下拉刷新
@@ -392,7 +389,7 @@
 							uni.request({
 								method: "POST",
 								dataType: "json",
-								url: that.url + "/api/admin/logout",
+								url: that.mUrl + "/api/admin/logout",
 								header: {
 									"Content-Type": "*/*",
 									"ADMIN-Authorization": accessToken
@@ -461,15 +458,7 @@
 
 				}
 			},
-
-			/**
-			 * popup弹出层
-			 */
-			popup: function(message, type = "error") {
-				this.popupMessage = message
-				this.popupType = type
-				this.$refs.popup.open()
-			},
+			
 
 			/**
 			 * popup验证码输入Dialog确认事件
@@ -479,7 +468,18 @@
 				let code = res
 				// 登录
 				this.adminLogin(code)
-			}
+			},
+			
+			/**
+			 * popup弹出层
+			 */
+			popup: function(message, type = "error") {
+				if (type === "error") {
+					this.$refs.popup.error(message);
+				} else {
+					this.$refs.popup.success(message);
+				}
+			},
 		}
 	}
 </script>
