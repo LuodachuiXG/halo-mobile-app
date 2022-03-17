@@ -113,7 +113,7 @@
 				<view class="view-input-titleView">封面图：</view>
 				<!-- 判断图片地址是否是绝对地址 -->
 				<image :src="thumbnail.indexOf('http') < 0  ? 
-						url + thumbnail : thumbnail" style="width: 100%;"></image>
+						getUrl() + thumbnail : thumbnail" style="width: 100%;"></image>
 				<view class="right-button-input">
 					<input class="input" type="text" v-model="thumbnail" />
 					<image src="/static/images/picture.png" @click="selectAttachment('thumbnail')"></image>
@@ -188,8 +188,6 @@
 	export default {
 		data() {
 			return {
-				url: "",
-				accessToken: "",
 				post: {},
 				postId: 0,
 				categories: {},
@@ -258,9 +256,6 @@
 		},
 
 		mounted() {
-			// 获取token和url
-			this.url = this.getData("url");
-			this.accessToken = this.getData("access_token");
 			this.refreshPostData();
 		},
 
@@ -273,10 +268,10 @@
 				uni.request({
 					method: "GET",
 					dataType: "json",
-					url: this.url + "/api/admin/posts/" + this.postId,
+					url: this.getUrl() + "/api/admin/posts/" + this.postId,
 					header: {
 						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.accessToken
+						"ADMIN-Authorization": this.getAccessToken()
 					},
 					success: function(res) {
 						if (res.statusCode !== 200) {
@@ -294,6 +289,7 @@
 						that.post = res.data.data;
 						that.title = that.post.title;
 						that.slug = that.post.slug;
+						that.topped = that.post.topped;
 						that.createTimeStamp = that.post.createTime;
 						that.createTime = that.format(that.createTimeStamp);
 						that.disallowComment = that.post.disallowComment;
@@ -332,10 +328,10 @@
 				uni.request({
 					method: "GET",
 					dataType: "json",
-					url: this.url + "/api/admin/categories?more=false",
+					url: this.getUrl() + "/api/admin/categories?more=false",
 					header: {
 						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.accessToken
+						"ADMIN-Authorization": this.getAccessToken()
 					},
 					success: function(res) {
 						if (res.statusCode !== 200) {
@@ -392,10 +388,10 @@
 				uni.request({
 					method: "GET",
 					dataType: "json",
-					url: this.url + "/api/admin/tags?more=true",
+					url: this.getUrl() + "/api/admin/tags?more=true",
 					header: {
 						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.accessToken
+						"ADMIN-Authorization": this.getAccessToken()
 					},
 					success: function(res) {
 						if (res.statusCode !== 200) {
@@ -488,7 +484,7 @@
 				uni.request({
 					method: "POST",
 					dataType: "json",
-					url: this.url + "/api/admin/categories",
+					url: this.getUrl() + "/api/admin/categories",
 					header: {
 						"Content-Type": "application/json",
 						"ADMIN-Authorization": this.accessToken
@@ -562,10 +558,10 @@
 							uni.request({
 								method: "POST",
 								dataType: "json",
-								url: thatt.url + "/api/admin/tags",
+								url: thatt.getUrl() + "/api/admin/tags",
 								header: {
 									"Content-Type": "application/json",
-									"ADMIN-Authorization": thatt.accessToken
+									"ADMIN-Authorization": thatt.getAccessToken()
 								},
 								data: json,
 								success: function(res) {
@@ -640,10 +636,10 @@
 				uni.request({
 					method: "PUT",
 					dataType: "json",
-					url: that.url + "/api/admin/posts/" + that.post.id,
+					url: that.getUrl() + "/api/admin/posts/" + that.post.id,
 					header: {
 						"Content-Type": "application/json",
-						"ADMIN-Authorization": that.accessToken
+						"ADMIN-Authorization": that.getAccessToken()
 					},
 					data: json,
 					success: function(res) {

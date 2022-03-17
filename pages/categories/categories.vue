@@ -15,7 +15,7 @@
 			<view class="block-thumbnail">
 				<!-- 判断缩略图是否是绝对地址 -->
 				<image v-if="category.thumbnail" :src="category.thumbnail.indexOf('http') < 0  ? 
-					url + category.thumbnail : category.thumbnail"></image>
+					getUrl() + category.thumbnail : category.thumbnail"></image>
 			</view>
 
 			<!-- 分类目录的一些信息 -->
@@ -56,8 +56,6 @@
 	export default {
 		data() {
 			return {
-				accessToken: "",
-				url: "",
 				categories: [],
 
 				popupType: "",
@@ -66,9 +64,7 @@
 		},
 
 		mounted() {
-			// 获取token和url
-			this.url = this.getData("url")
-			this.accessToken = this.getData("access_token")
+			
 		},
 
 		// 下拉刷新事件
@@ -93,10 +89,10 @@
 				uni.request({
 					method: "GET",
 					dataType: "json",
-					url: this.url + "/api/admin/categories?more=true",
+					url: this.getUrl() + "/api/admin/categories?more=true",
 					header: {
 						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.accessToken
+						"ADMIN-Authorization": this.getAccessToken()
 					},
 					success: function(res) {
 						if (res.statusCode !== 200) {
@@ -151,11 +147,11 @@
 							uni.request({
 								method: "DELETE",
 								dataType: "json",
-								url: that.url + 
+								url: that.getUrl() + 
 									"/api/admin/categories/" + that.categories[i].id,
 								header: {
 									"Content-Type": "application/json",
-									"ADMIN-Authorization": that.accessToken
+									"ADMIN-Authorization": that.getAccessToken()
 								},
 								success: function(res) {
 									if (res.statusCode !== 200) {

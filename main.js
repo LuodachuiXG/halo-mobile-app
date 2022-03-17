@@ -5,7 +5,7 @@ import {
 	encrypt,
 	decrypt
 } from './utils/encryp.js';
-import Network from './network/Network.js';
+// import Network from './network/Network.js';
 
 
 Vue.config.productionTip = false
@@ -34,8 +34,21 @@ export function createApp() {
 
 Vue.prototype.encrypt = encrypt;
 Vue.prototype.decrypt = decrypt;
-Vue.prototype.$network = new Network();
+// Vue.prototype.$network = new Network();
 
+/**
+ * 获取博客 url
+ */
+Vue.prototype.getUrl = function() {
+	return this.getData("url");
+}
+
+/**
+ * 获取登录 accessToken
+ */
+Vue.prototype.getAccessToken = function() {
+	return this.getData("access_token");
+}
 
 Vue.prototype.toast = function(mTitle, mIcon = "none", mPosition = "bottom") {
 	uni.showToast({

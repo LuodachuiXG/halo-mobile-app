@@ -26,9 +26,6 @@
 	export default {
 		data() {
 			return {
-				accessToken: "",
-				url: "",
-
 				api_enabled: false,
 				api_access_key: "",
 
@@ -38,8 +35,6 @@
 		},
 
 		mounted() {
-			this.url = this.getData("url")
-			this.accessToken = this.getData("access_token")
 			this.refreshData()
 		},
 
@@ -60,10 +55,10 @@
 				uni.request({
 					method: "POST",
 					dataType: "json",
-					url: this.url + "/api/admin/options/map_view/keys",
+					url: this.getUrl() + "/api/admin/options/map_view/keys",
 					header: {
 						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.accessToken
+						"ADMIN-Authorization": this.getAccessToken()
 					},
 					data: array,
 					success: function(res) {
@@ -115,10 +110,10 @@
 				uni.request({
 					method: "POST",
 					dataType: "json",
-					url: this.url + "/api/admin/options/map_view/saving",
+					url: this.getUrl() + "/api/admin/options/map_view/saving",
 					header: {
 						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.accessToken
+						"ADMIN-Authorization": this.getAccessToken()
 					},
 					data: json,
 					success: function(res) {

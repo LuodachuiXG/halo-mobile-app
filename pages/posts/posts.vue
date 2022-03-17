@@ -15,7 +15,7 @@
 				<view class="block-thumbnail">
 					<!-- 判断缩略图是否是绝对地址 -->
 					<image v-if="post.thumbnail" :src="post.thumbnail.indexOf('http') < 0  ? 
-						url + post.thumbnail : post.thumbnail"></image>
+						getUrl() + post.thumbnail : post.thumbnail"></image>
 				</view>
 				
 				<!-- 文章总结 -->
@@ -109,9 +109,6 @@
 	export default {
 		data() {
 			return {
-				accessToken: "",
-				url: "",
-				
 				// 当前页数
 				page: 0,
 				// 总页数
@@ -132,10 +129,6 @@
 		},
 		
 		mounted() {
-			// 获取token和url
-			this.url = this.getData("url")
-			this.accessToken = this.getData("access_token")
-			
 			// 获取之前设置的每页几条数据
 			this.sizesIndex = this.getData("posts_sizesIndex")
 			if (this.sizesIndex.length <= 0) {
@@ -185,11 +178,11 @@
 				uni.request({
 					method: "GET",
 					dataType: "json",
-					url: this.url + "/api/admin/posts?page=" + this.page + 
+					url: this.getUrl() + "/api/admin/posts?page=" + this.page + 
 						"&size=" + this.size,
 					header: {
 						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.accessToken
+						"ADMIN-Authorization": this.getAccessToken()
 					},
 					success: function(res) {
 						if (res.statusCode !== 200) {
@@ -244,11 +237,11 @@
 								uni.request({
 									method: "DELETE",
 									dataType: "json",
-									url: that.url + 
+									url: that.getUrl() + 
 										"/api/admin/posts/" + post.id,
 									header: {
 										"Content-Type": "application/json",
-										"ADMIN-Authorization": that.accessToken
+										"ADMIN-Authorization": that.getAccessToken()
 									},
 									success: function(res) {
 										if (res.statusCode !== 200) {
@@ -321,11 +314,11 @@
 								uni.request({
 									method: "PUT",
 									dataType: "json",
-									url: that.url + 
+									url: that.getUrl() + 
 										"/api/admin/posts/" + that.posts[i].id + "/status/PUBLISHED",
 									header: {
 										"Content-Type": "application/json",
-										"ADMIN-Authorization": that.accessToken
+										"ADMIN-Authorization": that.getAccessToken()
 									},
 									success: function(res) {
 										if (res.statusCode !== 200) {
@@ -363,11 +356,11 @@
 								uni.request({
 									method: "PUT",
 									dataType: "json",
-									url: that.url + 
+									url: that.getUrl() + 
 										"/api/admin/posts/" + that.posts[i].id + "/status/RECYCLE",
 									header: {
 										"Content-Type": "application/json",
-										"ADMIN-Authorization": that.accessToken
+										"ADMIN-Authorization": that.getAccessToken()
 									},
 									success: function(res) {
 										if (res.statusCode !== 200) {

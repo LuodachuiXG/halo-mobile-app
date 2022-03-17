@@ -9,7 +9,7 @@
 				<view class="currentTheme tips-info" v-if="theme.activated">当前启用</view>
 			</view>
 			<view class="block-screenshots">
-				<image :src="url + theme.screenshots"></image>
+				<image :src="getUrl() + theme.screenshots"></image>
 			</view>
 			<view class="block-action">
 				<uni-row>
@@ -44,8 +44,6 @@
 	export default {
 		data() {
 			return {
-				url: "",
-				accessToken: "",
 				themes: null,
 
 				popupType: "",
@@ -53,8 +51,6 @@
 			}
 		},
 		mounted() {
-			this.url = this.getData("url")
-			this.accessToken = this.getData("access_token")
 			this.refreshData()
 		},
 
@@ -73,10 +69,10 @@
 				uni.request({
 					method: "GET",
 					dataType: "json",
-					url: this.url + "/api/admin/themes",
+					url: this.getUrl() + "/api/admin/themes",
 					header: {
 						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.accessToken
+						"ADMIN-Authorization": this.getAccessToken()
 					},
 					success: function(res) {
 						uni.stopPullDownRefresh();
@@ -129,10 +125,10 @@
 				uni.request({
 					method: "POST",
 					dataType: "json",
-					url: this.url + "/api/admin/themes/" + clickThemeId + "/activation",
+					url: this.getUrl() + "/api/admin/themes/" + clickThemeId + "/activation",
 					header: {
 						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.accessToken
+						"ADMIN-Authorization": this.getAccessToken()
 					},
 					success: function(res) {
 						if (res.statusCode !== 200) {
@@ -170,6 +166,7 @@
 				uni.showActionSheet({
 					itemList: ['删除'],
 					success: function(res) {
+						let thatt = that;
 						switch (res.tapIndex) {
 							// 删除
 							case 0:
@@ -180,32 +177,31 @@
 								}
 								uni.showModal({
 									title: '提示',
-									content: '确定要删除 ' + that.themes[i].name + ' 吗？',
+									content: '确定要删除 ' + thatt.themes[i].name + ' 吗？',
 									success: function(res) {
 										if (res.confirm) {
 											uni.request({
 												method: "DELETE",
 												dataType: "json",
-												url: that.url + "/api/admin/themes/" + 
-													that.themes[i].id + "?deleteSettings=true",
+												url: thatt.getUrl() + "/api/admin/themes/" + 
+													thatt.themes[i].id + "?deleteSettings=true",
 												header: {
 													"Content-Type": "application/json",
-													"ADMIN-Authorization": that.accessToken
+													"ADMIN-Authorization": thatt.getAccessToken()
 												},
 												success: function(res) {											if (res.statusCode !== 200) {
-														that.popup("删除失败")
+														thatt.popup("删除失败")
 														// 登录过期
-														if (that
-															.isExpiredByRequest(res)) {
-															that.setData("isLogin","false")
+														if (thatt.isExpiredByRequest(res)) {
+															thatt.setData("isLogin","false")
 															uni.reLaunch({
 																url: "../../me/me"
 															});
 														}
 														return;
 													}
-													that.popup("删除成功", "success");
-													that.refreshData();
+													thatt.popup("删除成功", "success");
+													thatt.refreshData();
 												},
 												fail: function(e) {
 													uni.stopPullDownRefresh()

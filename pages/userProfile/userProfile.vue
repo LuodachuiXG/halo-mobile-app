@@ -36,9 +36,6 @@
 	export default {
 		data() {
 			return {
-				accessToken: "",
-				url: "",
-				
 				username: "",
 				nickname: "",
 				email: "",
@@ -51,8 +48,6 @@
 			}
 		},
 		mounted() {
-			this.url = this.getData("url")
-			this.accessToken = this.getData("access_token")
 			this.refreshData()
 		},
 		
@@ -71,10 +66,10 @@
 				uni.request({
 					method: "GET",
 					dataType: "json",
-					url: this.url + "/api/admin/statistics/user",
+					url: this.getUrl() + "/api/admin/statistics/user",
 					header: {
 						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.accessToken
+						"ADMIN-Authorization": this.getAccessToken()
 					},
 					success: function(res) {
 						uni.stopPullDownRefresh()
@@ -127,10 +122,10 @@
 				uni.request({
 					method: "PUT",
 					dataType: "json",
-					url: this.url + "/api/admin/users/profiles",
+					url: this.getUrl() + "/api/admin/users/profiles",
 					header: {
 						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.accessToken
+						"ADMIN-Authorization": this.getAccessToken()
 					},
 					data: json,
 					success: function(res) {

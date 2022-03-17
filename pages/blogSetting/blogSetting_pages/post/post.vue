@@ -75,9 +75,6 @@
 	export default {
 		data() {
 			return {
-				accessToken: "",
-				url: "",
-
 				post_index_sort: "",
 				post_index_sortText: ["创建时间", "最后编辑时间", "点击量"],
 				post_index_sortValue: ["createTime", "editTime", "visits"],
@@ -107,8 +104,6 @@
 		},
 
 		mounted() {
-			this.url = this.getData("url")
-			this.accessToken = this.getData("access_token")
 			this.refreshData()
 		},
 
@@ -132,10 +127,10 @@
 				uni.request({
 					method: "POST",
 					dataType: "json",
-					url: this.url + "/api/admin/options/map_view/keys",
+					url: this.getUrl() + "/api/admin/options/map_view/keys",
 					header: {
 						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.accessToken
+						"ADMIN-Authorization": this.getAccessToken()
 					},
 					data: array,
 					success: function(res) {
@@ -233,10 +228,10 @@
 				uni.request({
 					method: "POST",
 					dataType: "json",
-					url: this.url + "/api/admin/options/map_view/saving",
+					url: this.getUrl() + "/api/admin/options/map_view/saving",
 					header: {
 						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.accessToken
+						"ADMIN-Authorization": this.getAccessToken()
 					},
 					data: json,
 					success: function(res) {

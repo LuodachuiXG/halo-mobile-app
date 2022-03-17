@@ -12,26 +12,26 @@
 					</picker>
 				</view>
 				<text class="view-input-text">
-					{{ url + "/" + post_permalink_typeTips + path_suffix}}
+					{{ getUrl() + "/" + post_permalink_typeTips + path_suffix}}
 				</text>
 			</view>
 			
 			<view class="view-input">
 				<view class="view-input-titleView">归档前缀：</view>
 				<input class="input" type="text" v-model="archives_prefix" @input="refreshPostLinkTypeTips"/>
-				<text class="view-input-text">{{ url + "/" + archives_prefix + path_suffix}}</text>
+				<text class="view-input-text">{{ getUrl() + "/" + archives_prefix + path_suffix}}</text>
 			</view>
 
 			<view class="view-input">
 				<view class="view-input-titleView">分类前缀：</view>
 				<input class="input" type="text" v-model="categories_prefix" />
-				<text class="view-input-text">{{ url + "/" + categories_prefix + "/" + "{slug}" + path_suffix}}</text>
+				<text class="view-input-text">{{ getUrl() + "/" + categories_prefix + "/" + "{slug}" + path_suffix}}</text>
 			</view>
 			
 			<view class="view-input">
 				<view class="view-input-titleView">标签前缀：</view>
 				<input class="input" type="text" v-model="tags_prefix" />
-				<text class="view-input-text">{{ url + "/" + tags_prefix + "/" + "{slug}" + path_suffix}}</text>
+				<text class="view-input-text">{{ getUrl() + "/" + tags_prefix + "/" + "{slug}" + path_suffix}}</text>
 			</view>
 			
 			<view class="view-input">
@@ -42,33 +42,33 @@
 					</picker>
 				</view>
 				<text class="view-input-text">
-					{{ (sheet_permalink_typeIndex === 0 ? url + "/" + sheet_prefix + "/{slug}" : 
-						url +  "/{slug}") + path_suffix}}
+					{{ (sheet_permalink_typeIndex === 0 ? etUrl() + "/" + sheet_prefix + "/{slug}" : 
+						getUrl() +  "/{slug}") + path_suffix}}
 				</text>
 			</view>
 			
 			<view class="view-input" v-if="sheet_permalink_typeIndex === 0">
 				<view class="view-input-titleView">自定义页面前缀：</view>
 				<input class="input" type="text" v-model="sheet_prefix" />
-				<text class="view-input-text">{{ url + "/" + sheet_prefix + "/{slug}" + path_suffix}}</text>
+				<text class="view-input-text">{{ getUrl() + "/" + sheet_prefix + "/{slug}" + path_suffix}}</text>
 			</view>
 
 			<view class="view-input">
 				<view class="view-input-titleView">友情链接页面前缀：</view>
 				<input class="input" type="text" v-model="links_prefix" />
-				<text class="view-input-text">{{ url + "/" + links_prefix + path_suffix}}</text>
+				<text class="view-input-text">{{ getUrl() + "/" + links_prefix + path_suffix}}</text>
 			</view>
 			
 			<view class="view-input">
 				<view class="view-input-titleView">图库页面前缀：</view>
 				<input class="input" type="text" v-model="photos_prefix" />
-				<text class="view-input-text">{{ url + "/" + photos_prefix + path_suffix}}</text>
+				<text class="view-input-text">{{ getUrl() + "/" + photos_prefix + path_suffix}}</text>
 			</view>
 			
 			<view class="view-input">
 				<view class="view-input-titleView">日志页面前缀：</view>
 				<input class="input" type="text" v-model="journals_prefix" />
-				<text class="view-input-text">{{ url + "/" + journals_prefix + path_suffix}}</text>
+				<text class="view-input-text">{{ getUrl() + "/" + journals_prefix + path_suffix}}</text>
 			</view>
 			
 			<view class="view-input">
@@ -86,9 +86,6 @@
 	export default {
 		data() {
 			return {
-				accessToken: "",
-				url: "",
-				
 				post_permalink_type: "",
 				post_permalink_typeText: ["默认", "年份型", "年月型", "年月日型", "ID 型", "ID 别名型"],
 				post_permalink_typeValue: ["DEFAULT", "YEAR", "DATE", "DAY", "ID", "ID_SLUG"],
@@ -117,8 +114,6 @@
 		},
 
 		mounted() {
-			this.url = this.getData("url")
-			this.accessToken = this.getData("access_token")
 			this.refreshData()
 		},
 
@@ -142,10 +137,10 @@
 				uni.request({
 					method: "POST",
 					dataType: "json",
-					url: this.url + "/api/admin/options/map_view/keys",
+					url: this.getUrl() + "/api/admin/options/map_view/keys",
 					header: {
 						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.accessToken
+						"ADMIN-Authorization": this.getAccessToken()
 					},
 					data: array,
 					success: function(res) {
@@ -268,10 +263,10 @@
 				uni.request({
 					method: "POST",
 					dataType: "json",
-					url: this.url + "/api/admin/options/map_view/saving",
+					url: this.getUrl() + "/api/admin/options/map_view/saving",
 					header: {
 						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.accessToken
+						"ADMIN-Authorization": this.getAccessToken()
 					},
 					data: json,
 					success: function(res) {

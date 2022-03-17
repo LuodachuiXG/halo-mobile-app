@@ -116,9 +116,9 @@
 
 		mounted: function() {
 			// 恢复之前保存的数据
-			this.url = this.getData("url")
-			this.username = this.getData("username")
-			this.password = this.getData("password")
+			this.url = this.getUrl();
+			this.username = this.getData("username");
+			this.password = this.getData("password");
 
 			// 判断个人信息是否过期，没过期就加载个人资料
 			if (!this.isExpired()) {
@@ -303,7 +303,7 @@
 			 * 加载用户信息
 			 */
 			loadAdminInfo: function() {
-				let accessToken = this.getData("access_token")
+				let accessToken = this.getAccessToken()
 				console.log(accessToken)
 				let that = this
 

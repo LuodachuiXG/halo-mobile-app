@@ -10,8 +10,6 @@
 	export default {
 		data() {
 			return {
-				url: "",
-				accessToken: "",
 				themeId: "",
 				
 				
@@ -26,8 +24,6 @@
 		},
 		
 		mounted() {
-			this.url = this.getData("url")
-			this.accessToken = this.getData("access_token")
 			this.refreshData()
 		},
 		
@@ -47,10 +43,10 @@
 				uni.request({
 					method: "GET",
 					dataType: "json",
-					url: this.url + "/api/admin/themes/" + this.themeId + "/configurations",
+					url: this.getUrl() + "/api/admin/themes/" + this.themeId + "/configurations",
 					header: {
 						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.accessToken
+						"ADMIN-Authorization": this.getAccessToken()
 					},
 					success: function(res) {
 						uni.stopPullDownRefresh();

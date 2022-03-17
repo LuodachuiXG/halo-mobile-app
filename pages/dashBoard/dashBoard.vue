@@ -115,8 +115,6 @@
 	export default {
 		data() {
 			return {
-				url: "",
-				accessToken: "",
 				// popup弹窗类型和信息
 				popupType: "error",
 				popupMessage: "",
@@ -149,10 +147,6 @@
 				return
 			}
 
-			// 获取数据
-			this.accessToken = this.getData("access_token")
-			this.url = this.getData("url")
-
 			// 加载博客统计信息
 			this.loadBlogStatistics()
 			// 加载最近文章
@@ -179,10 +173,10 @@
 				uni.request({
 					method: "GET",
 					dataType: "json",
-					url: this.url + "/api/admin/statistics",
+					url: this.getUrl() + "/api/admin/statistics",
 					header: {
 						"Content-Type": "*/*",
-						"ADMIN-Authorization": this.accessToken
+						"ADMIN-Authorization": this.getAccessToken()
 					},
 					success: function(res) {
 						let data = res.data.data
@@ -228,10 +222,10 @@
 				uni.request({
 					method: "GET",
 					dataType: "json",
-					url: this.url + "/api/admin/posts/latest",
+					url: this.getUrl() + "/api/admin/posts/latest",
 					header: {
 						"Content-Type": "*/*",
-						"ADMIN-Authorization": this.accessToken
+						"ADMIN-Authorization": this.getAccessToken()
 					},
 					data: {
 						top: "10"
@@ -265,7 +259,7 @@
 			 * @param {Object} i
 			 */
 			selectPost: function(i) {
-				let url = this.url + this.posts[i].fullPath
+				let url = this.getUrl() + this.posts[i].fullPath
 				this.openURL(url)
 			},
 			

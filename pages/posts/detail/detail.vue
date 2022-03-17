@@ -13,8 +13,6 @@
 		},
 		data() {
 			return {
-				accessToken: "",
-				url: "",
 				postUrl: "",
 
 				markdownData: {},
@@ -28,10 +26,6 @@
 		},
 
 		mounted() {
-			// 获取token和url
-			this.url = this.getData("url")
-			this.accessToken = this.getData("access_token")
-			
 			this.refreshData()
 		},
 
@@ -55,10 +49,10 @@
 				uni.request({
 					method: "GET",
 					dataType: "json",
-					url: this.url + "/api/admin/posts/" + this.postId,
+					url: this.getUrl() + "/api/admin/posts/" + this.postId,
 					header: {
 						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.accessToken
+						"ADMIN-Authorization": this.getAccessToken()
 					},
 					success: function(res) {
 						console.log(res)
@@ -76,7 +70,7 @@
 						
 						// 解析 markdown
 						that.markdownData = markdownFunc(res.data.data.originalContent, 'markdown');
-						that.postUrl = that.url + res.data.data.fullPath;
+						that.postUrl = that.getUrl() + res.data.data.fullPath;
 						uni.stopPullDownRefresh()
 					},
 					fail: function(e) {

@@ -67,9 +67,6 @@
 	export default {
 		data() {
 			return {
-				accessToken: "",
-				url: "",
-				
 				comment_gravatar_default: "",
 				comment_gravatar_defaultText: ["默认", "匿名者", "抽象几何图形", "小怪物", "Wavatar", "复古", "机器人", "不显示头像"],
 				comment_gravatar_defaultValue: ["", "mm", "identicon", "monsterid", "wavatar", "retro", "robohash", "blank"],
@@ -90,8 +87,6 @@
 		},
 
 		mounted() {
-			this.url = this.getData("url")
-			this.accessToken = this.getData("access_token")
 			this.refreshData()
 		},
 
@@ -115,10 +110,10 @@
 				uni.request({
 					method: "POST",
 					dataType: "json",
-					url: this.url + "/api/admin/options/map_view/keys",
+					url: this.getUrl() + "/api/admin/options/map_view/keys",
 					header: {
 						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.accessToken
+						"ADMIN-Authorization": this.getAccessToken()
 					},
 					data: array,
 					success: function(res) {
@@ -220,10 +215,10 @@
 				uni.request({
 					method: "POST",
 					dataType: "json",
-					url: this.url + "/api/admin/options/map_view/saving",
+					url: this.getUrl() + "/api/admin/options/map_view/saving",
 					header: {
 						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.accessToken
+						"ADMIN-Authorization": this.getAccessToken()
 					},
 					data: json,
 					success: function(res) {

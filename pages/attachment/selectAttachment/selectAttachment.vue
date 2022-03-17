@@ -29,9 +29,6 @@
 	export default {
 		data() {
 			return {
-				accessToken: "",
-				url: "",
-
 				// 总页数
 				pages: 0,
 				// 总附件数
@@ -58,10 +55,6 @@
 		},
 
 		mounted() {
-			// 获取token和url
-			this.url = this.getData("url")
-			this.accessToken = this.getData("access_token")
-			
 			// 获取之前设置的每页几条数据
 			this.sizesIndex = this.getData("selectAttachment_sizesIndex")
 			if (this.sizesIndex.length <= 0) {
@@ -112,10 +105,10 @@
 				uni.request({
 					method: "GET",
 					dataType: "json",
-					url: this.url + "/api/admin/attachments",
+					url: this.getUrl() + "/api/admin/attachments",
 					header: {
 						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.accessToken
+						"ADMIN-Authorization": this.getAccessToken()
 					},
 					data: {
 						page: this.currentPage,
@@ -145,7 +138,7 @@
 							let thumbPath = that.content[i].thumbPath
 							// 如果图片地址是相对地址，就加上网站URL
 							if (item.thumbPath.indexOf("http") === -1) {
-								that.content[i].url = that.url + thumbPath
+								that.content[i].url = that.getUrl() + thumbPath
 							} else {
 								that.content[i].url = thumbPath
 							}

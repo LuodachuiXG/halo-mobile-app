@@ -58,8 +58,6 @@
 	export default {
 		data() {
 			return {
-				accessToken: "",
-				url: "",
 				categoryId: "",
 				// 分类目录页面的分类在数组中的索引
 				categoryIndex: 0,
@@ -138,9 +136,7 @@
 			}
 		},
 		mounted() {
-			// 获取token和url
-			this.url = this.getData("url")
-			this.accessToken = this.getData("access_token")
+			
 		},
 
 		methods: {
@@ -184,10 +180,10 @@
 					uni.request({
 						method: "POST",
 						dataType: "json",
-						url: this.url + "/api/admin/categories",
+						url: this.getUrl() + "/api/admin/categories",
 						header: {
 							"Content-Type": "application/json",
-							"ADMIN-Authorization": this.accessToken
+							"ADMIN-Authorization": this.getAccessToken()
 						},
 						data: json,
 						success: function(res) {
@@ -226,10 +222,10 @@
 					uni.request({
 						method: "PUT",
 						dataType: "json",
-						url: this.url + "/api/admin/categories/" + this.categoryId,
+						url: this.getUrl() + "/api/admin/categories/" + this.categoryId,
 						header: {
 							"Content-Type": "application/json",
-							"ADMIN-Authorization": this.accessToken
+							"ADMIN-Authorization": this.getAccessToken()
 						},
 						data: json,
 						success: function(res) {
