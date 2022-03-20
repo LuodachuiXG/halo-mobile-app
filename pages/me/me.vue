@@ -84,6 +84,10 @@
 </template>
 
 <script>
+	import {
+		getUserProfiles,
+		logout
+	} from "../../common/api.js";
 	export default {
 		data() {
 			return {
@@ -300,62 +304,37 @@
 			 * 加载用户信息
 			 */
 			loadAdminInfo: function() {
-				let accessToken = this.getAccessToken()
-				console.log(accessToken)
-				let that = this
-
-				// 获取用户资料
-				uni.request({
-					method: "GET",
-					dataType: "json",
-					url: this.mUrl + "/api/admin/users/profiles",
-					header: {
-						"Content-Type": "*/*",
-						"ADMIN-Authorization": accessToken
-					},
-					success: function(res) {
-						let data = res.data
-						if (res.statusCode !== 200) {
-							that.popup("获取个人资料失败\n" + data.message);
-							if (data.message === "Token 已过期或不存在") {
-								that.isLogin = false
-								that.setData("isLogin", "false")
-							}
-							return
-						}
-
-						// 设置个人数据到变量
-						if (data.data.avatar.indexOf("http") != -1) {
-							// 检查 avatar 是否是绝对地址
-							that.avatar = data.data.avatar
-						} else {
-							that.avatar = that.getUrl() + data.data.avatar
-						}
-						that.username = data.data.username
-						that.nickname = data.data.nickname
-						that.email = data.data.email
-						that.createTime = data.data.createTime
-						that.updateTime = data.data.updateTime
-						that.description = data.data.description
-
-						// 计算用户已经创建多少天了
-						let now = Number(Date.parse(new Date()))
-						let createdTime = (now - Number(that.createTime)) / 1000
-						that.createdDay = Math.floor(createdTime / 86400)
-						// 停止下拉刷新
-						uni.stopPullDownRefresh()
-						that.popup('欢迎回来', 'success')
-					},
-					fail: function(e) {
-						// 停止下拉刷新
-						uni.stopPullDownRefresh()
-						uni.showModal({
-							title: "获取个人资料失败",
-							content: e.errMsg,
-							showCancel: false
-						})
+				let that = this;
+				
+				getUserProfiles().then(data => {
+					// 设置个人数据到变量
+					if (data.avatar.indexOf("http") != -1) {
+						// 检查 avatar 是否是绝对地址
+						that.avatar = data.avatar
+					} else {
+						that.avatar = that.getUrl() + data.avatar
 					}
-				})
+					that.username = data.username
+					that.nickname = data.nickname
+					that.email = data.email
+					that.createTime = data.createTime
+					that.updateTime = data.updateTime
+					that.description = data.description
+					
+					// 计算用户已经创建多少天了
+					let now = Number(Date.parse(new Date()))
+					let createdTime = (now - Number(that.createTime)) / 1000
+					that.createdDay = Math.floor(createdTime / 86400)
+					// 停止下拉刷新
+					uni.stopPullDownRefresh()
+					that.popup('欢迎回来', 'success')
+				}).catch(err => {
+					uni.stopPullDownRefresh();
+					uni.showModal({
+						title: "获取个人资料失败",
+						content: err
+					});
+				});
 			},
 
 			/**
@@ -386,31 +365,22 @@
 					success: function(res) {
 						if (res.tapIndex === 0) {
 							// 注销，清除会话
-							uni.request({
-								method: "POST",
-								dataType: "json",
-								url: that.mUrl + "/api/admin/logout",
-								header: {
-									"Content-Type": "*/*",
-									"ADMIN-Authorization": accessToken
-								},
-								complete: function(e) {
-									// 清除本地登录数据
-									that.isLogin = false
-									that.accessToken = ""
-									that.avatar = ""
-									that.username = ""
-									that.nickname = ""
-									that.email = ""
-									that.createTime = ""
-									that.createdDay = ""
-									that.updateTime = ""
-									that.description = ""
-									that.setData("expired_date", "0")
-									that.setData("isLogin", "false")
-									that.setData("access_token", "")
-								}
-							})
+							logout().then(data => {
+								// 清除本地登录数据
+								that.isLogin = false
+								that.accessToken = ""
+								that.avatar = ""
+								that.username = ""
+								that.nickname = ""
+								that.email = ""
+								that.createTime = ""
+								that.createdDay = ""
+								that.updateTime = ""
+								that.description = ""
+								that.setData("expired_date", "0")
+								that.setData("isLogin", "false")
+								that.setData("access_token", "")
+							});
 						} else {
 							// #ifdef APP-PLUS
 							if (uni.getSystemInfoSync().platform == 'ios') {

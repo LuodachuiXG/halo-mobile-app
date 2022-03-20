@@ -6,7 +6,6 @@ import {
 	encrypt,
 	decrypt
 } from './utils/encryp.js';
-// import Network from './network/Network.js';
 
 Vue.use(uView);
 
@@ -18,6 +17,8 @@ const app = new Vue({
 	...App
 })
 app.$mount()
+
+export default app;
 // #endif
 
 // #ifdef VUE3
@@ -36,7 +37,6 @@ export function createApp() {
 
 Vue.prototype.encrypt = encrypt;
 Vue.prototype.decrypt = decrypt;
-// Vue.prototype.$network = new Network();
 
 /**
  * 获取博客 url
@@ -146,7 +146,9 @@ Vue.prototype.openURL = function(url) {
  * @param {Object} res
  */
 Vue.prototype.isExpiredByRequest = function(res) {
-	if (res.data.message === undefined || res.data.message === "Token 已过期或不存在") {
+	if (res.data.message === "未登录，请登录后访问" || 
+		res.data.message === "Token 已过期或不存在" ||
+		res.data.message === undefined) {
 		// token已经过期，将本地登录状态更改
 		this.setData("isLogin", "false")
 		return true;

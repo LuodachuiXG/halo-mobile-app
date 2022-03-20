@@ -70,6 +70,10 @@
 </template>
 
 <script>
+	import {
+		getOptionsByMapViewsKeys,
+		updateOptionsByMapViews
+	} from "../../../../common/api.js";
 	export default {
 		data() {
 			return {
@@ -120,57 +124,31 @@
 				let array = ["post_index_sort", "post_index_page_size", "post_archives_page_size",
 					"rss_content_type", "rss_page_size", "post_summary_length", "recycled_post_cleaning_enabled",
 					"recycled_post_retention_time", "recycled_post_retention_timeunit"
-				]
-				let that = this
-				uni.request({
-					method: "POST",
-					dataType: "json",
-					url: this.getUrl() + "/api/admin/options/map_view/keys",
-					header: {
-						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.getAccessToken()
-					},
-					data: array,
-					success: function(res) {
-						uni.stopPullDownRefresh()
-						if (res.statusCode !== 200) {
-							that.popup("获取数据失败")
-							// 登录过期
-							if (that.isExpiredByRequest(res)) {
-								that.setData("isLogin", "false")
-								uni.reLaunch({
-									url: "../../me/me"
-								})
-							}
-							return
-						}
-
-						let data = res.data.data
-						that.post_index_sort = data.post_index_sort
-						// 把服务端的数据和post_index_sortValue比对，获得对应的选项索引
-						that.post_index_sortIndex = that.post_index_sortValue.indexOf(that.post_index_sort)
-						that.post_index_page_size = data.post_index_page_size
-						that.post_archives_page_size = data.post_archives_page_size
-						that.rss_content_type = data.rss_content_type
-						that.rss_content_typeIndex = that.rss_content_typeValue.indexOf(that.rss_content_type)
-						that.rss_page_size = data.rss_page_size
-						that.post_summary_length = data.post_summary_length
-						that.recycled_post_cleaning_enabled = data.recycled_post_cleaning_enabled
-						that.recycled_post_retention_time = data.recycled_post_retention_time
-						that.recycled_post_retention_timeunit = data.recycled_post_retention_timeunit
-						that.recycled_post_retention_timeunitIndex = 
-							that.recycled_post_retention_timeunitValue.indexOf(that.recycled_post_retention_timeunit)
-						
-					
-					},
-					fail: function(e) {
-						uni.stopPullDownRefresh()
-						uni.showModal({
-							title: "获取数据失败",
-							content: e.errMsg
-						})
-					}
-				})
+				];
+				let that = this;
+				getOptionsByMapViewsKeys(array).then(data => {
+					that.post_index_sort = data.post_index_sort
+					// 把服务端的数据和post_index_sortValue比对，获得对应的选项索引
+					that.post_index_sortIndex = that.post_index_sortValue.indexOf(that.post_index_sort)
+					that.post_index_page_size = data.post_index_page_size
+					that.post_archives_page_size = data.post_archives_page_size
+					that.rss_content_type = data.rss_content_type
+					that.rss_content_typeIndex = that.rss_content_typeValue.indexOf(that.rss_content_type)
+					that.rss_page_size = data.rss_page_size
+					that.post_summary_length = data.post_summary_length
+					that.recycled_post_cleaning_enabled = data.recycled_post_cleaning_enabled
+					that.recycled_post_retention_time = data.recycled_post_retention_time
+					that.recycled_post_retention_timeunit = data.recycled_post_retention_timeunit
+					that.recycled_post_retention_timeunitIndex = 
+						that.recycled_post_retention_timeunitValue.indexOf(that.recycled_post_retention_timeunit)
+					uni.stopPullDownRefresh();
+				}).catch(err => {
+					uni.stopPullDownRefresh();
+					uni.showModal({
+						title: "获取数据失败",
+						content: err
+					});
+				});
 			},
 
 			/**
@@ -221,36 +199,19 @@
 					"recycled_post_retention_time": this.recycled_post_retention_time,
 					"recycled_post_retention_timeunit": 
 						this.recycled_post_retention_timeunitValue[this.recycled_post_retention_timeunitIndex]
-				}
-				let that = this
-				uni.request({
-					method: "POST",
-					dataType: "json",
-					url: this.getUrl() + "/api/admin/options/map_view/saving",
-					header: {
-						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.getAccessToken()
-					},
-					data: json,
-					success: function(res) {
-						if (res.statusCode !== 200) {
-							that.popup("保存失败：" + res.statusCode)
-							// 登录过期
-							if (that.isExpiredByRequest(res)) {
-								that.popup("保存失败，登录已过期，请重新登陆")
-							}
-							return
-						}
-						that.popup("保存成功", "success")
-						that.refreshData()
-					},
-					fail: function(e) {
-						uni.showModal({
-							title: "保存数据失败",
-							content: e.errMsg
-						})
-					}
-				})
+				};
+				let that = this;
+				
+				updateOptionsByMapViews(json).then(data => {
+					that.popup("保存成功", "success");
+					that.refreshData();
+				}).catch(err => {
+					uni.stopPullDownRefresh();
+					uni.showModal({
+						title: "保存数据失败",
+						content: err
+					});
+				});
 			},
 
 

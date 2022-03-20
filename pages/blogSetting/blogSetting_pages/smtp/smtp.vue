@@ -95,6 +95,11 @@
 </template>
 
 <script>
+	import {
+		getOptionsByMapViewsKeys,
+		updateOptionsByMapViews,
+		sendMailTest
+	} from "../../../../common/api.js";
 	export default {
 		data() {
 			return {
@@ -137,48 +142,25 @@
 			 */
 			refreshData: function() {
 				let array = ["email_enabled", "email_host", "email_protocol", "email_ssl_port",
-					"email_username", "email_password", "email_from_name"]
-				let that = this
-				uni.request({
-					method: "POST",
-					dataType: "json",
-					url: this.getUrl() + "/api/admin/options/map_view/keys",
-					header: {
-						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.getAccessToken()
-					},
-					data: array,
-					success: function(res) {
-						uni.stopPullDownRefresh()
-						if (res.statusCode !== 200) {
-							that.popup("获取数据失败")
-							// 登录过期
-							if (that.isExpiredByRequest(res)) {
-								that.setData("isLogin", "false")
-								uni.reLaunch({
-									url: "../../me/me"
-								})
-							}
-							return
-						}
-						let data = res.data.data
-
-						that.email_enabled = data.email_enabled
-						that.email_host = data.email_host
-						that.email_protocol = data.email_protocol
-						that.email_ssl_port = data.email_ssl_port
-						that.email_username = data.email_username
-						that.email_password = data.email_password
-						that.email_from_name = data.email_from_name
-					},
-					fail: function(e) {
-						uni.stopPullDownRefresh()
-						uni.showModal({
-							title: "获取数据失败",
-							content: e.errMsg
-						})
-					}
-				})
+					"email_username", "email_password", "email_from_name"];
+				let that = this;
+				
+				getOptionsByMapViewsKeys(array).then(data => {
+					that.email_enabled = data.email_enabled
+					that.email_host = data.email_host
+					that.email_protocol = data.email_protocol
+					that.email_ssl_port = data.email_ssl_port
+					that.email_username = data.email_username
+					that.email_password = data.email_password
+					that.email_from_name = data.email_from_name
+					uni.stopPullDownRefresh();
+				}).catch(err => {
+					uni.stopPullDownRefresh();
+					uni.showModal({
+						title: "获取数据失败",
+						content: err
+					});
+				});
 			},
 
 			/**
@@ -196,30 +178,30 @@
 			saving: function() {
 				if (this.email_enabled) {
 					if (this.email_host.length <= 0) {
-						this.popup("SMTP 地址不能为空")
+						this.popup("SMTP 地址不能为空");
 						return
 					}
 					if (this.email_protocol.length <= 0) {
-						this.popup("发送协议不能为空")
+						this.popup("发送协议不能为空");
 						return
 					}
 					if (this.email_ssl_port.length <= 0) {
-						this.popup("SSL 端口不能为空")
+						this.popup("SSL 端口不能为空");
 						return
 					}
 					if (this.email_username.length <= 0) {
-						this.popup("邮箱账号不能为空")
+						this.popup("邮箱账号不能为空");
 						return
 					}
 					if (this.email_password.length <= 0) {
-						this.popup("邮箱密码不能为空")
+						this.popup("邮箱密码不能为空");
 						return
 					}
 					if (this.email_from_name.length <= 0) {
-						this.popup("发件人不能为空")
+						this.popup("发件人不能为空");
 						return
 					}
-				}
+				};
 				let json = {
 					"email_enabled": this.email_enabled,
 					"email_host": this.email_host,
@@ -228,36 +210,19 @@
 					"email_username": this.email_username,
 					"email_password": this.email_password,
 					"email_from_name": this.email_from_name
-				}
-				let that = this
-				uni.request({
-					method: "POST",
-					dataType: "json",
-					url: this.getUrl() + "/api/admin/options/map_view/saving",
-					header: {
-						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.getAccessToken()
-					},
-					data: json,
-					success: function(res) {
-						if (res.statusCode !== 200) {
-							that.popup("保存失败：" + res.statusCode)
-							// 登录过期
-							if (that.isExpiredByRequest(res)) {
-								that.popup("保存失败，登录已过期，请重新登陆")
-							}
-							return
-						}
-						that.popup("保存成功", "success")
-						that.refreshData()
-					},
-					fail: function(e) {
-						uni.showModal({
-							title: "保存数据失败",
-							content: e.errMsg
-						})
-					}
-				})
+				};
+				let that = this;
+				
+				updateOptionsByMapViews(json).then(data => {
+					that.popup("保存成功", "success");
+					that.refreshData();
+				}).catch(err => {
+					uni.stopPullDownRefresh();
+					uni.showModal({
+						title: "保存数据失败",
+						content: err
+					});
+				});
 			},
 			
 			
@@ -265,42 +230,21 @@
 			 * 发送邮件按钮事件
 			 */
 			sendEmail: function() {
-				let that = this
+				let that = this;
 				if (this.to.length <= 0 || this.subject.length <=0 || this.content.length <= 0) {
 					this.popup("请将内容填写完整");
 					return ;
 				}
-				uni.request({
-					method: "POST",
-					dataType: "json",
-					url: this.getUrl() + "/api/admin/mails/test",
-					header: {
-						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.getAccessToken()
-					},
-					data: {
-						to: that.to,
-						subject: that.subject,
-						content: that.content
-					},
-					success: function(res) {
-						if (res.statusCode !== 200) {
-							that.popup("发送失败：" + res.statusCode)
-							// 登录过期
-							if (that.isExpiredByRequest(res)) {
-								that.popup("发送失败，登录已过期，请重新登陆")
-							}
-							return
-						}
-						that.popup(res.data.message, "success")
-					},
-					fail: function(e) {
-						uni.showModal({
-							title: "发送邮件失败",
-							content: e.errMsg
-						})
-					}
-				})
+				
+				sendMailTest(this.to, this.subject, this.content).then(data => {
+					that.popup("发送成功", "success");
+				}).catch(err => {
+					uni.stopPullDownRefresh();
+					uni.showModal({
+						title: "发送邮件失败",
+						content: err
+					});
+				});
 			},
 
 			/**

@@ -26,6 +26,9 @@
 </template>
 
 <script>
+	import {
+		getAttachments,
+	} from "../../../common/api.js";
 	export default {
 		data() {
 			return {
@@ -100,67 +103,39 @@
 			refreshData: function() {
 				uni.showLoading({
 					title: "正在加载"
-				})
-				let that = this
-				uni.request({
-					method: "GET",
-					dataType: "json",
-					url: this.getUrl() + "/api/admin/attachments",
-					header: {
-						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.getAccessToken()
-					},
-					data: {
-						page: this.currentPage,
-						size: this.size
-					},
-					success: function(res) {
-						if (res.statusCode !== 200) {
-							that.popup("获取数据失败")
-							// 登录过期
-							if (that.isExpiredByRequest(res)) {
-								that.setData("isLogin", "false")
-								uni.reLaunch({
-									url: "../../me/me"
-								})
-							}
-							return
+				});
+				let that = this;
+				getAttachments(this.currentPage, this.size).then(data => {
+					that.pages = data.pages;
+					that.total = data.total;
+					that.content = data.content;
+					
+					for (let i = 0; i < that.content.length; i++) {
+						let item = that.content[i];
+						let thumbPath = that.content[i].thumbPath;
+						// 如果图片地址是相对地址，就加上网站URL
+						if (item.thumbPath.indexOf("http") === -1) {
+							that.content[i].url = that.getUrl() + thumbPath;
+						} else {
+							that.content[i].url = thumbPath;
 						}
-
-						let data = res.data.data
-						that.pages = data.pages
-						that.total = data.total
-						that.content = data.content
-
-
-						for (let i = 0; i < that.content.length; i++) {
-							let item = that.content[i]
-							let thumbPath = that.content[i].thumbPath
-							// 如果图片地址是相对地址，就加上网站URL
-							if (item.thumbPath.indexOf("http") === -1) {
-								that.content[i].url = that.getUrl() + thumbPath
-							} else {
-								that.content[i].url = thumbPath
-							}
-
-							// 如果当前附件不是图片就标记它
-							if (item.mediaType.indexOf("image") === -1) {
-								that.content[i].isNotImage = true
-							}
+					
+						// 如果当前附件不是图片就标记它
+						if (item.mediaType.indexOf("image") === -1) {
+							that.content[i].isNotImage = true;
 						}
-
-						uni.stopPullDownRefresh()
-						uni.hideLoading()
-					},
-					fail: function(e) {
-						uni.stopPullDownRefresh()
-						uni.hideLoading()
-						uni.showModal({
-							title: "获取数据失败",
-							content: e.errMsg
-						})
 					}
-				})
+						uni.stopPullDownRefresh();
+						uni.hideLoading();
+				}).catch(err => {
+					uni.stopPullDownRefresh()
+					uni.hideLoading()
+					uni.showModal({
+						title: "获取数据失败",
+						content: err,
+						showCancel: false
+					})
+				});
 			},
 			
 			/**

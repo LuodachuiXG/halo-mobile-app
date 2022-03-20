@@ -51,6 +51,11 @@
 </template>
 
 <script>
+	import {
+		getCategories,
+		deleteCategory
+		
+	} from "../../common/api.js";
 	export default {
 		data() {
 			return {
@@ -83,40 +88,17 @@
 			 * 刷新数据
 			 */
 			refreshData: function() {
-				let that = this
-				uni.request({
-					method: "GET",
-					dataType: "json",
-					url: this.getUrl() + "/api/admin/categories?more=true",
-					header: {
-						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.getAccessToken()
-					},
-					success: function(res) {
-						if (res.statusCode !== 200) {
-							that.popup("获取数据失败")
-							// 登录过期
-							if (that.isExpiredByRequest(res)) {
-								that.setData("isLogin", "false")
-								uni.reLaunch({
-									url: "../../me/me"
-								})
-							}
-							return;
-						}
-
-						that.categories = res.data.data;
-
-						uni.stopPullDownRefresh();
-					},
-					fail: function(e) {
-						uni.stopPullDownRefresh();
-						uni.showModal({
-							title: "获取数据失败",
-							content: e.errMsg
-						});
-					}
-				})
+				let that = this;
+				getCategories().then(data => {
+					that.categories = data;
+					uni.stopPullDownRefresh();
+				}).catch(err => {
+					uni.stopPullDownRefresh();
+					uni.showModal({
+						title: "获取数据失败",
+						content: err
+					});
+				});
 			},
 
 			/**
@@ -142,38 +124,16 @@
 					content: '确定要删除【' + this.categories[i].name + '】分类吗？',
 					success: function(res) {
 						if (res.confirm) {
-							uni.request({
-								method: "DELETE",
-								dataType: "json",
-								url: that.getUrl() + 
-									"/api/admin/categories/" + that.categories[i].id,
-								header: {
-									"Content-Type": "application/json",
-									"ADMIN-Authorization": that.getAccessToken()
-								},
-								success: function(res) {
-									if (res.statusCode !== 200) {
-										that.popup("删除失败")
-										// 登录过期
-										if (that.isExpiredByRequest(res)) {
-											that.setData("isLogin","false")
-											uni.reLaunch({
-												url: "../../me/me"
-											});
-										}
-										return;
-									}
-									that.popup("删除成功", "success");
-									that.refreshData();
-								},
-								fail: function(e) {
-									uni.stopPullDownRefresh()
-									uni.showModal({
-										title: "删除失败",
-										content: e.errMsg
-									})
-								}
-							})
+							deleteCategory(that.categories[i].id).then(data => {
+								that.popup("删除成功", "success");
+								that.refreshData();
+							}).catch(err => {
+								uni.stopPullDownRefresh();
+								uni.showModal({
+									title: "删除失败",
+									content: err
+								});
+							});
 						}
 					}
 				});

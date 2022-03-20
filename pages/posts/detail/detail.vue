@@ -5,6 +5,9 @@
 </template>
 
 <script>
+	import {
+		getPost,
+	} from "../../../common/api.js";
 	import joMarkdown from '@/components/jo-markdown/decode.vue';
 	import markdownFunc from '@/components/jo-markdown/index.js';
 	export default {
@@ -46,41 +49,18 @@
 			 */
 			refreshData: function() {
 				let that = this;
-				uni.request({
-					method: "GET",
-					dataType: "json",
-					url: this.getUrl() + "/api/admin/posts/" + this.postId,
-					header: {
-						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.getAccessToken()
-					},
-					success: function(res) {
-						console.log(res)
-						if (res.statusCode !== 200) {
-							that.toast("获取文章失败")
-							// 登录过期
-							if (that.isExpiredByRequest(res)) {
-								that.setData("isLogin", "false")
-								uni.reLaunch({
-									url: "../../me/me"
-								})
-							}
-							return;
-						}
-						
-						// 解析 markdown
-						that.markdownData = markdownFunc(res.data.data.originalContent, 'markdown');
-						that.postUrl = that.getUrl() + res.data.data.fullPath;
-						uni.stopPullDownRefresh()
-					},
-					fail: function(e) {
-						uni.stopPullDownRefresh()
-						uni.showModal({
-							title: "获取文章失败",
-							content: e.errMsg
-						})
-					}
-				})
+				getPost(this.postId).then(data => {
+					// 解析 markdown
+					that.markdownData = markdownFunc(data.originalContent, 'markdown');
+					that.postUrl = that.getUrl() + data.fullPath;
+					uni.stopPullDownRefresh()
+				}).catch(err => {
+					uni.stopPullDownRefresh();
+					uni.showModal({
+						title: "获取文章失败",
+						content: err
+					});
+				});
 			},
 			
 			

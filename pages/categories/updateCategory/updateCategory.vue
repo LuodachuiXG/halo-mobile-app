@@ -53,6 +53,10 @@
 </template>
 
 <script>
+	import {
+		addCategory,
+		updateCategory
+	} from "../../../common/api.js";
 	export default {
 		data() {
 			return {
@@ -175,87 +179,41 @@
 					
 				if (this.type == "add") {
 					// 当前是添加分类目录
-					uni.request({
-						method: "POST",
-						dataType: "json",
-						url: this.getUrl() + "/api/admin/categories",
-						header: {
-							"Content-Type": "application/json",
-							"ADMIN-Authorization": this.getAccessToken()
-						},
-						data: json,
-						success: function(res) {
-							
-							if (res.statusCode !== 200) {
-								that.popup("添加分类目录失败")
-								// 登录过期
-								if (that.isExpiredByRequest(res)) {
-									that.setData("isLogin", "false")
-									uni.reLaunch({
-										url: "../../me/me"
-									})
-								}
-								return;
-							}
-							
-							uni.showToast({
-								title: "添加分类目录成功",
-								icon: "none",
-								position: "bottom"
-							})
-							uni.navigateBack({
-								delta:1
-							})
-						},
-						fail: function(e) {
-							uni.stopPullDownRefresh();
-							uni.showModal({
-								title: "添加分类目录失败",
-								content: e.errMsg
-							});
-						}
-					})
+					addCategory(json).then(data => {
+						uni.showToast({
+							title: "添加分类目录成功",
+							icon: "none",
+							position: "bottom"
+						})
+						uni.navigateBack({
+							delta:1
+						})
+					}).catch(err => {
+						uni.stopPullDownRefresh();
+						uni.showModal({
+							title: "添加分类目录失败",
+							content: err
+						});
+					});
 				} else {
 					// 当前是修改分类目录
-					uni.request({
-						method: "PUT",
-						dataType: "json",
-						url: this.getUrl() + "/api/admin/categories/" + this.categoryId,
-						header: {
-							"Content-Type": "application/json",
-							"ADMIN-Authorization": this.getAccessToken()
-						},
-						data: json,
-						success: function(res) {
-							if (res.statusCode !== 200) {
-								that.popup("修改分类目录失败")
-								// 登录过期
-								if (that.isExpiredByRequest(res)) {
-									that.setData("isLogin", "false")
-									uni.reLaunch({
-										url: "../../me/me"
-									})
-								}
-								return;
-							}
-							
-							uni.showToast({
+					updateCategory(this.categoryId, json).then(data => {
+						uni.showToast({
 								title: "修改分类目录成功",
 								icon: "none",
 								position: "bottom"
-							})
+							});
 							uni.navigateBack({
 								delta:1
-							})
-						},
-						fail: function(e) {
-							uni.stopPullDownRefresh();
-							uni.showModal({
-								title: "修改分类目录失败",
-								content: e.errMsg
 							});
-						}
-					})
+					}).catch(err => {
+						uni.stopPullDownRefresh();
+						uni.showModal({
+							title: "修改分类目录失败",
+							content: err
+						});
+					});
+
 				}
 			},
 			

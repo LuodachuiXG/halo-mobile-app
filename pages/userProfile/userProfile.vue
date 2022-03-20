@@ -31,6 +31,10 @@
 </template>
 
 <script>
+	import {
+		getUserStatistics,
+		updateUserProfiles
+	} from "../../common/api.js";
 	export default {
 		data() {
 			return {
@@ -57,45 +61,23 @@
 			 * 刷新数据
 			 */
 			refreshData: function() {
-				let that = this
-				uni.request({
-					method: "GET",
-					dataType: "json",
-					url: this.getUrl() + "/api/admin/statistics/user",
-					header: {
-						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.getAccessToken()
-					},
-					success: function(res) {
-						uni.stopPullDownRefresh()
-						if (res.statusCode !== 200) {
-							that.popup('获取数据失败');
-							// 登录过期
-							if (that.isExpiredByRequest(res)) {
-								that.setData("isLogin", "false")
-								uni.reLaunch({
-									url: "../../me/me"
-								})
-							}
-							return
-						}
-			
-						let user = res.data.data.user;
-						that.username = user.username;
-						that.nickname = user.nickname;
-						that.email = user.email;
-						that.description = user.description;
-						that.createTime = user.createTime;
-						that.updateTime = user.updateTime;
-					},
-					fail: function(e) {
-						uni.stopPullDownRefresh()
-						uni.showModal({
-							title: "获取数据失败",
-							content: e.errMsg
-						})
-					}
-				})
+				let that = this;
+				getUserStatistics().then(data => {
+					let user = data.user;
+					that.username = user.username;
+					that.nickname = user.nickname;
+					that.email = user.email;
+					that.description = user.description;
+					that.createTime = user.createTime;
+					that.updateTime = user.updateTime;
+					uni.stopPullDownRefresh();
+				}).catch(err => {
+					uni.stopPullDownRefresh();
+					uni.showModal({
+						title: "获取数据失败",
+						content: err
+					});
+				});
 			},
 			
 			
@@ -112,36 +94,18 @@
 					"nickname": this.nickname,
 					"email": this.email,
 					"description": this.description
-				}
-				let that = this
-				uni.request({
-					method: "PUT",
-					dataType: "json",
-					url: this.getUrl() + "/api/admin/users/profiles",
-					header: {
-						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.getAccessToken()
-					},
-					data: json,
-					success: function(res) {
-						if (res.statusCode !== 200) {
-							that.popup('保存失败');
-							// 登录过期
-							if (that.isExpiredByRequest(res)) {
-								that.popup('保存失败，登录已过期，请重新登陆');
-							}
-							return
-						}
-						that.popup('保存成功', 'success');
-						that.refreshData()
-					},
-					fail: function(e) {
-						uni.showModal({
-							title: "保存数据失败",
-							content: e.errMsg
-						})
-					}
-				})
+				};
+				let that = this;
+				updateUserProfiles(json).then(data => {
+					that.popup('保存成功', 'success');
+					that.refreshData()
+				}).catch(err => {
+					uni.showModal({
+						title: "保存数据失败",
+						content: err
+					});
+				});
+				
 			},
 			/**
 			 * popup弹出层

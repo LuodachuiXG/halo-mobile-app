@@ -39,6 +39,10 @@
 </template>
 
 <script>
+	import {
+		getOptionsByMapViewsKeys,
+		updateOptionsByMapViews
+	} from "../../../../common/api.js";
 	export default {
 		data() {
 			return {
@@ -69,45 +73,23 @@
 			 * 刷新数据
 			 */
 			refreshData: function() {
-				let array = ["blog_title", "blog_url", "blog_logo", "blog_favicon", "blog_footer_info"]
-				let that = this
-				uni.request({
-					method: "POST",
-					dataType: "json",
-					url: this.getUrl() + "/api/admin/options/map_view/keys",
-					header: {
-						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.getAccessToken()
-					},
-					data: array,
-					success: function(res) {
-						uni.stopPullDownRefresh()
-						if (res.statusCode !== 200) {
-							that.popup("获取数据失败")
-							// 登录过期
-							if (that.isExpiredByRequest(res)) {
-								that.setData("isLogin", "false")
-								uni.reLaunch({
-									url: "../../me/me"
-								})
-							}
-							return
-						}
-						let data = res.data.data
-						that.blog_title = data.blog_title
-						that.blog_url = data.blog_url
-						that.blog_logo = data.blog_logo
-						that.blog_favicon = data.blog_favicon
-						that.blog_footer_info = data.blog_footer_info
-					},
-					fail: function(e) {
-						uni.stopPullDownRefresh()
-						uni.showModal({
-							title: "获取数据失败",
-							content: e.errMsg
-						})
-					}
-				})
+				let array = ["blog_title", "blog_url", "blog_logo", "blog_favicon", "blog_footer_info"];
+				let that = this;
+				
+				getOptionsByMapViewsKeys(array).then(data => {
+					that.blog_title = data.blog_title
+					that.blog_url = data.blog_url
+					that.blog_logo = data.blog_logo
+					that.blog_favicon = data.blog_favicon
+					that.blog_footer_info = data.blog_footer_info
+					uni.stopPullDownRefresh();
+				}).catch(err => {
+					uni.stopPullDownRefresh();
+					uni.showModal({
+						title: "获取数据失败",
+						content: err
+					});
+				});
 			},
 			
 			/**
@@ -135,37 +117,19 @@
 					"blog_logo": this.blog_logo,
 					"blog_favicon": this.blog_favicon,
 					"blog_footer_info": this.blog_footer_info
-				}
-				let that = this
+				};
+				let that = this;
 				
-				uni.request({
-					method: "POST",
-					dataType: "json",
-					url: this.getUrl() + "/api/admin/options/map_view/saving",
-					header: {
-						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.getAccessToken()
-					},
-					data: json,
-					success: function(res) {
-						if (res.statusCode !== 200) {
-							that.popup("保存失败：" + res.statusCode)
-							// 登录过期
-							if (that.isExpiredByRequest(res)) {
-								that.popup("保存失败，登录已过期，请重新登陆")
-							}
-							return
-						}
-						that.popup("保存成功", "success")
-						that.refreshData()
-					},
-					fail: function(e) {
-						uni.showModal({
-							title: "保存数据失败",
-							content: e.errMsg
-						})
-					}
-				})
+				updateOptionsByMapViews(json).then(data => {
+					that.popup("保存成功", "success");
+					that.refreshData();
+				}).catch(err => {
+					uni.stopPullDownRefresh();
+					uni.showModal({
+						title: "保存数据失败",
+						content: err
+					});
+				});
 			},
 			
 

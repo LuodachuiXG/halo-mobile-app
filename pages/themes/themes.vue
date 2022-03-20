@@ -39,6 +39,11 @@
 </template>
 
 <script>
+	import {
+		getThemes,
+		updateThemeActivation,
+		deleteTheme,
+	} from "../../common/api.js";
 	export default {
 		data() {
 			return {
@@ -60,47 +65,26 @@
 			 * 刷新数据
 			 */
 			refreshData: function() {
-				let that = this
-				uni.request({
-					method: "GET",
-					dataType: "json",
-					url: this.getUrl() + "/api/admin/themes",
-					header: {
-						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.getAccessToken()
-					},
-					success: function(res) {
-						uni.stopPullDownRefresh();
-						if (res.statusCode !== 200) {
-							that.popup("获取数据失败");
-							// 登录过期
-							if (that.isExpiredByRequest(res)) {
-								that.setData("isLogin", "false")
-								uni.reLaunch({
-									url: "../../me/me"
-								});
-							}
-							return;
+				let that = this;
+				getThemes().then(data => {
+					that.themes = data;
+					// 将已经启用的主题排在第一个
+					for (var i = 0; i < that.themes.length; i++) {
+						if (that.themes[i].activated) {
+							let current = that.themes[i];
+							that.themes[i] = that.themes[0];
+							that.themes[0] = current;
 						}
-
-						that.themes = res.data.data;
-						// 将已经启用的主题排在第一个
-						for (var i = 0; i < that.themes.length; i++) {
-							if (that.themes[i].activated) {
-								let current = that.themes[i];
-								that.themes[i] = that.themes[0];
-								that.themes[0] = current;
-							}
-						}
-					},
-					fail: function(e) {
-						uni.stopPullDownRefresh()
-						uni.showModal({
-							title: "获取数据失败",
-							content: e.errMsg
-						})
 					}
-				})
+					uni.stopPullDownRefresh();
+				}).catch(err => {
+					uni.stopPullDownRefresh();
+					uni.showModal({
+						title: "获取数据失败",
+						content: err
+					});
+				});
+
 			},
 
 			/**
@@ -117,39 +101,16 @@
 				}
 
 				// 提交激活主题请求
-				uni.request({
-					method: "POST",
-					dataType: "json",
-					url: this.getUrl() + "/api/admin/themes/" + clickThemeId + "/activation",
-					header: {
-						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.getAccessToken()
-					},
-					success: function(res) {
-						if (res.statusCode !== 200) {
-							that.popup("启用主题失败");
-							// 登录过期
-							if (that.isExpiredByRequest(res)) {
-								that.setData("isLogin", "false")
-								uni.reLaunch({
-									url: "../../me/me"
-								});
-							}
-							return;
-						}
-						console.log(res)
-						that.popup("启用主题成功", "success");
-						that.refreshData();
-
-					},
-					fail: function(e) {
-						uni.stopPullDownRefresh()
-						uni.showModal({
-							title: "启用主题失败",
-							content: e.errMsg
-						})
-					}
-				})
+				updateThemeActivation(clickThemeId).then(data => {
+					that.popup("启用主题成功", "success");
+					that.refreshData();
+				}).catch(err => {
+					uni.stopPullDownRefresh();
+					uni.showModal({
+						title: "启用主题失败",
+						content: err
+					});
+				});
 			},
 
 			/**
@@ -175,38 +136,16 @@
 									content: '确定要删除 ' + thatt.themes[i].name + ' 吗？',
 									success: function(res) {
 										if (res.confirm) {
-											uni.request({
-												method: "DELETE",
-												dataType: "json",
-												url: thatt.getUrl() + "/api/admin/themes/" + 
-													thatt.themes[i].id + "?deleteSettings=true",
-												header: {
-													"Content-Type": "application/json",
-													"ADMIN-Authorization": thatt.getAccessToken()
-												},
-												success: function(res) {											
-													if (res.statusCode !== 200) {
-														thatt.$refs.popup.error("删除失败");
-														// 登录过期
-														if (thatt.isExpiredByRequest(res)) {
-															thatt.setData("isLogin","false")
-															uni.reLaunch({
-																url: "../../me/me"
-															});
-														}
-														return;
-													}
-													that.popup("删除成功", "success");
-													thatt.refreshData();
-												},
-												fail: function(e) {
-													uni.stopPullDownRefresh()
-													uni.showModal({
-														title: "删除主题失败",
-														content: e.errMsg
-													})
-												}
-											})
+											deleteTheme(thatt.themes[i].id).then(data => {
+												thatt.popup("删除成功", "success");
+												thatt.refreshData();
+											}).catch(err => {
+												uni.stopPullDownRefresh();
+												uni.showModal({
+													title: "删除主题失败",
+													content: err
+												});
+											});
 										}
 									}
 								});

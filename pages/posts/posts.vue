@@ -104,6 +104,11 @@
 </template>
 
 <script>
+	import {
+		getPosts,
+		updatePostStatus,
+		deletePosts
+	} from "../../common/api.js";
 	export default {
 		data() {
 			return {
@@ -171,50 +176,25 @@
 			refreshData: function() {
 				uni.showLoading({
 					title: "正在加载"
-				})
-				let that = this
-				uni.request({
-					method: "GET",
-					dataType: "json",
-					url: this.getUrl() + "/api/admin/posts?page=" + this.page + 
-						"&size=" + this.size,
-					header: {
-						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.getAccessToken()
-					},
-					success: function(res) {
-						if (res.statusCode !== 200) {
-							that.popup("获取数据失败")
-							// 登录过期
-							if (that.isExpiredByRequest(res)) {
-								that.setData("isLogin", "false")
-								uni.reLaunch({
-									url: "../../me/me"
-								})
-							}
-							return ;
-						}
-			
-						// 保存文章数组
-						that.posts = res.data.data.content;
-						// 保存文章总数
-						that.total = res.data.data.total;
-						// 保存总页数
-						that.pages = res.data.data.pages;
-						
-						
-						uni.stopPullDownRefresh()
-						uni.hideLoading()
-					},
-					fail: function(e) {
-						uni.stopPullDownRefresh()
-						uni.hideLoading()
-						uni.showModal({
-							title: "获取数据失败",
-							content: e.errMsg
-						})
-					}
-				})
+				});
+				let that = this;
+				getPosts(this.page, this.size).then(data => {
+					// 保存文章数组
+					that.posts = data.content;
+					// 保存文章总数
+					that.total = data.total;
+					// 保存总页数
+					that.pages = data.pages;
+					
+					uni.stopPullDownRefresh()
+					uni.hideLoading()
+				}).catch(err => {
+					uni.stopPullDownRefresh();
+					uni.showModal({
+						title: "获取数据失败",
+						content: err
+					});
+				});
 			},
 			
 			
@@ -232,38 +212,16 @@
 						content: '确定要永久删除【' + that.posts[i].title + '】文章吗？此操作不可逆。',
 						success: function(res) {
 							if (res.confirm) {
-								uni.request({
-									method: "DELETE",
-									dataType: "json",
-									url: that.getUrl() + 
-										"/api/admin/posts/" + post.id,
-									header: {
-										"Content-Type": "application/json",
-										"ADMIN-Authorization": that.getAccessToken()
-									},
-									success: function(res) {
-										if (res.statusCode !== 200) {
-											that.popup("删除失败")
-											// 登录过期
-											if (that.isExpiredByRequest(res)) {
-												that.setData("isLogin","false")
-												uni.reLaunch({
-													url: "../../me/me"
-												});
-											}
-											return;
-										}
-										that.popup("删除成功", "success");
-										that.refreshData();
-									},
-									fail: function(e) {
-										uni.stopPullDownRefresh()
-										uni.showModal({
-											title: "删除失败",
-											content: e.errMsg
-										})
-									}
-								})
+								deletePosts(post.id).then(data => {
+									that.popup("删除成功", "success");
+									that.refreshData();
+								}).catch(err => {
+									uni.stopPullDownRefresh();
+									uni.showModal({
+										title: "删除失败",
+										content: err
+									});
+								});
 							}
 						}
 					});
@@ -309,80 +267,35 @@
 						content: '确定要发布【' + that.posts[i].title + '】文章吗？',
 						success: function(res) {
 							if (res.confirm) {
-								uni.request({
-									method: "PUT",
-									dataType: "json",
-									url: that.getUrl() + 
-										"/api/admin/posts/" + that.posts[i].id + "/status/PUBLISHED",
-									header: {
-										"Content-Type": "application/json",
-										"ADMIN-Authorization": that.getAccessToken()
-									},
-									success: function(res) {
-										if (res.statusCode !== 200) {
-											that.popup("发布失败")
-											// 登录过期
-											if (that.isExpiredByRequest(res)) {
-												that.setData("isLogin","false")
-												uni.reLaunch({
-													url: "../../me/me"
-												});
-											}
-											return;
-										}
-										that.popup("发布成功", "success");
-										that.refreshData();
-									},
-									fail: function(e) {
-										uni.stopPullDownRefresh()
-										uni.showModal({
-											title: "发布失败",
-											content: e.errMsg
-										})
-									}
-								})
+								updatePostStatus(that.posts[i].id, "PUBLISHED").then(data => {
+									that.popup("发布成功", "success");
+									that.refreshData();
+								}).catch(err => {
+									uni.showModal({
+										title: "发布失败",
+										content: err
+									});
+								});
 							}
 						}
 					});
 				} else {
-					// 当前文章是正常状态，准备删除
+					// 当前文章是正常状态，准备回收
 					uni.showModal({
 						title: '提示',
 						content: '确定要将【' + that.posts[i].title + '】放入回收站吗？',
 						success: function(res) {
 							if (res.confirm) {
-								uni.request({
-									method: "PUT",
-									dataType: "json",
-									url: that.getUrl() + 
-										"/api/admin/posts/" + that.posts[i].id + "/status/RECYCLE",
-									header: {
-										"Content-Type": "application/json",
-										"ADMIN-Authorization": that.getAccessToken()
-									},
-									success: function(res) {
-										if (res.statusCode !== 200) {
-											that.popup("放入回收站失败")
-											// 登录过期
-											if (that.isExpiredByRequest(res)) {
-												that.setData("isLogin","false")
-												uni.reLaunch({
-													url: "../../me/me"
-												});
-											}
-											return;
-										}
-										that.popup("成功放入回收站", "success");
-										that.refreshData();
-									},
-									fail: function(e) {
-										uni.stopPullDownRefresh()
-										uni.showModal({
-											title: "放入回收站失败",
-											content: e.errMsg
-										})
-									}
-								})
+								updatePostStatus(that.posts[i].id, "RECYCLE").then(data => {
+									that.popup("成功放入回收站", "success");
+									that.refreshData();
+								}).catch(err => {
+									uni.stopPullDownRefresh();
+									uni.showModal({
+										title: "放入回收站失败",
+										content: err
+									});
+								});
 							}
 						}
 					});

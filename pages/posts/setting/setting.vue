@@ -183,6 +183,15 @@
 </template>
 
 <script>
+	import {
+		getPost,
+		getCategories,
+		getTags,
+		addCategory,
+		addTag,
+		updatePost,
+		
+	} from "../../../common/api.js";
 	export default {
 		data() {
 			return {
@@ -262,55 +271,34 @@
 			 * 刷新文章数据
 			 */
 			refreshPostData: function() {
-				let that = this
-				uni.request({
-					method: "GET",
-					dataType: "json",
-					url: this.getUrl() + "/api/admin/posts/" + this.postId,
-					header: {
-						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.getAccessToken()
-					},
-					success: function(res) {
-						if (res.statusCode !== 200) {
-							that.popup("获取数据失败")
-							// 登录过期
-							if (that.isExpiredByRequest(res)) {
-								that.setData("isLogin", "false")
-								uni.reLaunch({
-									url: "../../me/me"
-								})
-							}
-							return;
-						}
-
-						that.post = res.data.data;
-						that.title = that.post.title;
-						that.slug = that.post.slug;
-						that.topped = that.post.topped;
-						that.createTimeStamp = that.post.createTime;
-						that.createTime = that.format(that.createTimeStamp);
-						that.disallowComment = that.post.disallowComment;
-						// 保存当前文章的分类目录ID
-						that.categoriesValue = that.post.categoryIds;
-						// 保存当前文章的标签ID
-						that.tagsValue = that.post.tagIds;
-						that.thumbnail = that.post.thumbnail;
-						that.summary = that.post.summary;
-						that.password = that.post.password;
-						that.metaKeywords = that.post.metaKeywords;
-						that.metaDescription = that.post.metaDescription;
-						that.metaIds = that.post.metaIds;
-						that.metas = that.post.metas;
-						
-					},
-					fail: function(e) {
-						uni.showModal({
-							title: "获取数据失败",
-							content: e.errMsg
-						})
-					}
+				let that = this;
+				getPost(this.postId).then(data => {
+					that.post = data;
+					that.title = that.post.title;
+					that.slug = that.post.slug;
+					that.topped = that.post.topped;
+					that.createTimeStamp = that.post.createTime;
+					that.createTime = that.format(that.createTimeStamp);
+					that.disallowComment = that.post.disallowComment;
+					// 保存当前文章的分类目录ID
+					that.categoriesValue = that.post.categoryIds;
+					// 保存当前文章的标签ID
+					that.tagsValue = that.post.tagIds;
+					that.thumbnail = that.post.thumbnail;
+					that.summary = that.post.summary;
+					that.password = that.post.password;
+					that.metaKeywords = that.post.metaKeywords;
+					that.metaDescription = that.post.metaDescription;
+					that.metaIds = that.post.metaIds;
+					that.metas = that.post.metas;
+				}).catch(err => {
+					uni.stopPullDownRefresh();
+					uni.showModal({
+						title: "获取文章数据失败",
+						content: err
+					});
 				});
+				
 				// 刷新分类数据
 				this.refreshCategoryData();
 				// 刷新标签数据
@@ -323,58 +311,35 @@
 			 */
 			refreshCategoryData: function() {
 				let that = this;
-				uni.request({
-					method: "GET",
-					dataType: "json",
-					url: this.getUrl() + "/api/admin/categories?more=false",
-					header: {
-						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.getAccessToken()
-					},
-					success: function(res) {
-						if (res.statusCode !== 200) {
-							that.popup("获取数据失败")
-							// 登录过期
-							if (that.isExpiredByRequest(res)) {
-								that.setData("isLogin", "false")
-								uni.reLaunch({
-									url: "../../me/me"
-								})
-							}
-							return;
-						}
-				
-						that.categories = res.data.data;
-						that.categoriesRange = [];
-						// 将分类目录的数据按照 [{"value": 分类ID,"text": 分类名	}]的格式存入数组
-						for (var i = 0; i < that.categories.length; i++) {
-							let categoriesId = that.categories[i].id;
-							let categoriesName = that.categories[i].name;
-							let json = {"value": categoriesId,
-								"text": categoriesName};
-							that.categoriesRange.push(json)
-						}
-						
-						// 将所有分类目录的名称和id保存到新增分类的 “上级目录” 选项卡的数组中
-						for (var i = 0; i < that.categories.length; i++) {
-							// 因为要在数组的 0 索引预留一个 “0” 选项，所以这里 +1
-							that.parentText[i + 1] = that.categories[i].name;
-							that.parentValue[i + 1] = that.categories[i].id;
-						}
-						that.parentText[0] = "0";
-						that.parentValue[0] = 0;
-						
-						
-						uni.stopPullDownRefresh()
-					},
-					fail: function(e) {
-						uni.stopPullDownRefresh()
-						uni.showModal({
-							title: "获取数据失败",
-							content: e.errMsg
-						})
+				getCategories("false").then(data => {
+					that.categories = data;
+					that.categoriesRange = [];
+					// 将分类目录的数据按照 [{"value": 分类ID,"text": 分类名	}]的格式存入数组
+					for (var i = 0; i < that.categories.length; i++) {
+						let categoriesId = that.categories[i].id;
+						let categoriesName = that.categories[i].name;
+						let json = {"value": categoriesId,
+							"text": categoriesName};
+						that.categoriesRange.push(json)
 					}
-				})
+					
+					// 将所有分类目录的名称和id保存到新增分类的 “上级目录” 选项卡的数组中
+					for (var i = 0; i < that.categories.length; i++) {
+						// 因为要在数组的 0 索引预留一个 “0” 选项，所以这里 +1
+						that.parentText[i + 1] = that.categories[i].name;
+						that.parentValue[i + 1] = that.categories[i].id;
+					}
+					that.parentText[0] = "0";
+					that.parentValue[0] = 0;
+					
+					uni.stopPullDownRefresh()
+				}).catch(err => {
+					uni.stopPullDownRefresh();
+					uni.showModal({
+						title: "获取分类数据失败",
+						content: err
+					});
+				});
 			},
 			
 			
@@ -383,49 +348,27 @@
 			 */
 			refreshTagData: function() {
 				let that = this;
-				uni.request({
-					method: "GET",
-					dataType: "json",
-					url: this.getUrl() + "/api/admin/tags?more=true",
-					header: {
-						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.getAccessToken()
-					},
-					success: function(res) {
-						if (res.statusCode !== 200) {
-							that.popup("获取数据失败")
-							// 登录过期
-							if (that.isExpiredByRequest(res)) {
-								that.setData("isLogin", "false")
-								uni.reLaunch({
-									url: "../../me/me"
-								})
-							}
-							return;
-						}
 				
-						that.tags = res.data.data;
-						that.tagsRange = [];
-						// 将标签的数据按照 [{"value": 标签ID,"text": 标签名	}]的格式存入数组
-						for (var i = 0; i < that.tags.length; i++) {
-							let tagId = that.tags[i].id;
-							let tagName = that.tags[i].name;
-							let json = {"value": tagId,
-								"text": tagName};
-							that.tagsRange.push(json);
-						}
-
-						
-						uni.stopPullDownRefresh()
-					},
-					fail: function(e) {
-						uni.stopPullDownRefresh()
-						uni.showModal({
-							title: "获取数据失败",
-							content: e.errMsg
-						})
+				getTags().then(data => {
+					that.tags = data;
+					that.tagsRange = [];
+					// 将标签的数据按照 [{"value": 标签ID,"text": 标签名	}]的格式存入数组
+					for (var i = 0; i < that.tags.length; i++) {
+						let tagId = that.tags[i].id;
+						let tagName = that.tags[i].name;
+						let json = {"value": tagId,
+							"text": tagName};
+						that.tagsRange.push(json);
 					}
-				})
+					
+					uni.stopPullDownRefresh()
+				}).catch(err => {
+					uni.stopPullDownRefresh();
+					uni.showModal({
+						title: "获取标签数据失败",
+						content: err
+					});
+				});
 			},
 
 			/**
@@ -479,41 +422,19 @@
 					"slug": this.categorySlug,
 					"parentId": this.parentValue[this.parentIndex]};
 				// 提交分类
-				uni.request({
-					method: "POST",
-					dataType: "json",
-					url: this.getUrl() + "/api/admin/categories",
-					header: {
-						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.accessToken
-					},
-					data: json,
-					success: function(res) {
-						if (res.statusCode !== 200) {
-							that.popup("添加分类目录失败")
-							// 登录过期
-							if (that.isExpiredByRequest(res)) {
-								that.setData("isLogin", "false")
-								uni.reLaunch({
-									url: "../../me/me"
-								})
-							}
-							return;
-						}
-						that.popup("添加分类目录成功", "success");
-						that.parentIndex = 0;
-						that.categoryName = "";
-						that.categorySlug = "";
-						that.addCategory = false;
-						that.refreshCategoryData();
-					},
-					fail: function(e) {
-						uni.showModal({
-							title: "添加分类目录失败",
-							content: e.errMsg
-						})
-					}
-				})
+				addCategory(json).then(data => {
+					that.popup("添加分类目录成功", "success");
+					that.parentIndex = 0;
+					that.categoryName = "";
+					that.categorySlug = "";
+					that.addCategory = false;
+					that.refreshCategoryData();
+				}).catch(err => {
+					uni.showModal({
+						title: "添加分类目录失败",
+						content: err
+					});
+				});
 			},
 			
 			/**
@@ -553,37 +474,16 @@
 							let newTagName = res.content;
 							let json = {"name": newTagName};
 							// 提交标签
-							uni.request({
-								method: "POST",
-								dataType: "json",
-								url: thatt.getUrl() + "/api/admin/tags",
-								header: {
-									"Content-Type": "application/json",
-									"ADMIN-Authorization": thatt.getAccessToken()
-								},
-								data: json,
-								success: function(res) {
-									if (res.statusCode !== 200) {
-										thatt.popup("添加标签失败")
-										// 登录过期
-										if (thatt.isExpiredByRequest(res)) {
-											thatt.setData("isLogin", "false")
-											uni.reLaunch({
-												url: "../../me/me"
-											})
-										}
-										return;
-									}
-									thatt.popup("添加标签成功", "success");
-									thatt.refreshTagData();
-								},
-								fail: function(e) {
-									uni.showModal({
-										title: "添加标签失败",
-										content: e.errMsg
-									})
-								}
-							})
+							addTag(json).then(data => {
+								thatt.popup("添加标签成功", "success");
+								thatt.refreshTagData();
+							}).catch(err => {
+								uni.stopPullDownRefresh();
+								uni.showModal({
+									title: "添加标签失败",
+									content: err
+								});
+							});
 						}
 					}
 				})
@@ -630,38 +530,17 @@
 				json.metaIds = this.metaIds;
 				json.topPriority = this.topped ? 1 : 0;
 				
-				// 提交标签
-				uni.request({
-					method: "PUT",
-					dataType: "json",
-					url: that.getUrl() + "/api/admin/posts/" + that.post.id,
-					header: {
-						"Content-Type": "application/json",
-						"ADMIN-Authorization": that.getAccessToken()
-					},
-					data: json,
-					success: function(res) {
-						if (res.statusCode !== 200) {
-							that.popup("保存数据失败")
-							// 登录过期
-							if (that.isExpiredByRequest(res)) {
-								that.setData("isLogin", "false")
-								uni.reLaunch({
-									url: "../../me/me"
-								})
-							}
-							return;
-						}
-						that.popup("保存数据成功", "success");
-						that.refreshPostData();
-					},
-					fail: function(e) {
-						uni.showModal({
-							title: "保存数据失败",
-							content: e.errMsg
-						})
-					}
-				})
+				// 提交修改
+				updatePost(that.post.id, json).then(data => {
+					that.popup("保存数据成功", "success");
+					that.refreshPostData();
+				}).catch(err => {
+					uni.stopPullDownRefresh();
+					uni.showModal({
+						title: "保存数据失败",
+						content: err
+					});
+				});
 			},
 			
 			// 元数据新增按钮点击事件

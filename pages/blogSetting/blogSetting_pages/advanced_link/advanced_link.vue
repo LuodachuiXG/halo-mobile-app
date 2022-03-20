@@ -81,6 +81,10 @@
 </template>
 
 <script>
+	import {
+		getOptionsByMapViewsKeys,
+		updateOptionsByMapViews
+	} from "../../../../common/api.js";
 	export default {
 		data() {
 			return {
@@ -129,56 +133,31 @@
 					"links_prefix", "photos_prefix", "journals_prefix", "path_suffix"
 				]
 				let that = this
-				uni.request({
-					method: "POST",
-					dataType: "json",
-					url: this.getUrl() + "/api/admin/options/map_view/keys",
-					header: {
-						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.getAccessToken()
-					},
-					data: array,
-					success: function(res) {
-						uni.stopPullDownRefresh()
-						if (res.statusCode !== 200) {
-							that.popup("获取数据失败");
-							// 登录过期
-							if (that.isExpiredByRequest(res)) {
-								that.setData("isLogin", "false")
-								uni.reLaunch({
-									url: "../../me/me"
-								})
-							}
-							return
-						}
-
-						let data = res.data.data
-						
-						that.post_permalink_type = data.post_permalink_type
-						// 把服务端的数据和post_permalink_type比对，获得对应的选项索引
-						that.post_permalink_typeIndex = 
-							that.post_permalink_typeValue.indexOf(that.post_permalink_type)
-						that.archives_prefix = data.archives_prefix
-						that.categories_prefix = data.categories_prefix
-						that.tags_prefix = data.tags_prefix
-						that.sheet_permalink_type = data.sheet_permalink_type
-						// 把服务端的数据和sheet_permalink_type比对，获得对应的选项索引
-						that.sheet_permalink_typeIndex = 
-							that.sheet_permalink_typeValue.indexOf(that.sheet_permalink_type)
-						that.sheet_prefix = data.sheet_prefix
-						that.links_prefix = data.links_prefix
-						that.photos_prefix = data.photos_prefix
-						that.journals_prefix = data.journals_prefix
-						that.path_suffix = data.path_suffix
-					},
-					fail: function(e) {
-						uni.stopPullDownRefresh()
-						uni.showModal({
-							title: "获取数据失败",
-							content: e.errMsg
-						})
-					}
-				})
+				getOptionsByMapViewsKeys(array).then(data => {
+					that.post_permalink_type = data.post_permalink_type
+					// 把服务端的数据和post_permalink_type比对，获得对应的选项索引
+					that.post_permalink_typeIndex = 
+						that.post_permalink_typeValue.indexOf(that.post_permalink_type)
+					that.archives_prefix = data.archives_prefix
+					that.categories_prefix = data.categories_prefix
+					that.tags_prefix = data.tags_prefix
+					that.sheet_permalink_type = data.sheet_permalink_type
+					// 把服务端的数据和sheet_permalink_type比对，获得对应的选项索引
+					that.sheet_permalink_typeIndex = 
+						that.sheet_permalink_typeValue.indexOf(that.sheet_permalink_type)
+					that.sheet_prefix = data.sheet_prefix
+					that.links_prefix = data.links_prefix
+					that.photos_prefix = data.photos_prefix
+					that.journals_prefix = data.journals_prefix
+					that.path_suffix = data.path_suffix
+					uni.stopPullDownRefresh();
+				}).catch(err => {
+					uni.stopPullDownRefresh();
+					uni.showModal({
+						title: "获取数据失败",
+						content: err
+					});
+				});
 			},
 
 			/**
@@ -255,34 +234,16 @@
 					"path_suffix": this.path_suffix
 				}
 				let that = this
-				uni.request({
-					method: "POST",
-					dataType: "json",
-					url: this.getUrl() + "/api/admin/options/map_view/saving",
-					header: {
-						"Content-Type": "application/json",
-						"ADMIN-Authorization": this.getAccessToken()
-					},
-					data: json,
-					success: function(res) {
-						if (res.statusCode !== 200) {
-							that.popup("保存失败：" + res.statusCode);
-							// 登录过期
-							if (that.isExpiredByRequest(res)) {
-								that.popup("保存失败，登录已过期，请重新登陆");
-							}
-							return
-						}
-						that.popup("保存成功", "success");
-						that.refreshData()
-					},
-					fail: function(e) {
-						uni.showModal({
-							title: "保存数据失败",
-							content: e.errMsg
-						})
-					}
-				})
+				updateOptionsByMapViews(json).then(data => {
+					that.popup("保存成功", "success");
+					that.refreshData();
+				}).catch(err => {
+					uni.stopPullDownRefresh();
+					uni.showModal({
+						title: "保存数据失败",
+						content: err
+					});
+				});
 			},
 			
 			/**
