@@ -304,32 +304,36 @@
 			 * 加载用户信息
 			 */
 			loadAdminInfo: function() {
+				uni.showLoading({
+					title: "正在加载"
+				});
 				let that = this;
-				
 				getUserProfiles().then(data => {
 					// 设置个人数据到变量
 					if (data.avatar.indexOf("http") != -1) {
 						// 检查 avatar 是否是绝对地址
-						that.avatar = data.avatar
+						that.avatar = data.avatar;
 					} else {
-						that.avatar = that.getUrl() + data.avatar
+						that.avatar = that.getUrl() + data.avatar;
 					}
-					that.username = data.username
-					that.nickname = data.nickname
-					that.email = data.email
-					that.createTime = data.createTime
-					that.updateTime = data.updateTime
-					that.description = data.description
+					that.username = data.username;
+					that.nickname = data.nickname;
+					that.email = data.email;
+					that.createTime = data.createTime;
+					that.updateTime = data.updateTime;
+					that.description = data.description;
 					
 					// 计算用户已经创建多少天了
-					let now = Number(Date.parse(new Date()))
-					let createdTime = (now - Number(that.createTime)) / 1000
-					that.createdDay = Math.floor(createdTime / 86400)
+					let now = Number(Date.parse(new Date()));
+					let createdTime = (now - Number(that.createTime)) / 1000;
+					that.createdDay = Math.floor(createdTime / 86400);
 					// 停止下拉刷新
-					uni.stopPullDownRefresh()
-					that.popup('欢迎回来', 'success')
+					uni.stopPullDownRefresh();
+					uni.hideLoading();
+					that.popup('欢迎回来', 'success');
 				}).catch(err => {
 					uni.stopPullDownRefresh();
+					uni.hideLoading();
 					uni.showModal({
 						title: "获取个人资料失败",
 						content: err
