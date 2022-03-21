@@ -125,7 +125,7 @@
 		top: calc(50% - 15rpx);
 		right: 40rpx;
 		background-color: #cbcbcb;
-		width: 8rpx;
+		width: 4rpx;
 		height: 30rpx;
 		border-radius: 99999px;
 	}

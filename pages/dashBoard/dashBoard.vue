@@ -23,6 +23,45 @@
 							</view>
 						</uni-col>
 					</uni-row>
+					
+					<uni-row class="row">
+						<uni-col :span="10">
+							<view class="view-block-view" @click="onClick(2)">
+								<text class="view-block-title">分类</text>
+								<uni-icons class="view-block-icon" type="info" color="#2F54EB" size="20"></uni-icons>
+								<u-count-to class="view-block-text" :startVal="0" :endVal="categoryCount"
+									color="#000000" fontSize="2em"></u-count-to>
+							</view>
+						</uni-col>
+						<uni-col :span="10" :push="2">
+							<view class="view-block-view" @click="onClick(3)">
+								<text class="view-block-title">标签</text>
+								<uni-icons class="view-block-icon" type="info" color="#2F54EB" size="20"></uni-icons>
+								<u-count-to class="view-block-text" :startVal="0" :endVal="tagCount" color="#000000"
+									fontSize="2em"></u-count-to>
+							</view>
+						</uni-col>
+					</uni-row>
+					
+					<uni-row class="row">
+						<uni-col :span="10">
+							<view class="view-block-view">
+								<text class="view-block-title" @click="onClick(4)">日志</text>
+								<uni-icons class="view-block-icon" type="info" color="#2F54EB" size="20"></uni-icons>
+								<u-count-to class="view-block-text" :startVal="0" :endVal="journalCount" color="#000000"
+									fontSize="2em"></u-count-to>
+							</view>
+						</uni-col>
+						<uni-col :span="10" :push="2">
+							<view class="view-block-view">
+								<text class="view-block-title" @click="onClick(5)">链接</text>
+								<uni-icons class="view-block-icon" type="link" color="#2F54EB" size="20"></uni-icons>
+								<u-count-to class="view-block-text" :startVal="0" :endVal="linkCount" color="#000000"
+									fontSize="2em"></u-count-to>
+							</view>
+						</uni-col>
+						
+					</uni-row>
 
 					<uni-row class="row">
 						<uni-col :span="10">
@@ -42,51 +81,15 @@
 							</view>
 						</uni-col>
 					</uni-row>
+					
+					
 
 					<uni-row class="row">
 						<uni-col :span="10">
-							<view class="view-block-view" @click="onClick(2)">
-								<text class="view-block-title">分类</text>
-								<uni-icons class="view-block-icon" type="info" color="#2F54EB" size="20"></uni-icons>
-								<u-count-to class="view-block-text" :startVal="0" :endVal="categoryCount"
-									color="#000000" fontSize="2em"></u-count-to>
-							</view>
-						</uni-col>
-						<uni-col :span="10" :push="2">
-							<view class="view-block-view" @click="onClick(3)">
-								<text class="view-block-title">标签</text>
-								<uni-icons class="view-block-icon" type="info" color="#2F54EB" size="20"></uni-icons>
-								<u-count-to class="view-block-text" :startVal="0" :endVal="tagCount" color="#000000"
-									fontSize="2em"></u-count-to>
-							</view>
-						</uni-col>
-					</uni-row>
-
-					<uni-row class="row">
-						<uni-col :span="10">
-							<view class="view-block-view">
-								<text class="view-block-title" @click="onClick(4)">日志</text>
-								<uni-icons class="view-block-icon" type="info" color="#2F54EB" size="20"></uni-icons>
-								<u-count-to class="view-block-text" :startVal="0" :endVal="journalCount" color="#000000"
-									fontSize="2em"></u-count-to>
-							</view>
-						</uni-col>
-						<uni-col :span="10" :push="2">
 							<view class="view-block-view">
 								<text class="view-block-title">点赞</text>
 								<!-- <uni-icons class="view-block-icon" type="info" color="#2F54EB" size="20"></uni-icons> -->
 								<u-count-to class="view-block-text" :startVal="0" :endVal="likeCount" color="#000000"
-									fontSize="2em"></u-count-to>
-							</view>
-						</uni-col>
-					</uni-row>
-
-					<uni-row class="row">
-						<uni-col :span="10">
-							<view class="view-block-view">
-								<text class="view-block-title" @click="onClick(5)">链接</text>
-								<uni-icons class="view-block-icon" type="link" color="#2F54EB" size="20"></uni-icons>
-								<u-count-to class="view-block-text" :startVal="0" :endVal="linkCount" color="#000000"
 									fontSize="2em"></u-count-to>
 							</view>
 						</uni-col>

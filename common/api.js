@@ -1,17 +1,6 @@
 import request from "./request.js";
 
 /**
- * 加载博客统计信息
- */
-export function getBlogStatistics() {
-	return request({
-		url: "/api/admin/statistics",
-		method: "GET"
-	});
-}
-
-
-/**
  * 加载最近文章
  * @param {Object} top 加载的文章数量
  */
@@ -148,12 +137,34 @@ export function updateUserProfiles(json) {
 }
 
 /**
+ * 获取用户统计数据
+ */
+export function getUserStatistics() {
+	return request({
+		url: "/api/admin/statistics/user",
+		method: "GET"
+	});
+}
+
+/**
  * 注销登录状态
  */
 export function logout() {
 	return request({
 		url: "/api/admin/logout",
 		method: "POST"
+	});
+}
+
+
+
+/**
+ * 加载博客统计信息
+ */
+export function getBlogStatistics() {
+	return request({
+		url: "/api/admin/statistics",
+		method: "GET"
 	});
 }
 
@@ -269,12 +280,3 @@ export function deleteTheme(id) {
 	});
 }
 
-/**
- * 获取用户统计数据
- */
-export function getUserStatistics() {
-	return request({
-		url: "/api/admin/statistics/user",
-		method: "GET"
-	});
-}
