@@ -436,6 +436,7 @@
 						break;
 					// 问题反馈
 					case 4:
+						let that = this;
 						let url = "https://gitee.com/luodachui/halo-mobile-app/issues/new?issue%5Bassignee_id%5D=0&issue%5Bmilestone_id%5D=0";
 						this.openURL(url);
 						uni.setClipboardData({
