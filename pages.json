@@ -155,7 +155,7 @@
 	}, {
 		"path": "pages/categories/updateCategory/updateCategory",
 		"style": {
-			"navigationBarTitleText": "编辑文章",
+			"navigationBarTitleText": "",
 			"enablePullDownRefresh": false
 		}
 

@@ -15,6 +15,89 @@ export function getLatestPosts(top) {
 }
 
 /**
+ * 根据页数和每页显示数量获取文章
+ * @param {Object} page
+ * @param {Object} size
+ */
+export function getPosts(page, size) {
+	return request({
+		url: "/api/admin/posts?page=" + page + "&size=" + size,
+		method: "GET"
+	});
+}
+
+/**
+ * 根据文章 id 删除文章
+ * @param {Object} id
+ */
+export function deletePosts(id) {
+	return request({
+		url: "/api/admin/posts/" + id,
+		method: "DELETE"
+	});
+}
+
+/**
+ * 根据文章 id 更改文章状态
+ * @param {Object} id
+ */
+export function updatePostStatus(id, status) {
+	return request({
+		url: "/api/admin/posts/" + id + "/status/" + status,
+		method: "PUT"
+	});
+}
+
+/**
+ * 根据文章 id 获取文章数据
+ * @param {Object} id
+ */
+export function getPost(id) {
+	return request({
+		url: "/api/admin/posts/" + id,
+		method: "GET"
+	});
+}
+
+/**
+ * 修改文章数据
+ * @param {Object} id
+ * @param {Object} json
+ */
+export function updatePost(id, json, autoSave = "false") {
+	return request({
+		url: "/api/admin/posts/" + id + "?autoSave=" + autoSave,
+		method: "PUT",
+		data: json
+	});
+}
+
+/**
+ * 新增文章
+ * @param {Object} json
+ * @param {Object} autoSave
+ */
+export function addPost(json, autoSave = "false") {
+	return request({
+		url: "/api/admin/posts",
+		method: "POST",
+		data: json
+	});
+}
+
+/**
+ * 根据文章 id 获取文章预览 link
+ * @param {Object} id
+ */
+export function getPostPreviewLink(id) {
+	return request({
+		url: "/api/admin/posts/preview/" + id,
+		method: "GET",
+		allData: true
+	});
+}
+
+/**
  * 根据页数和每页显示数量获取附件
  * @param {Object} page
  * @param {Object} size
@@ -168,63 +251,6 @@ export function getBlogStatistics() {
 	});
 }
 
-/**
- * 根据页数和每页显示数量获取文章
- * @param {Object} page
- * @param {Object} size
- */
-export function getPosts(page, size) {
-	return request({
-		url: "/api/admin/posts?page=" + page + "&size=" + size,
-		method: "GET"
-	});
-}
-
-/**
- * 根据文章 id 删除文章
- * @param {Object} id
- */
-export function deletePosts(id) {
-	return request({
-		url: "/api/admin/posts/" + id,
-		method: "DELETE"
-	});
-}
-
-/**
- * 根据文章 id 更改文章状态
- * @param {Object} id
- */
-export function updatePostStatus(id, status) {
-	return request({
-		url: "/api/admin/posts/" + id + "/status/" + status,
-		method: "PUT"
-	});
-}
-
-/**
- * 根据文章 id 获取文章数据
- * @param {Object} id
- */
-export function getPost(id) {
-	return request({
-		url: "/api/admin/posts/" + id,
-		method: "GET"
-	});
-}
-
-/**
- * 修改文章数据
- * @param {Object} id
- * @param {Object} json
- */
-export function updatePost(id, json) {
-	return request({
-		url: "/api/admin/posts/" + id + "?autoSave=false",
-		method: "PUT",
-		data: json
-	});
-}
 
 
 /**

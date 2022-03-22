@@ -101,7 +101,7 @@
 		<uni-pagination style="padding-bottom: 80rpx;margin-left: 20rpx;margin-right: 20rpx;" title="文章" 
 		:pageSize="size" :total="total" :current="page + 1" @change="pageChange"></uni-pagination>
 		
-		
+		<uni-fab horizontal="right" vertical="bottom" @fabClick="onAddPostClick"></uni-fab>
 	</view>
 </template>
 
@@ -128,8 +128,6 @@
 				
 				sizes: ["4条/页", "8条/页", "16条/页", "24条/页", "48条/页", "96条/页"],
 				sizesIndex: 1,
-				popupType: "",
-				popupMessage: "",
 			}
 		},
 		
@@ -188,10 +186,11 @@
 					// 保存总页数
 					that.pages = data.pages;
 					
-					uni.stopPullDownRefresh()
-					uni.hideLoading()
+					uni.stopPullDownRefresh();
+					uni.hideLoading();
 				}).catch(err => {
 					uni.stopPullDownRefresh();
+					uni.hideLoading();
 					uni.showModal({
 						title: "获取数据失败",
 						content: err
@@ -229,6 +228,9 @@
 					});
 				} else {
 					// 编辑文章
+					uni.navigateTo({
+						url: "./edit/edit?id=" + this.posts[i].id + "?type=update"
+					})
 				}
 			},
 			
@@ -364,6 +366,15 @@
 				let postId = this.posts[i].id;
 				uni.navigateTo({
 					url:'./setting/setting?id=' + postId
+				})
+			},
+			
+			/**
+			 * 新增文章悬浮按钮点击事件
+			 */
+			onAddPostClick: function() {
+				uni.navigateTo({
+					url: "./edit/edit?type=add"
 				})
 			},
 			

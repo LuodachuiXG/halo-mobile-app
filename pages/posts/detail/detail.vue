@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		<joMarkdown :nodes="markdownData"></joMarkdown>
+		<u-parse :content="post.formatContent" :selectable="true"></u-parse>
 	</view>
 </template>
 
@@ -8,17 +8,11 @@
 	import {
 		getPost,
 	} from "../../../common/api.js";
-	import joMarkdown from '@/components/jo-markdown/decode.vue';
-	import markdownFunc from '@/components/jo-markdown/index.js';
 	export default {
-		components: {
-			joMarkdown
-		},
 		data() {
 			return {
 				postUrl: "",
-
-				markdownData: {},
+				post: [],
 				postId: 0,
 
 			}
@@ -39,9 +33,6 @@
 			}
 		},
 		
-		onBrowserClick: function() {
-			console.log(1)
-		},
 
 		methods: {
 			/**
@@ -51,7 +42,8 @@
 				let that = this;
 				getPost(this.postId).then(data => {
 					// 解析 markdown
-					that.markdownData = markdownFunc(data.originalContent, 'markdown');
+					that.post = data;
+					// that.markdownData = markdownFunc(data.originalContent, 'markdown');
 					that.postUrl = that.getUrl() + data.fullPath;
 					uni.stopPullDownRefresh()
 				}).catch(err => {
@@ -69,10 +61,7 @@
 </script>
 
 <style>
-	/* 解析 md */
-	@import '../../../components/jo-markdown/main.css';
-	
 	.content {
-		padding: 30rpx;
+		padding: 40rpx;
 	}
 </style>

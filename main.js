@@ -129,7 +129,7 @@ Vue.prototype.format = function(time) {
  */
 Vue.prototype.openURL = function(url) {
 	// #ifdef APP-PLUS
-	plus.runtime.openURL(url);
+	plus.runtime.openWeb(url);
 	// #endif
 	// #ifdef H5
 	window.open(url)

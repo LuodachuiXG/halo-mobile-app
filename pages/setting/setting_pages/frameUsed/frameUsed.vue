@@ -1,16 +1,12 @@
 <template>
 	<view class="content">
 		<view class="link">
-			<uni-link href="https://ext.dcloud.net.cn/plugin?id=6545"
-				text="markdown解析兼容小程序H5App @Joe5ree" color="blue"></uni-link>
+			<u-link href="https://ext.dcloud.net.cn/plugin?id=273" 
+				text="日期、时间、多级联动picker @380***@qq.com"></u-link>
 		</view>
 		<view class="link">
-			<uni-link href="https://ext.dcloud.net.cn/plugin?id=273"
-				text="日期、时间、多级联动picker @380***@qq.com" color="blue"></uni-link>
-		</view>
-		<view class="link">
-			<uni-link href="https://ext.dcloud.net.cn/plugin?id=1593"
-				text="uView2.0 @uViewUI " color="blue"></uni-link>
+			<u-link href="https://ext.dcloud.net.cn/plugin?id=1593"
+				text="uView2.0 @uViewUI"></u-link>
 		</view>
 	</view>
 </template>
@@ -33,6 +29,6 @@
 		padding: 30rpx;
 	}
 	.link {
-		margin-bottom: 20rpx;
+		margin-bottom: 40rpx;
 	}
 </style>

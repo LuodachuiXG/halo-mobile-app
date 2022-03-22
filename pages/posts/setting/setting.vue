@@ -75,7 +75,7 @@
 					
 				</view>
 				
-				<button class="btn" @click="onAddCategoryClick" v-if="!addCategory" 
+				<button class="btn add-btn" @click="onAddCategoryClick" v-if="!addCategory" 
 					style="margin-top: 20rpx;">新增分类</button>
 				<view v-if="addCategory" style="position: relative;">
 					<button class="btn save-btn" @click="onSaveClick">保存</button>
@@ -87,23 +87,14 @@
 			
 			<!-- 标签 -->
 			<view class="view-input" style="margin-right: 0rpx;">
-				<view class="view-input-titleView">标签：</view>
-	<!-- 			<uni-tag class="block-tag-item" v-for="(tag, i) in tagsRange"
-					:text="tag.text" type="success" :inverted="!(tagsValue.indexOf(tag.value) > -1)"
-					 @click="onTagClick(tag.value)"></uni-tag> -->
-					 
-					 
+				<view class="view-input-titleView">标签：</view>		 			 
 				<view class="block-tag">
 					<view class="block-tag-item"v-for="(tag, j) in tagsRange">
 						<u-tag :text="tag.text" :plain="!(tagsValue.indexOf(tag.value) > -1)" 
 							 type="success" @click="onTagClick(tag.value)"></u-tag>	
 					</view>
 				</view>	 
-					 
-					 
-					 
-					 
-					 
+
 				<uni-tag class="block-tag-item" text="新增 +" 
 					type="default" :inverted="true" @click="onAddTagClick"></uni-tag>
 			</view>
@@ -123,16 +114,21 @@
 			<view class="view-input">
 				<view class="view-input-titleView">封面图：</view>
 				<!-- 判断图片地址是否是绝对地址 -->
-				<image :src="thumbnail.indexOf('http') < 0  ? 
-						getUrl() + thumbnail : thumbnail" style="width: 100%;"></image>
+				<image :src="thumbnail.length <= 0 ? '/static/images/nothumbnail.jpg' 
+							: (thumbnail.indexOf('http') < 0  ? getUrl() + thumbnail : thumbnail)" 
+							style="width: 100%;"></image>
 				<view class="right-button-input">
 					<input class="input" type="text" v-model="thumbnail" />
 					<image src="/static/images/picture.png" @click="selectAttachment('thumbnail')"></image>
 				</view>
 			</view>
-			<button class="button save-button" type="primary" @click="saving" v-if="!advanced">
+			<button class="button save-button" type="primary" @click="saving" v-if="!advanced && type === 'update'">
 				保存
 			</button>
+			<view class="view-input" style="position: relative;margin-top: 20px;" v-if="!advanced && type === 'add'">
+				<button class="btn left-btn" type="warn" @click="saving(1)">保存草稿</button>
+				<button class="btn right-btn" type="primary" @click="releasePost">发布</button>
+			</view>
 		</view>
 		
 		<!-- 高级设置 -->
@@ -184,9 +180,13 @@
 						<button class="meta-add-btn" @click="onMetaAddClick">新增</button>
 					</view>
 					
-					<button class="button save-button" type="primary" @click="saving" v-if="advanced">
+					<button class="button save-button" type="primary" @click="saving" v-if="advanced && type === 'update'">
 						保存
 					</button>
+					<view class="view-input" style="position: relative;margin-top: 20px;" v-if="advanced && type === 'add'">
+						<button class="btn left-btn" type="warn" @click="saving(1)">保存草稿</button>
+						<button class="btn right-btn" type="primary" @click="releasePost">发布</button>
+					</view>
 				</uni-collapse-item>
 			</uni-collapse>
 		</view>
@@ -203,15 +203,19 @@
 		addCategory,
 		addTag,
 		updatePost,
+		addPost
 		
 	} from "../../../common/api.js";
 	export default {
 		data() {
 			return {
-				post: {},
+				// 标记当前是旧文章的设置更新，还是新文章的设置发布，add/update
+				type: "",
+				
+				post: [],
 				postId: 0,
-				categories: {},
-				tags: {},
+				categories: [],
+				tags: [],
 
 				title: "",
 				slug: "",
@@ -272,11 +276,18 @@
 			}
 		},
 		onLoad(res) {
-			this.postId = res.id;
+			// 如果上个页面没有传来文章 id， 证明当前是 新增/编辑文章 页面跳转的文章设置
+			if (res.id == undefined) {
+				this.type = "add";
+			} else {
+				this.postId = res.id;
+				this.type = "update";
+			}
+			this.refreshPostData();
 		},
 
 		mounted() {
-			this.refreshPostData();
+			
 		},
 
 		methods: {
@@ -284,34 +295,77 @@
 			 * 刷新文章数据
 			 */
 			refreshPostData: function() {
-				let that = this;
-				getPost(this.postId).then(data => {
-					that.post = data;
-					that.title = that.post.title;
-					that.slug = that.post.slug;
-					that.topped = that.post.topped;
-					that.createTimeStamp = that.post.createTime;
-					that.createTime = that.format(that.createTimeStamp);
-					that.disallowComment = that.post.disallowComment;
+				let mPost;
+				if (this.type === "add") {
+					// 当前是 新增/编辑文章 页面跳转的文章设置，从上个页面直接读取 post
+					let pages = getCurrentPages();
+					// 上一页面实例
+					let prevPage = pages[pages.length - 2];
+					
+					mPost = prevPage.$vm._data.post;
+					this.title = mPost.title;
+					this.slug = mPost.slug == undefined ? '' : mPost.slug;
+					this.topped = mPost.topped == undefined ? false : mPost.topped;
+					this.createTimeStamp = mPost.createTime == undefined ? new Date() : mPost.createTime;
+					this.createTime = this.format(this.createTimeStamp);
+					this.disallowComment = mPost.disallowComment == undefined ? false : mPost.disallowComment;
 					// 保存当前文章的分类目录ID
-					that.categoriesValue = that.post.categoryIds;
+					this.categoriesValue = mPost.categoryIds == undefined ? [] : mPost.categoryIds;
 					// 保存当前文章的标签ID
-					that.tagsValue = that.post.tagIds;
-					that.thumbnail = that.post.thumbnail;
-					that.summary = that.post.summary;
-					that.password = that.post.password;
-					that.metaKeywords = that.post.metaKeywords;
-					that.metaDescription = that.post.metaDescription;
-					that.metaIds = that.post.metaIds;
-					that.metas = that.post.metas;
-				}).catch(err => {
-					uni.stopPullDownRefresh();
-					uni.showModal({
-						title: "获取文章数据失败",
-						content: err
+					this.tagsValue = mPost.tagIds == undefined ? [] :  mPost.tagIds;
+					this.thumbnail = mPost.thumbnail == undefined ? "" :  mPost.thumbnail;
+					this.summary = mPost.summary == undefined ? "" :  mPost.summary;
+					this.password = mPost.password == undefined ? "" :  mPost.password;
+					this.metaKeywords = mPost.metaKeywords == undefined ? "" :  mPost.metaKeywords;
+					this.metaDescription = mPost.metaDescription == undefined ? "" :  mPost.metaDescription;
+					this.metaIds = mPost.metaIds == undefined ? [] :  mPost.metaIds;
+					this.metas = mPost.metas == undefined ? [] :  mPost.metas;
+					
+					// 对 this.post 进行初始化，否则如果是新文章的话，提交数据会没有主体
+					this.post = {
+						"title" : this.title,
+						"slug" : this.slug,
+						"topPriority" : this.topped ? 1 : 0,
+						"createTime" : this.createTime,
+						"disallowComment" : this.disallowComment,
+						"thumbnail" : this.thumbnail,
+						"summary" : this.summary,
+						"password" : this.password,
+						"metaKeywords" : this.metaKeywords,
+						"metaDescription" : this.metaDescription,
+						"metaIds" : this.metaIds,
+						"metas" : this.metas,
+						"originalContent" : mPost.originalContent
+					};
+				} else {
+					let that = this;
+					getPost(this.postId).then(data => {
+						mPost = data;
+						that.post = mPost;
+						that.title = mPost.title;
+						that.slug = mPost.slug;
+						that.topped = mPost.topped;
+						that.createTimeStamp = mPost.createTime;
+						that.createTime = that.format(that.createTimeStamp);
+						that.disallowComment = mPost.disallowComment;
+						// 保存当前文章的分类目录ID
+						that.categoriesValue = mPost.categoryIds;
+						// 保存当前文章的标签ID
+						that.tagsValue = mPost.tagIds;
+						that.thumbnail = mPost.thumbnail;
+						that.summary = mPost.summary;
+						that.password = mPost.password;
+						that.metaKeywords = mPost.metaKeywords;
+						that.metaDescription = mPost.metaDescription;
+						that.metaIds = mPost.metaIds;
+						that.metas = mPost.metas;
+					}).catch(err => {
+						uni.showModal({
+							title: "获取文章数据失败",
+							content: err
+						});
 					});
-				});
-				
+				}
 				// 刷新分类数据
 				this.refreshCategoryData();
 				// 刷新标签数据
@@ -345,9 +399,7 @@
 					that.parentText[0] = "0";
 					that.parentValue[0] = 0;
 					
-					uni.stopPullDownRefresh()
 				}).catch(err => {
-					uni.stopPullDownRefresh();
 					uni.showModal({
 						title: "获取分类数据失败",
 						content: err
@@ -374,9 +426,7 @@
 						that.tagsRange.push(json);
 					}
 					
-					uni.stopPullDownRefresh()
 				}).catch(err => {
-					uni.stopPullDownRefresh();
 					uni.showModal({
 						title: "获取标签数据失败",
 						content: err
@@ -491,7 +541,6 @@
 								thatt.popup("添加标签成功", "success");
 								thatt.refreshTagData();
 							}).catch(err => {
-								uni.stopPullDownRefresh();
 								uni.showModal({
 									title: "添加标签失败",
 									content: err
@@ -521,14 +570,16 @@
 			
 			/**
 			 * 保存按钮点击事件
+			* @param {Object} i 0 为保存，1为保存草稿
 			 */
-			saving: function() {
+			saving: function(i = 0) {
 				if (this.title.length <= 0) {
 					this.popup("文章标题不能为空");
 					return ;
 				}
-				let that = this;
-				let json = this.post;
+				
+				var that = this;
+				var json = this.post;
 				json.title = this.title;
 				json.slug = this.slug;
 				json.createTime = this.createTimeStamp;
@@ -543,12 +594,38 @@
 				json.metaIds = this.metaIds;
 				json.topPriority = this.topped ? 1 : 0;
 				
-				// 提交修改
-				updatePost(that.post.id, json).then(data => {
-					that.popup("保存数据成功", "success");
-					that.refreshPostData();
+				if (i === 1) {
+					// 当前是保存草稿，将 status 改为 DRAFT
+					json.status = "DRAFT";
+					if (this.post.id === undefined || this.post.id.length <= 0) {
+						// id 不存在，证明是新文章，所以这里创建新文章
+						addPost(json).then(data => {
+							// 创建文章成功，保存 id
+							that.toast("保存草稿成功")
+							uni.navigateBack({
+								delta: 2
+							})
+						}).catch(err => {
+							uni.showModal({
+								title: "保存草稿失败",
+								content: err
+							});
+						});
+						return ;
+					}
+				}
+				updatePost(this.post.id, json).then(data => {
+					if (i === 1) {
+						that.toast("保存草稿成功");
+						uni.navigateBack({
+							delta: 2
+						})
+					} else {
+						that.popup("保存数据成功", "success");
+						that.refreshPostData();
+					}
+					
 				}).catch(err => {
-					uni.stopPullDownRefresh();
 					uni.showModal({
 						title: "保存数据失败",
 						content: err
@@ -578,6 +655,56 @@
 				date.setSeconds(res.obj.second);
 				this.createTimeStamp = date.getTime();
 				this.createTime = this.format(this.createTimeStamp);
+			},
+			
+			/**
+			 * 发布按钮点击事件
+			 */
+			releasePost: function() {
+				var that = this;
+				var json = this.post;
+				json.title = this.title;
+				json.slug = this.slug;
+				json.status = "PUBLISHED";
+				json.createTime = this.createTimeStamp;
+				json.metaKeywords = this.metaKeywords;
+				json.metaDescription = this.metaDescription;
+				json.summary = this.summary;
+				json.thumbnail = this.thumbnail;
+				json.disallowComment = this.disallowComment;
+				json.password = this.password;
+				json.tagIds = this.tagsValue;
+				json.categoryIds = this.categoriesValue;
+				json.metaIds = this.metaIds;
+				json.topPriority = this.topped ? 1 : 0;
+				if (this.post.id == undefined) {
+					// 当前文章没有 id 所以这里是创建文章
+					addPost(json).then(data => {
+						// 创建文章成功，保存 id
+						that.toast("发布文章成功")
+						uni.navigateBack({
+							delta: 2
+						})
+					}).catch(err => {
+						uni.showModal({
+							title: "发布文章失败",
+							content: err
+						});
+					});
+				} else {
+					// 当前文章有 id 所以是保存数据
+					updatePost(this.post.id, json).then(data => {
+						that.popup("保存数据成功", "success");
+						uni.navigateBack({
+							delta: 2
+						})
+					}).catch(err => {
+						uni.showModal({
+							title: "保存数据失败",
+							content: err
+						});
+					});
+				}
 			},
 			
 
@@ -611,19 +738,21 @@
 		background-color: var(--activatedColor);
 	}
 	.btn {
-		background-color: var(--primaryColor);
 		color: #FFFFFF;
 		height: 60rpx;
 		line-height: 60rpx;
 		margin-right: 20rpx;
 		font-size: .9em;
 	}
+	.add-btn {
+		background-color: var(--primaryColor);
+	}
 	
 	.save-btn {
 		display: inline-block;
 		width: 47%;
 		position: relative;
-		
+		background-color: var(--primaryColor);
 	}
 	
 	.cancel-btn {
@@ -654,6 +783,20 @@
 	}
 	.view-meta {
 		margin-bottom: 20rpx;
+	}
+	.left-btn {
+		display: inline-block;
+		width: 47%;
+		position: relative;
+		
+	}
+	
+	.right-btn {
+		display: inline-block;
+		width: 47%;
+		position: absolute;
+		margin-right: 0px;
+		right: 0px;
 	}
 
 </style>
