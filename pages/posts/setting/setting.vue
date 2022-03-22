@@ -88,9 +88,22 @@
 			<!-- 标签 -->
 			<view class="view-input" style="margin-right: 0rpx;">
 				<view class="view-input-titleView">标签：</view>
-				<uni-tag class="block-tag-item" v-for="(tag, i) in tagsRange"
+	<!-- 			<uni-tag class="block-tag-item" v-for="(tag, i) in tagsRange"
 					:text="tag.text" type="success" :inverted="!(tagsValue.indexOf(tag.value) > -1)"
-					 @click="onTagClick(tag.value)"></uni-tag>
+					 @click="onTagClick(tag.value)"></uni-tag> -->
+					 
+					 
+				<view class="block-tag">
+					<view class="block-tag-item"v-for="(tag, j) in tagsRange">
+						<u-tag :text="tag.text" :plain="!(tagsValue.indexOf(tag.value) > -1)" 
+							 type="success" @click="onTagClick(tag.value)"></u-tag>	
+					</view>
+				</view>	 
+					 
+					 
+					 
+					 
+					 
 				<uni-tag class="block-tag-item" text="新增 +" 
 					type="default" :inverted="true" @click="onAddTagClick"></uni-tag>
 			</view>
@@ -623,7 +636,8 @@
 	}
 	.block-tag-item {
 		margin-right: 20rpx;
-		font-weight: bold;
+		margin-top: 20rpx;
+		display: inline-block;
 
 	}
 	.block-tag-item:first-child {

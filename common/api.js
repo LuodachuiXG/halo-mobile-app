@@ -220,7 +220,7 @@ export function getPost(id) {
  */
 export function updatePost(id, json) {
 	return request({
-		url: "/api/admin/posts/" + id,
+		url: "/api/admin/posts/" + id + "?autoSave=false",
 		method: "PUT",
 		data: json
 	});

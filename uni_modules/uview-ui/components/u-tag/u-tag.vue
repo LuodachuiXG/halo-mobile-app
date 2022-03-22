@@ -152,12 +152,14 @@
 
 	.u-tag-wrapper {
 		position: relative;
+		
 	}
 
 	.u-tag {
 		@include flex;
 		align-items: center;
 		border-style: solid;
+		
 
 		&--circle {
 			border-radius: 100px;

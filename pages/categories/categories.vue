@@ -20,8 +20,12 @@
 			<view class="block-data"
 				:style="category.thumbnail == '' ? 'border-top:none' : 'border-top: 1px solid #ececec;'">
 				<view class="block-tag">
-					<uni-tag class="block-tag-item" type="primary" :text="'文章数：' + category.postCount"></uni-tag>
+					<view class="block-tag-item">
+						<u-tag :text="'文章数：' + category.postCount"></u-tag>
+					</view>
 				</view>
+				
+				
 			</view>
 
 			<!-- 操作按钮 -->
@@ -203,6 +207,7 @@
 		margin-top: 0rpx;
 		margin-left: 20rpx;
 		font-weight: bold;
+		display: inline-block;
 	}
 
 	.block-tag-item:first-child {

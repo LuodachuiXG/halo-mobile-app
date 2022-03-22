@@ -24,14 +24,16 @@
 			
 			<!-- 文章分类标签 -->
 			<view class="block-tag" v-if="post.categories.length > 0">
-				<uni-tag class="block-tag-item" type="primary" :inverted="true"
-					v-for="(categorie, j) in post.categories" :text="categorie.name"></uni-tag>
+				<view class="block-tag-item" v-for="(categorie, j) in post.categories">
+					<u-tag :text="categorie.name" plain plainFill type="warning"></u-tag>
+				</view>
 			</view>
 			
 			<!-- 文章标签 -->
 			<view class="block-tag" v-if="post.tags.length > 0">
-				<uni-tag class="block-tag-item" type="success" :inverted="true"
-					v-for="(tag, j) in post.tags" :text="tag.name"></uni-tag>
+				<view class="block-tag-item"v-for="(tag, j) in post.tags">
+					<u-tag :text="tag.name" plain plainFill type="success"></u-tag>	
+				</view>
 			</view>
 			
 			<!-- 显示文章状态 -->
@@ -468,15 +470,14 @@
 		padding-left: 30rpx;
 		padding-right: 30rpx;
 		padding-bottom: 20rpx;
+		
 	}
 	.block-tag-item {
 		margin-right: 20rpx;
-		font-weight: bold;
-		
+		margin-top: 20rpx;
+		display: inline-block;
 	}
-	.block-tag-item:first-child {
-		margin-left: 0rpx;
-	}
+
 	.block-status {
 		position: relative;
 		padding-left: 30rpx;
