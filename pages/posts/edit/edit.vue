@@ -5,11 +5,11 @@
 		<view class="block">
 			<view class="view-input">
 				<view class="view-input-titleView"><text style="color: red;">*</text>文章标题：</view>
-				<input class="input" type="text" v-model="title" placeholder="请输入标题"/>
+				<input class="input" type="text" v-model="title" placeholder="请输入标题"/>111
 			</view>
 			<view class="view-input">
 				<view class="view-input-titleView">文章内容：</view>
-				<u--textarea v-model="originalContent" 
+				<u--textarea v-model="originalContent"
 					placeholder="请输入内容" autoHeight :maxlength="-1" ></u--textarea>
 			</view>
 			<view class="view-input" style="position: relative;margin-top: 20px;">

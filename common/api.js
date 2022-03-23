@@ -17,11 +17,12 @@ export function getLatestPosts(top) {
 /**
  * 根据页数和每页显示数量获取文章
  * @param {Object} page
- * @param {Object} size
+ * @param {Object} sizec
  */
-export function getPosts(page, size) {
+export function getPosts(page, size, keyword = "", status = "", categoryId = "") {
 	return request({
-		url: "/api/admin/posts?page=" + page + "&size=" + size,
+		url: "/api/admin/posts?page=" + page + "&size=" + size + 
+		"&keyword=" + keyword + "&categoryId=" + categoryId + "&status=" + status,
 		method: "GET"
 	});
 }

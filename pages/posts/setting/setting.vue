@@ -597,9 +597,7 @@
 				json.categoryIds = this.categoriesValue;
 				json.metaIds = this.metaIds;
 				json.topPriority = this.topped ? 1 : 0;
-				console.log("id:" + json.id)
 				if (i === 1) {
-					console.log(1)
 					// 保存草稿
 					json.status = "DRAFT";
 					
@@ -632,7 +630,6 @@
 						});
 					}
 				} else {
-					console.log(0)
 					// i = 1，文章设置的保存数据
 					updatePost(json.id, json).then(data => {
 						that.popup("保存数据成功", "success");
