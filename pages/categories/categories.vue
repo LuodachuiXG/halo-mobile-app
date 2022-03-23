@@ -64,9 +64,6 @@
 		data() {
 			return {
 				categories: [],
-
-				popupType: "",
-				popupMessage: "",
 			}
 		},
 

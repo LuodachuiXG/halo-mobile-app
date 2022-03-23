@@ -59,7 +59,7 @@
 			<!-- 文章分类标签 -->
 			<view class="block-tag" v-if="post.categories.length > 0">
 				<view class="block-tag-item" v-for="(category, j) in post.categories">
-					<u-tag :text="category.name" plain plainFill type="warning" 
+					<u-tag :text="category.name" plain plainFill type="primary" 
 						@click="onCategoryTagClick(category.id)"></u-tag>
 				</view>
 			</view>

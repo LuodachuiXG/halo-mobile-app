@@ -207,6 +207,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/tags/updateTag/updateTag",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",

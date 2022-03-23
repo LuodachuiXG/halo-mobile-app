@@ -241,10 +241,16 @@
 							url: '../posts/posts'
 						});
 						break;
-						// 分类
+					// 分类
 					case 2:
 						uni.navigateTo({
 							url: '../categories/categories'
+						});
+						break;
+					// 标签
+					case 3:
+						uni.navigateTo({
+							url: '../tags/tags'
 						});
 						break;
 

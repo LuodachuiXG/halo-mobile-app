@@ -276,6 +276,28 @@ export function addTag(json) {
 }
 
 /**
+ * 更新标签
+ */
+export function updateTag(id, json) {
+	return request({
+		url: "/api/admin/tags/" + id,
+		method: "PUT",
+		data: json
+	});
+}
+
+
+/**
+ * 删除标签
+ */
+export function deleteTag(id) {
+	return request({
+		url: "/api/admin/tags/" + id,
+		method: "DELETE"
+	});
+}
+
+/**
  * 获取主题数据
  */
 export function getThemes() {
