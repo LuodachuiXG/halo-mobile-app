@@ -5,7 +5,7 @@
 		<view class="block">
 			<view class="view-input">
 				<view class="view-input-titleView"><text style="color: red;">*</text>文章标题：</view>
-				<input class="input" type="text" v-model="title" placeholder="请输入标题"/>111
+				<input class="input" type="text" v-model="title" placeholder="请输入标题"/>
 			</view>
 			<view class="view-input">
 				<view class="view-input-titleView">文章内容：</view>
