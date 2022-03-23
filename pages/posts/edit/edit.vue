@@ -42,7 +42,7 @@
 				title: "",
 				originalContent: "",
 				// 悬浮按钮弹出菜单
-				content: [{"text": "附件库", "iconPath": "/static/images/picture_gray.png"},
+				content: [{"text": "附件库", "iconPath": "/static/images/attachment.png"},
 					{"text": "预览", "iconPath": "/static/images/preview.png"}],
 					
 				// 用于存储选择附件的 URL

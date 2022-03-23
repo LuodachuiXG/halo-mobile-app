@@ -266,7 +266,7 @@ export function getTags(more = "true") {
 /**
  * 添加标签
  */
-export function addTag() {
+export function addTag(json) {
 	return request({
 		url: "/api/admin/tags",
 		method: "POST",

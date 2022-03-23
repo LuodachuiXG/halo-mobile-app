@@ -301,8 +301,9 @@
 					let pages = getCurrentPages();
 					// 上一页面实例
 					let prevPage = pages[pages.length - 2];
-					
 					mPost = prevPage.$vm._data.post;
+					this.postId = 
+						(mPost.id !== undefined  && mPost.id !== 0) ? mPost.id : 0;
 					this.title = mPost.title;
 					this.slug = mPost.slug == undefined ? '' : mPost.slug;
 					this.topped = mPost.topped == undefined ? false : mPost.topped;
@@ -321,8 +322,10 @@
 					this.metaIds = mPost.metaIds == undefined ? [] :  mPost.metaIds;
 					this.metas = mPost.metas == undefined ? [] :  mPost.metas;
 					
+					
 					// 对 this.post 进行初始化，否则如果是新文章的话，提交数据会没有主体
 					this.post = {
+						"id": this.postId,
 						"title" : this.title,
 						"slug" : this.slug,
 						"topPriority" : this.topped ? 1 : 0,
@@ -338,6 +341,7 @@
 						"originalContent" : mPost.originalContent
 					};
 				} else {
+					// 当前是修改文章设置模式，通过文章 id 获取文章数据
 					let that = this;
 					getPost(this.postId).then(data => {
 						mPost = data;
@@ -570,7 +574,7 @@
 			
 			/**
 			 * 保存按钮点击事件
-			* @param {Object} i 0 为保存，1为保存草稿
+			  * @param {Object} i 0 为文章设置的保存数据，1 为新增/编辑文章的保存草稿
 			 */
 			saving: function(i = 0) {
 				if (this.title.length <= 0) {
@@ -593,12 +597,14 @@
 				json.categoryIds = this.categoriesValue;
 				json.metaIds = this.metaIds;
 				json.topPriority = this.topped ? 1 : 0;
-				
+				console.log("id:" + json.id)
 				if (i === 1) {
-					// 当前是保存草稿，将 status 改为 DRAFT
+					console.log(1)
+					// 保存草稿
 					json.status = "DRAFT";
-					if (this.post.id === undefined || this.post.id.length <= 0) {
-						// id 不存在，证明是新文章，所以这里创建新文章
+					
+					if (json.id === undefined || json.id === 0) {
+						// 当前文章没有 id 所以这里是创建一个文章并设置草稿状态
 						addPost(json).then(data => {
 							// 创建文章成功，保存 id
 							that.toast("保存草稿成功")
@@ -611,40 +617,57 @@
 								content: err
 							});
 						});
-						return ;
-					}
-				}
-				updatePost(this.post.id, json).then(data => {
-					if (i === 1) {
-						that.toast("保存草稿成功");
-						uni.navigateBack({
-							delta: 2
-						})
 					} else {
+						// 当前文章有 id 所以是保存数据并设置草稿状态
+						updatePost(json.id, json).then(data => {
+							that.popup("保存草稿成功", "success");
+							uni.navigateBack({
+								delta: 2
+							})
+						}).catch(err => {
+							uni.showModal({
+								title: "保存草稿失败",
+								content: err
+							});
+						});
+					}
+				} else {
+					console.log(0)
+					// i = 1，文章设置的保存数据
+					updatePost(json.id, json).then(data => {
 						that.popup("保存数据成功", "success");
 						that.refreshPostData();
-					}
-					
-				}).catch(err => {
-					uni.showModal({
-						title: "保存数据失败",
-						content: err
+					}).catch(err => {
+						uni.showModal({
+							title: "保存数据失败",
+							content: err
+						});
 					});
-				});
+				}
 			},
 			
-			// 元数据新增按钮点击事件
+			/**
+			 * 元数据新增按钮点击事件
+			 */
 			onMetaAddClick: function() {
 				let json = {"value":"", "key": ""};
 				this.metas.push(json);
 			},
 			
-			// 元数据删除按钮点击事件
+			/**
+			 * 元数据删除按钮点击事件
+			 * @param {Object} i 索引
+			 */
 			onMetaDeleteClick: function(i) {
 				this.metas.splice(i, 1);
 				this.metaIds.splice(i, 1);
 			},
 			
+			/**
+			 * 选择创建时间的确认事件
+			 * @param {Object} res
+			 * @param {Object} e
+			 */
 			onCreateTimeConfirm: function(res, e) {
 				var date = new Date();
 				date.setFullYear(res.obj.year);
@@ -677,7 +700,7 @@
 				json.categoryIds = this.categoriesValue;
 				json.metaIds = this.metaIds;
 				json.topPriority = this.topped ? 1 : 0;
-				if (this.post.id == undefined) {
+				if (json.id === undefined || json.id === 0) {
 					// 当前文章没有 id 所以这里是创建文章
 					addPost(json).then(data => {
 						// 创建文章成功，保存 id
@@ -693,7 +716,7 @@
 					});
 				} else {
 					// 当前文章有 id 所以是保存数据
-					updatePost(this.post.id, json).then(data => {
+					updatePost(json.id, json).then(data => {
 						that.popup("保存数据成功", "success");
 						uni.navigateBack({
 							delta: 2

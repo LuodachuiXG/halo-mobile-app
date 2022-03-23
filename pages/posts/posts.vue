@@ -162,7 +162,10 @@
 					this.size = 96
 					break;	
 			}
-			this.refreshData()
+		},
+		
+		onShow()	 {
+			this.refreshData();
 		},
 		
 		// 下拉刷新事件
