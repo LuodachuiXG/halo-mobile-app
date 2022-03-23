@@ -5,7 +5,7 @@
 		<!-- 文章筛选组件 -->
 		<u-sticky>
 			<uni-collapse>
-				<uni-collapse-item title="文章筛选" open>
+				<uni-collapse-item title="文章筛选">
 					<view>
 						<view class="view-input">
 							<view class="view-input-titleView">关键词：</view>
