@@ -5,7 +5,7 @@
 		<!-- 文章筛选组件 -->
 		<u-sticky>
 			<uni-collapse>
-				<uni-collapse-item title="文章筛选">
+				<uni-collapse-item title="文章筛选" :open="collapseOpen">
 					<view>
 						<view class="view-input">
 							<view class="view-input-titleView">关键词：</view>
@@ -58,8 +58,9 @@
 
 			<!-- 文章分类标签 -->
 			<view class="block-tag" v-if="post.categories.length > 0">
-				<view class="block-tag-item" v-for="(categorie, j) in post.categories">
-					<u-tag :text="categorie.name" plain plainFill type="warning"></u-tag>
+				<view class="block-tag-item" v-for="(category, j) in post.categories">
+					<u-tag :text="category.name" plain plainFill type="warning" 
+						@click="onCategoryTagClick(category.id)"></u-tag>
 				</view>
 			</view>
 
@@ -151,6 +152,9 @@
 	export default {
 		data() {
 			return {
+				// 控制文章筛选折叠面板是否打开
+				collapseOpen: false,
+				
 				// 文章筛选中文章状态的选项数据
 				post_statusText: ["所有状态", "已发布", "草稿", "回收站", "私密"],
 				post_statusValue: ["", "PUBLISHED", "DRAFT", "RECYCLE", "INTIMATE"],
@@ -490,6 +494,17 @@
 				this.post_statusIndex = 0;
 				this.categoriesIndex = 0;
 				this.refreshData();
+			},
+			
+			/**
+			 * 文章方块上分类标签的点击事件，筛选出当前分类的所有文章
+			 * @param {Object} id
+			 */
+			onCategoryTagClick: function(id) {
+				this.categoriesIndex = this.categoriesValue.indexOf(id);
+				this.refreshData();
+				this.popup("你选择了：" + this.categories[this.categoriesIndex - 1].name, "success");
+				this.collapseOpen = true;
 			},
 
 			/**

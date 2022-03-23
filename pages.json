@@ -198,6 +198,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/tags/tags",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "所有标签",
+                "enablePullDownRefresh": true
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
