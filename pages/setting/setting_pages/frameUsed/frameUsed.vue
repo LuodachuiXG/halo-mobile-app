@@ -8,6 +8,10 @@
 			<u-link href="https://ext.dcloud.net.cn/plugin?id=1593"
 				text="uView2.0 @uViewUI"></u-link>
 		</view>
+		<view class="link">
+			<u-link href="https://ext.dcloud.net.cn/plugin?id=412"
+				text="t-color-picker 颜色选择器"></u-link>
+		</view>
 	</view>
 </template>
 

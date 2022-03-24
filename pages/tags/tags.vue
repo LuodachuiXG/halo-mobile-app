@@ -11,7 +11,8 @@
 			<view class="block-tag">
 				<view class="block-tag-item" v-for="(tag, i) in tags">
 					<u-tag :text="tag.name + '(' + tag.postCount + ')'" plain plainFill closable 
-						type="primary" @close="onCloseTagClick(i)" @click="onEditClick(i)"></u-tag>
+						type="info" @close="onCloseTagClick(i)" @click="onEditClick(i)"
+						:bgColor="tag.color" :borderColor="tag.color" color="#000000"></u-tag>
 				</view>
 			</view>
 		</view>

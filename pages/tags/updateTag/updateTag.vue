@@ -14,6 +14,13 @@
 				<input class="input" type="text" v-model="slug" />
 				<text class="view-input-text">* 一般为单个分类页面的标识，最好为英文</text>
 			</view>
+			
+			<view class="view-input">
+				<view class="view-input-titleView">颜色：</view>
+				<input class="input" type="text" v-model="color" @click="onColorClick" disabled="true"/>
+				<view class="color-show" :style="'background-color:' + color"></view>
+				<t-color-picker ref="colorPicker" @confirm="onColorConfirm" :color="hexToRgb(color)"></t-color-picker>
+			</view>
 
 			<view class="view-input">
 				<view class="view-input-titleView">封面图：</view>
@@ -48,6 +55,7 @@
 
 				name: "",
 				slug: "",
+				color: "",
 				thumbnail: "",
 			}
 		},
@@ -80,10 +88,11 @@
 				this.name = this.tags[this.tagIndex].name;
 				this.slug = this.tags[this.tagIndex].slug;
 				this.thumbnail = this.tags[this.tagIndex].thumbnail;
+				this.color = this.tags[this.tagIndex].color;
 			}
 		},
 		mounted() {
-
+			
 		},
 
 		methods: {
@@ -110,7 +119,8 @@
 				let json = {
 					"name": this.name,
 					"slug": this.slug,
-					"thumbnail": this.thumbnail
+					"thumbnail": this.thumbnail,
+					"color": this.color
 				};
 
 				if (this.type == "add") {
@@ -142,6 +152,22 @@
 
 				}
 			},
+			
+			
+			/**
+			 * 选择颜色点击选项，弹出颜色选择框
+			 */
+			onColorClick: function() {
+				this.$refs.colorPicker.open();
+			},
+			
+			/**
+			 * 颜色选择器选择事件
+			 * @param {Object} e
+			 */
+			onColorConfirm: function(e) {
+				this.color = e.hex;
+			},
 
 			/**
 			 * popup弹出层
@@ -165,5 +191,13 @@
 	.save-button {
 		margin: 20rpx;
 		margin-bottom: 30rpx;
+	}
+	.color-show {
+		position: absolute;
+		top: 32px;
+		right: 10px;
+		border-radius: 9999px;
+		width: 24px;
+		height: 24px;
 	}
 </style>

@@ -161,6 +161,7 @@
 	}
 	
 	.view-input {
+		position: relative;
 		margin: 30rpx;
 		margin-left: 20rpx;
 		margin-right: 20rpx;

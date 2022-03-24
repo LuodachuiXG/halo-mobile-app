@@ -167,3 +167,17 @@ Vue.prototype.arrayRemove = function(array, value) {
 	}
 	return array;
 };
+
+/**
+ * 将 hex 转为 rgb
+ * @param {Object} hex
+ * @param {Object} opacity
+ */
+Vue.prototype.hexToRgb = function(hex) {
+    return {
+        r: parseInt("0x" + hex.slice(1, 3)),
+        g: parseInt("0x" + hex.slice(3, 5)),
+        b: parseInt("0x" + hex.slice(5, 7)),
+		a: 1
+    }
+};

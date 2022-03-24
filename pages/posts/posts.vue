@@ -134,11 +134,11 @@
 						@click="onCategoryTagClick(category.id)"></u-tag>
 				</view>
 			</view>
-
 			<!-- 文章标签 -->
 			<view class="block-tag" v-if="post.tags.length > 0">
 				<view class="block-tag-item" v-for="(tag, j) in post.tags">
-					<u-tag :text="tag.name" plain plainFill type="success"></u-tag>
+					<u-tag :text="tag.name" plain plainFill type="success"
+						:bgColor="tag.color" :borderColor="tag.color" color="#000000"></u-tag>
 				</view>
 			</view>
 
