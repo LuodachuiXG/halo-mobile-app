@@ -21,6 +21,14 @@
 				<text class="view-input-text">* 登录后台系统的邮箱</text>
 			</view>
 			<view class="view-input">
+				<view class="view-input-titleView">头像：</view>
+				<view class="right-button-input">
+					<input class="input" type="text" v-model="avatar" />
+					<image src="/static/images/picture.png" @click="selectAttachment('avatar')"></image>
+				</view>
+				<text class="view-input-text">* 在分类页面可展示，需要主题支持</text>
+			</view>
+			<view class="view-input">
 				<view class="view-input-titleView">个人说明：</view>
 				<textarea class="input" v-model="description"></textarea>
 			</view>
@@ -44,6 +52,7 @@
 				description: "",
 				createTime: "",
 				updateTime: "",
+				avatar: "",
 			}
 		},
 		mounted() {
@@ -70,6 +79,7 @@
 					that.description = user.description;
 					that.createTime = user.createTime;
 					that.updateTime = user.updateTime;
+					that.avatar = user.avatar;
 					uni.stopPullDownRefresh();
 				}).catch(err => {
 					uni.stopPullDownRefresh();
@@ -93,7 +103,8 @@
 					"username": this.username,
 					"nickname": this.nickname,
 					"email": this.email,
-					"description": this.description
+					"description": this.description,
+					"avatar": this.avatar
 				};
 				let that = this;
 				updateUserProfiles(json).then(data => {
@@ -107,6 +118,17 @@
 				});
 				
 			},
+			
+			/**
+			 * 打开新窗口选择附件
+			 * @param {Object} attrName 当前页面的变量，传递给附件选择页，用于选择附件后修改的变量
+			 */
+			selectAttachment: function(attrName) {
+				uni.navigateTo({
+					url: "../attachment/selectAttachment/selectAttachment?attrName=" + attrName
+				})
+			},
+			
 			/**
 			 * popup弹出层
 			 */

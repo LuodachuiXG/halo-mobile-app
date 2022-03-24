@@ -520,7 +520,7 @@
 	}
 
 	.view-me-text-name {
-		margin-top: 20rpx;
+		margin-top: 40rpx;
 		display: block;
 		font-size: 1.3em;
 		text-align: center;
