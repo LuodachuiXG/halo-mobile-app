@@ -1,7 +1,13 @@
 <template>
 	<view>
 		<u-notify ref="popup"></u-notify>
-		<view class="block">
+		<u-empty
+			v-if="tags.length === 0"
+			mode="list"
+			icon="http://cdn.uviewui.com/uview/empty/list.png">
+		</u-empty>
+		
+		<view class="block" v-if="tags.length > 0">
 			<view class="block-tag">
 				<view class="block-tag-item" v-for="(tag, i) in tags">
 					<u-tag :text="tag.name + '(' + tag.postCount + ')'" plain plainFill closable 

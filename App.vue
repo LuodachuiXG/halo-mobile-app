@@ -210,6 +210,7 @@
 		padding-left: 20rpx;
 		display: inline;
 		height: 20px;
+		line-height: 20px;
 		border-radius: 999999px;
 		background-color: var(--primaryColor);
 	}

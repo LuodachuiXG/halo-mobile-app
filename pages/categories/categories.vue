@@ -1,7 +1,13 @@
 <template>
 	<view>
 		<u-notify ref="popup"></u-notify>
-
+		
+		<u-empty
+			v-if="categories.length === 0"
+			mode="list"
+			icon="http://cdn.uviewui.com/uview/empty/list.png">
+		</u-empty>
+		
 		<view class="block" v-for="(category, i) in categories">
 			<!-- 分类目录名 -->
 			<view class="block-name">

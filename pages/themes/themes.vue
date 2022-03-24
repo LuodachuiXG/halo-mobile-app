@@ -3,8 +3,8 @@
 		<u-notify ref="popup"></u-notify>
 		<view class="block" v-for="(theme, i) in themes">
 			<view class="block-name">
-				{{ theme.name }}
 				<view class="currentTheme tips-info" v-if="theme.activated">当前启用</view>
+				{{ theme.name }}
 			</view>
 			<view class="block-screenshots">
 				<image :src="getUrl() + theme.screenshots"></image>
@@ -238,6 +238,6 @@
 	}
 
 	.currentTheme {
-		margin-left: 20rpx;
+		margin-right: 20rpx;
 	}
 </style>

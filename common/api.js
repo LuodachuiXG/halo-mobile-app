@@ -20,9 +20,16 @@ export function getLatestPosts(top) {
  * @param {Object} sizec
  */
 export function getPosts(page, size, keyword = "", status = "", categoryId = "") {
+	// 默认显示除回收站外其他所有状态的文章
+	let mStatus = status;
+	if (mStatus.length <= 0) {
+		mStatus = "&statuses=PUBLISHED&statuses=DRAFT&statuses=INTIMATE";
+	} else {
+		mStatus = "&status=" + mStatus;
+	}
 	return request({
 		url: "/api/admin/posts?page=" + page + "&size=" + size + 
-		"&keyword=" + keyword + "&categoryId=" + categoryId + "&status=" + status,
+		"&keyword=" + keyword + "&categoryId=" + categoryId + mStatus,
 		method: "GET"
 	});
 }
@@ -31,10 +38,22 @@ export function getPosts(page, size, keyword = "", status = "", categoryId = "")
  * 根据文章 id 删除文章
  * @param {Object} id
  */
-export function deletePosts(id) {
+export function deletePost(id) {
 	return request({
 		url: "/api/admin/posts/" + id,
 		method: "DELETE"
+	});
+}
+
+/**
+ * 根据文章 id 数组批量删除文章
+ * @param {Object} id
+ */
+export function deletePosts(ids) {
+	return request({
+		url: "/api/admin/posts",
+		method: "DELETE",
+		data: ids
 	});
 }
 
@@ -46,6 +65,18 @@ export function updatePostStatus(id, status) {
 	return request({
 		url: "/api/admin/posts/" + id + "/status/" + status,
 		method: "PUT"
+	});
+}
+
+/**
+ * 根据文章 id 数组批量更改文章状态
+ * @param {Object} id
+ */
+export function updatePostsStatus(ids, status) {
+	return request({
+		url: "/api/admin/posts/status/" + status,
+		method: "PUT",
+		data: ids
 	});
 }
 

@@ -141,7 +141,7 @@
 	}, {
 		"path": "pages/posts/posts",
 		"style": {
-			"navigationBarTitleText": "博客文章",
+			"navigationBarTitleText": "所有文章",
 			"enablePullDownRefresh": true
 		}
 
@@ -216,6 +216,7 @@
             }
             
         }
+        
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",

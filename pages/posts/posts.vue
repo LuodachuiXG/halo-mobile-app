@@ -1,9 +1,9 @@
 <template>
 	<view>
-		<u-notify ref="popup"></u-notify>
-		
-		<!-- 文章筛选组件 -->
-		<u-sticky>
+		<u-notify ref="popup" duration="1500"></u-notify>
+
+		<!-- 文章筛选组件，回收站模式不显示 -->
+		<u-sticky v-if="mode === 'all'">
 			<uni-collapse>
 				<uni-collapse-item title="文章筛选" :open="collapseOpen">
 					<view>
@@ -15,7 +15,8 @@
 							<view class="view-input-titleView">文章状态：</view>
 							<view class="input">
 								<picker @change="postStatusChange" :value="post_statusIndex" :range="post_statusText">
-									<view style="height: 25px;line-height: 25px;">{{post_statusText[post_statusIndex]}}</view>
+									<view style="height: 25px;line-height: 25px;">{{post_statusText[post_statusIndex]}}
+									</view>
 								</picker>
 							</view>
 						</view>
@@ -23,7 +24,8 @@
 							<view class="view-input-titleView">分类目录：</view>
 							<view class="input">
 								<picker @change="categoriesChange" :value="categoriesIndex" :range="categoriesText">
-									<view style="height: 25px;line-height: 25px;">{{categoriesText[categoriesIndex]}}</view>
+									<view style="height: 25px;line-height: 25px;">{{categoriesText[categoriesIndex]}}
+									</view>
 								</picker>
 							</view>
 						</view>
@@ -35,12 +37,81 @@
 				</uni-collapse-item>
 			</uni-collapse>
 		</u-sticky>
+		
+		<!-- 批量操作模式的吸顶按钮 -->
+		<u-sticky v-if="mode === 'batch'">
+			<view class="recycle-sticky">
+				<uni-row>
+					<uni-col :span="5">
+						<u-checkbox-group>
+							<button @click="onSelectAllClick" :disabled="posts.length === 0"
+								:class="posts.length > 0 && (selectedPost.length === posts.length) ? 'blue' : ''">
+								{{ posts.length > 0 && (selectedPost.length === posts.length) ? "取消" : "全选" }}
+							</button>
+						</u-checkbox-group>
+					</uni-col>
+					<uni-col :span="5">
+						<picker @change="batchBatchChange" :value="batchBatchIndex"
+							:range="batchBatch" :disabled="selectedPost.length === 0">
+							<button class="blue" :disabled="selectedPost.length === 0">批量操作</button>
+						</picker>
+					</uni-col>
+					<uni-col :span="9" :push="1">
+						<button class="yellow" 
+							@click="onReturnAllClick">关闭批量操作模式</button>
+					</uni-col>
+				</uni-row>
+			</view>
+		</u-sticky>
+		
 
-		<view class="block" v-for="(post, i) in posts">
+		<!-- 回收站模式的吸顶按钮 -->
+		<u-sticky v-if="mode === 'recycle'">
+			<view class="recycle-sticky">
+				<uni-row>
+					<uni-col :span="5">
+						<u-checkbox-group>
+							<button @click="onSelectAllClick" :disabled="posts.length === 0"
+								:class="posts.length > 0 && (selectedPost.length === posts.length) ? 'blue' : ''">
+								{{ posts.length > 0 && (selectedPost.length === posts.length) ? "取消" : "全选" }}
+							</button>
+						</u-checkbox-group>
+					</uni-col>
+					<uni-col :span="5">
+						<picker @change="recycleBatchChange" :value="recycleBatchIndex"
+							:range="recycleBatch" :disabled="selectedPost.length === 0">
+							<button class="blue" :disabled="selectedPost.length === 0">批量操作</button>
+						</picker>
+					</uni-col>
+					<uni-col :span="6" :push="1">
+						<button class="red" :disabled="posts.length === 0" 
+							@click="onDeleteCurrentPageClick">删除当前页</button>
+					</uni-col>
+					<uni-col :span="5" :push="2">
+						<button class="yellow" @click="onReturnAllClick">返回</button>
+					</uni-col>
+				</uni-row>
+			</view>
+		</u-sticky>
+		
+		<u-empty 
+			v-if="posts.length === 0"
+			mode="list"
+			icon="http://cdn.uviewui.com/uview/empty/list.png">
+		</u-empty>
+
+		<view class="block" v-for="(post, i) in posts"  
+			:class="(selectedPost.indexOf(post.id) >= 0) ? 'selected' : ''">
 			<view @click="onPostClick(i)">
 				<!-- 文章名 -->
-				<view class="block-name">
-					<text>{{ post.title }}</text>
+				<view class="block-name-view">
+					<view class="block-name">
+						<view class="tips-info topped-tag"
+							style="margin-right: 15rpx;display: ;" v-if="post.topped && mode !== 'recycle'">
+							置顶
+						</view>
+						{{ post.title }}
+					</view>
 				</view>
 
 				<!-- 缩略图 -->
@@ -59,7 +130,7 @@
 			<!-- 文章分类标签 -->
 			<view class="block-tag" v-if="post.categories.length > 0">
 				<view class="block-tag-item" v-for="(category, j) in post.categories">
-					<u-tag :text="category.name" plain plainFill type="primary" 
+					<u-tag :text="category.name" plain plainFill type="primary"
 						@click="onCategoryTagClick(category.id)"></u-tag>
 				</view>
 			</view>
@@ -130,15 +201,23 @@
 			</view>
 		</view>
 
-		<view class="view-sizeSelect block">
+		<view class="view-sizeSelect block" v-if="posts.length > 0">
 			<picker @change="sizesChange" :value="sizesIndex" :range="sizes">
 				<view>{{sizes[sizesIndex]}}</view>
 			</picker>
 		</view>
-		<uni-pagination style="padding-bottom: 80rpx;margin-left: 20rpx;margin-right: 20rpx;" title="文章"
-			:pageSize="size" :total="total" :current="page + 1" @change="pageChange"></uni-pagination>
+		<uni-pagination 
+			style="padding-bottom: 200rpx;margin-left: 20rpx;margin-right: 20rpx;" 
+			title="文章"
+			:pageSize="size" 
+			:total="total" 
+			:current="page + 1"
+			@change="pageChange"
+			v-if="posts.length > 0"></uni-pagination>
 
-		<uni-fab horizontal="right" vertical="bottom" @fabClick="onAddPostClick"></uni-fab>
+		<!-- 回收站模式不显示悬浮按钮 -->
+		<uni-fab horizontal="right" vertical="bottom" @trigger="onFabClick" :content="content"
+			v-if="mode === 'all'"></uni-fab>
 	</view>
 </template>
 
@@ -146,24 +225,26 @@
 	import {
 		getPosts,
 		updatePostStatus,
+		updatePostsStatus,
 		deletePosts,
-		getCategories
+		deletePost,
+		getCategories,
 	} from "../../common/api.js";
 	export default {
 		data() {
 			return {
 				// 控制文章筛选折叠面板是否打开
 				collapseOpen: false,
-				
-				// 文章筛选中文章状态的选项数据
-				post_statusText: ["所有状态", "已发布", "草稿", "回收站", "私密"],
-				post_statusValue: ["", "PUBLISHED", "DRAFT", "RECYCLE", "INTIMATE"],
+
+				// 文章筛选中文章状态的 picker 选项
+				post_statusText: ["所有状态", "已发布", "草稿", "私密"],
+				post_statusValue: ["", "PUBLISHED", "DRAFT", "INTIMATE"],
 				post_statusIndex: 0,
 
 				// 文章筛选中关键词
 				keyword: "",
-				
-				// 文章筛选中分类目录的选项数据
+
+				// 文章筛选中分类目录的 picker 选项
 				categories: [],
 				categoriesText: ["所有分类"],
 				categoriesValue: [""],
@@ -181,9 +262,36 @@
 
 				// 存放文章信息
 				posts: [],
+				selectedPost: [],
 
 				sizes: ["4条/页", "8条/页", "16条/页", "24条/页", "48条/页", "96条/页"],
 				sizesIndex: 1,
+
+				// 回收站模式的批量操作的 picker 选项
+				recycleBatch: ["发布", "转为草稿", "永久删除"],
+				recycleBatchIndex: 0,
+				
+				// 批量操作模式的批量操作的 picker 选项
+				batchBatch: ["发布", "转为草稿", "删除"],
+				batchBatchIndex: 0,
+
+				// 悬浮按钮弹出菜单
+				content: [{
+						"text": "写文章",
+						"iconPath": "/static/images/edit.png"
+					},
+					{
+						"text": "批量操作",
+						"iconPath": "/static/images/checkbox.png"
+					},
+					{
+						"text": "回收站",
+						"iconPath": "/static/images/trash.png"
+					}
+				],
+
+				// 当前页面是什么模式，展示文章/批量操作/回收站/  all/batch/recycle
+				mode: "all",
 			}
 		},
 
@@ -245,9 +353,15 @@
 				let keyword = this.keyword;
 				let status = this.post_statusValue[this.post_statusIndex];
 				let categoryId = this.categoriesValue[this.categoriesIndex];
+				if (this.mode === "recycle") {
+					// 回收站模式只获取回收站状态的文章
+					status = "RECYCLE";
+				}
 				getPosts(page, size, keyword, status, categoryId).then(data => {
 					// 保存文章数组
 					that.posts = data.content;
+					// 清空已选择的文章
+					that.selectedPost = [];
 					// 保存文章总数
 					that.total = data.total;
 					// 保存总页数
@@ -264,7 +378,7 @@
 					});
 				});
 			},
-			
+
 			/**
 			 * 刷新分类目录数据
 			 */
@@ -303,11 +417,10 @@
 						content: '确定要永久删除【' + that.posts[i].title + '】文章吗？此操作不可逆。',
 						success: function(res) {
 							if (res.confirm) {
-								deletePosts(post.id).then(data => {
+								deletePost(post.id).then(data => {
 									that.popup("删除成功", "success");
 									that.refreshData();
 								}).catch(err => {
-									uni.stopPullDownRefresh();
 									uni.showModal({
 										title: "删除失败",
 										content: err
@@ -384,7 +497,6 @@
 									that.popup("成功放入回收站", "success");
 									that.refreshData();
 								}).catch(err => {
-									uni.stopPullDownRefresh();
 									uni.showModal({
 										title: "放入回收站失败",
 										content: err
@@ -443,9 +555,21 @@
 			 * @param {Object} i
 			 */
 			onPostClick: function(i) {
-				uni.navigateTo({
-					url: './detail/detail?id=' + this.posts[i].id
-				})
+				// 如果当前不是展示文章模式（处于回收站或批量操作模式下），点击文章是选择文章，而不是查看文章内容
+				if (this.mode !== "all") {
+					let id = this.posts[i].id;
+					let index = this.selectedPost.indexOf(id);
+					if (index < 0) {
+						this.selectedPost.push(id);
+					} else {
+						this.selectedPost.splice(index, 1);
+					}
+				} else {
+					uni.navigateTo({
+						url: './detail/detail?id=' + this.posts[i].id
+					})
+				}
+
 			},
 
 			/**
@@ -460,12 +584,32 @@
 			},
 
 			/**
-			 * 新增文章悬浮按钮点击事件
+			 * 悬浮按钮点击事件
 			 */
-			onAddPostClick: function() {
-				uni.navigateTo({
-					url: "./edit/edit?type=add"
-				})
+			onFabClick: function(e) {
+				switch (e.index) {
+					// 写文章
+					case 0:
+						uni.navigateTo({
+							url: "./edit/edit?type=add"
+						});
+						break;
+					// 批量操作
+					case 1:
+						this.mode = "batch";
+						this.selectedPost = [];
+						break;
+					// 回收站
+					case 2:
+						uni.setNavigationBarTitle({
+							title: "回收站"
+						})
+						this.mode = "recycle";
+						this.selectedPost = [];
+						this.refreshData();
+						break;
+				}
+
 			},
 
 			/**
@@ -476,7 +620,7 @@
 				this.post_statusIndex = e.detail.value;
 				this.refreshData();
 			},
-			
+
 			/**
 			 * 文章筛选分类目录选项更改事件
 			 * @param {Object} e
@@ -485,7 +629,7 @@
 				this.categoriesIndex = e.detail.value;
 				this.refreshData();
 			},
-			
+
 			/**
 			 * 重置文章筛选选项
 			 */
@@ -495,16 +639,214 @@
 				this.categoriesIndex = 0;
 				this.refreshData();
 			},
-			
+
 			/**
 			 * 文章方块上分类标签的点击事件，筛选出当前分类的所有文章
 			 * @param {Object} id
 			 */
 			onCategoryTagClick: function(id) {
-				this.categoriesIndex = this.categoriesValue.indexOf(id);
+				// 只有展示所有文章模式时才会筛选文章
+				if (this.mode === "all") {
+					this.categoriesIndex = this.categoriesValue.indexOf(id);
+					this.refreshData();
+					this.toast("你选择了：" + this.categories[this.categoriesIndex - 1].name);
+					this.collapseOpen = true;
+				}
+
+			},
+
+			/**
+			 * 返回展示所有文章模式
+			 */
+			onReturnAllClick: function() {
+				this.mode = "all";
+				uni.setNavigationBarTitle({
+					title: "所有文章"
+				});
 				this.refreshData();
-				this.popup("你选择了：" + this.categories[this.categoriesIndex - 1].name, "success");
-				this.collapseOpen = true;
+			},
+			
+			/**
+			 * 全选按钮点击事件
+			 */
+			onSelectAllClick: function() {
+				if (this.posts.length === this.selectedPost.length) {
+					this.selectedPost = [];
+				} else {
+					this.selectedPost = [];
+					for (var i = 0; i < this.posts.length; i++) {
+						this.selectedPost.push(this.posts[i].id);
+					}
+				}
+			},
+			
+			/**
+			 * 回收站批量操作 picker 选择事件
+			 * @param {Object} e
+			 */
+			recycleBatchChange: function(e) {
+				let that = this;
+				switch (e.detail.value) {
+					// 发布
+					case 0:
+						uni.showModal({
+							title: '提示',
+							content: '确定要将所选的 ' + this.selectedPost.length + ' 个文章转为已发布状态吗？',
+							success: function(res) {
+								if (res.confirm) {
+									updatePostsStatus(that.selectedPost, "PUBLISHED").then(data => {
+										that.popup("发布成功", "success");
+										that.refreshData();
+									}).catch(err => {
+										uni.showModal({
+											title: "发布失败",
+											content: err
+										});
+									});
+								}
+							}
+						});
+						break;
+					// 转为草稿
+					case 1:
+						uni.showModal({
+							title: '提示',
+							content: '确定要将所选的 ' + this.selectedPost.length + ' 个文章转为草稿状态吗？',
+							success: function(res) {
+								if (res.confirm) {
+									updatePostsStatus(that.selectedPost, "DRAFT").then(data => {
+										that.popup("操作成功", "success");
+										that.refreshData();
+									}).catch(err => {
+										uni.showModal({
+											title: "操作失败",
+											content: err
+										});
+									});
+								}
+							}
+						});
+						break;
+					// 永久删除
+					case 2:
+						uni.showModal({
+							title: '提示',
+							content: '确定要将所选的 ' + this.selectedPost.length + ' 个文章永久删除吗？',
+							success: function(res) {
+								if (res.confirm) {
+									deletePosts(that.selectedPost).then(data => {
+										that.popup("删除成功", "success");
+										that.refreshData();
+									}).catch(err => {
+										uni.showModal({
+											title: "删除失败",
+											content: err
+										});
+									});
+								}
+							}
+						});
+						break;
+				}
+			},
+			
+			/**
+			 * 回收站删除当前页点击事件
+			 * @param {Object} e
+			 */
+			onDeleteCurrentPageClick: function() {
+				let that = this;
+				uni.showModal({
+					title: '提示',
+					content: '确定要永久删除当前页的 ' + this.posts.length + ' 个文章吗？',
+					success: function(res) {
+						if (res.confirm) {
+							let ids = [];
+							for (var i = 0; i < that.posts.length; i++) {
+								ids.push(that.posts[i].id);
+							}
+							deletePosts(ids).then(data => {
+								that.popup("删除成功", "success");
+								that.refreshData();
+							}).catch(err => {
+								uni.showModal({
+									title: "删除失败",
+									content: err
+								});
+							});
+						}
+					}
+				});
+			},
+			
+			/**
+			 * 批量操作模式的批量操作 picker 选择事件
+			 * @param {Object} e
+			 */
+			batchBatchChange: function(e) {
+				let that = this;
+				switch (e.detail.value) {
+					// 发布
+					case 0:
+						uni.showModal({
+							title: '提示',
+							content: '确定要将所选的 ' + this.selectedPost.length + ' 个文章转为已发布状态吗？',
+							success: function(res) {
+								if (res.confirm) {
+									updatePostsStatus(that.selectedPost, "PUBLISHED").then(data => {
+										that.popup("发布成功", "success");
+										that.refreshData();
+									}).catch(err => {
+										uni.showModal({
+											title: "发布失败",
+											content: err
+										});
+									});
+								}
+							}
+						});
+						break;
+					// 转为草稿
+					case 1:
+						uni.showModal({
+							title: '提示',
+							content: '确定要将所选的 ' + this.selectedPost.length + ' 个文章转为草稿状态吗？',
+							success: function(res) {
+								if (res.confirm) {
+									updatePostsStatus(that.selectedPost, "DRAFT").then(data => {
+										that.popup("操作成功", "success");
+										that.refreshData();
+									}).catch(err => {
+										uni.showModal({
+											title: "操作失败",
+											content: err
+										});
+									});
+								}
+							}
+						});
+						break;
+					// 删除到回收站
+					case 2:
+						uni.showModal({
+							title: '提示',
+							content: '确定要将所选的 ' + this.selectedPost.length + ' 个文章转为回收站状态吗？',
+							success: function(res) {
+								if (res.confirm) {
+									updatePostsStatus(that.selectedPost, "RECYCLE").then(data => {
+										that.popup("操作成功", "success");
+										that.refreshData();
+									}).catch(err => {
+										uni.showModal({
+											title: "操作失败",
+											content: err
+										});
+									});
+								}
+							}
+						});
+						break;
+				}
 			},
 
 			/**
@@ -524,20 +866,16 @@
 <style>
 	.block {
 		position: relative;
-	}
-
-	.block {
 		margin-bottom: 50rpx;
 	}
 
-
-	.block-name {
+	.block-name-view{
 		padding: 30rpx;
 		padding-bottom: 20rpx;
 		border-bottom: 1px solid #ececec;
 	}
 
-	.block-name text {
+	.block-name {
 		font-weight: bold;
 		font-size: 1.1em;
 		display: inline-block;
@@ -682,27 +1020,68 @@
 		margin-left: 30rpx;
 		margin-right: 30rpx;
 	}
-	
+
 	.btn {
 		height: 60rpx;
 		line-height: 60rpx;
 		margin-right: 20rpx;
 		font-size: .9em;
 	}
-	
+
 	.left-btn {
 		display: inline-block;
 		width: 47%;
 		position: relative;
-		
+
 	}
-	
+
 	.right-btn {
 		display: inline-block;
 		width: 47%;
 		position: absolute;
 		margin-right: 0px;
 		right: 0px;
-		
+
+	}
+
+	.recycle-sticky {
+		background-color: #FFFFFF;
+		height: 80rpx;
+		box-shadow: 0px 1px 4px rgb(50, 50, 50, .2);
+	}
+
+	.recycle-sticky button {
+		height: 60rpx;
+		font-size: .9em;
+		margin-top: 10rpx;
+		line-height: 60rpx;
+		border: none;
+	}
+
+	.recycle-sticky-picker {
+		height: 60rpx;
+		line-height: 60rpx;
+		margin-top: 10rpx;
+		text-align: center;
+	}
+
+	.red {
+		background-color: var(--errorColor);
+		color: #FFFFFF;
+	}
+	.blue {
+		background-color: var(--primaryColor);
+		color: #FFFFFF;
+	}
+	.yellow {
+		background-color: var(--warningColor);
+		color: #FFFFFF;
+	}
+	.selected {
+		filter: brightness(60%) blur(1px);
+	}
+	
+	.topped-tag {
+		background-color: var(--errorColor);
 	}
 </style>
