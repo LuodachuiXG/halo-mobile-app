@@ -198,14 +198,19 @@
 <script>
 	import {
 		getPost,
-		getCategories,
-		getTags,
-		addCategory,
-		addTag,
 		updatePost,
 		addPost
-		
-	} from "../../../common/api.js";
+	} from "@/network/PostApi.js";
+	
+	import {
+		getCategories,
+		addCategory
+	} from "@/network/CategoryApi.js";
+	
+	import {
+		getTags,
+		addTag
+	} from "@/network/TagApi.js";
 	export default {
 		data() {
 			return {

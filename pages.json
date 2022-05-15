@@ -217,6 +217,15 @@
             
         }
         
+        ,{
+            "path" : "pages/comments/comments",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "所有评论",
+                "enablePullDownRefresh": true
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",

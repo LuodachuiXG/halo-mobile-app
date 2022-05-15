@@ -42,7 +42,7 @@
 	import {
 		getUserStatistics,
 		updateUserProfiles
-	} from "../../common/api.js";
+	} from "@/network/UserApi.js";
 	export default {
 		data() {
 			return {

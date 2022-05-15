@@ -97,9 +97,11 @@
 <script>
 	import {
 		getOptionsByMapViewsKeys,
-		updateOptionsByMapViews,
+		updateOptionsByMapViews
+	} from "@/network/SettingApi.js";
+	import {
 		sendMailTest
-	} from "../../../../common/api.js";
+	} from "@/network/OtherApi.js";
 	export default {
 		data() {
 			return {

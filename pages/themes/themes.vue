@@ -43,7 +43,7 @@
 		getThemes,
 		updateThemeActivation,
 		deleteTheme,
-	} from "../../common/api.js";
+	} from "@/network/ThemeApi.js";
 	export default {
 		data() {
 			return {

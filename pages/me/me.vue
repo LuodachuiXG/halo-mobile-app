@@ -92,7 +92,7 @@
 	import {
 		getUserProfiles,
 		logout
-	} from "../../common/api.js";
+	} from "@/network/UserApi.js";
 	export default {
 		data() {
 			return {
@@ -271,6 +271,7 @@
 							// 登录成功，保存token
 							var mData = data.data
 							var accessToken = mData.access_token
+							console.log(accessToken)
 							var expiredIn = mData.expired_in
 							var refreshToken = mData.refresh_token
 							if (accessToken === "" || expiredIn === "") {

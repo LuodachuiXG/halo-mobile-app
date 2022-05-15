@@ -24,7 +24,7 @@
 	import {
 		getTags,
 		deleteTag
-	} from "../../common/api.js";
+	} from "@/network/TagApi.js";
 	export default {
 		data() {
 			return {

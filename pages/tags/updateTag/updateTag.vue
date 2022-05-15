@@ -42,7 +42,7 @@
 	import {
 		addTag,
 		updateTag
-	} from "../../../common/api.js";
+	} from "@/network/TagApi.js";
 	export default {
 		data() {
 			return {

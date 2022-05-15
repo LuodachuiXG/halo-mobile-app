@@ -14,8 +14,8 @@
 									fontSize="2em"></u-count-to>
 							</view>
 						</uni-col>
-						<uni-col :span="10" :push="2" @click="onClick(1)">
-							<view class="view-block-view">
+						<uni-col :span="10" :push="2">
+							<view class="view-block-view" @click="onClick(1)">
 								<text class="view-block-title">评论</text>
 								<uni-icons class="view-block-icon" type="list" color="#2F54EB" size="20"></uni-icons>
 								<u-count-to class="view-block-text" :startVal="0" :endVal="commentCount" color="#000000"
@@ -116,9 +116,12 @@
 
 <script>
 	import {
-		getBlogStatistics,
 		getLatestPosts
-	} from "../../common/api.js";
+	} from "@/network/PostApi.js";
+	import {
+		getBlogStatistics
+	} from "@/network/OtherApi.js";
+	
 	export default {
 		data() {
 			return {
@@ -239,6 +242,12 @@
 					case 0:
 						uni.navigateTo({
 							url: '../posts/posts'
+						});
+						break;
+					// 评论
+					case 1:
+						uni.navigateTo({
+							url: '../comments/comments'
 						});
 						break;
 					// 分类

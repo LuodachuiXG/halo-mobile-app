@@ -30,7 +30,7 @@
 		addPost,
 		getPostPreviewLink,
 		updatePost
-	} from "../../../common/api.js";
+	} from "@/network/PostApi.js";
 	export default {
 		data() {
 			return {

@@ -64,8 +64,7 @@
 	import {
 		getCategories,
 		deleteCategory
-		
-	} from "../../common/api.js";
+	} from "@/network/CategoryApi.js";
 	export default {
 		data() {
 			return {

@@ -227,9 +227,12 @@
 		updatePostStatus,
 		updatePostsStatus,
 		deletePosts,
-		deletePost,
-		getCategories,
-	} from "../../common/api.js";
+		deletePost
+	} from "@/network/PostApi.js";
+	
+	import {
+		getCategories
+	} from "@/network/CategoryApi.js";
 	export default {
 		data() {
 			return {
@@ -299,7 +302,7 @@
 			// 获取之前设置的每页几条数据
 			this.sizesIndex = this.getData("posts_sizesIndex")
 			if (this.sizesIndex.length <= 0) {
-				// 默认16条/页
+				// 默认8条/页
 				this.sizesIndex = 1;
 			}
 
@@ -695,7 +698,7 @@
 							success: function(res) {
 								if (res.confirm) {
 									updatePostsStatus(that.selectedPost, "PUBLISHED").then(data => {
-										that.popup("发布成功", "success");
+										that.toast("发布成功", "success");
 										that.refreshData();
 									}).catch(err => {
 										uni.showModal({
@@ -715,7 +718,7 @@
 							success: function(res) {
 								if (res.confirm) {
 									updatePostsStatus(that.selectedPost, "DRAFT").then(data => {
-										that.popup("操作成功", "success");
+										that.toast("操作成功", "success");
 										that.refreshData();
 									}).catch(err => {
 										uni.showModal({
@@ -735,7 +738,7 @@
 							success: function(res) {
 								if (res.confirm) {
 									deletePosts(that.selectedPost).then(data => {
-										that.popup("删除成功", "success");
+										that.toast("删除成功", "success");
 										that.refreshData();
 									}).catch(err => {
 										uni.showModal({

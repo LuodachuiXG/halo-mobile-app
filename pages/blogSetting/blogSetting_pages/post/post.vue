@@ -73,7 +73,7 @@
 	import {
 		getOptionsByMapViewsKeys,
 		updateOptionsByMapViews
-	} from "../../../../common/api.js";
+	} from "@/network/SettingApi.js";
 	export default {
 		data() {
 			return {
