@@ -45,16 +45,16 @@
 					
 					<uni-row class="row">
 						<uni-col :span="10">
-							<view class="view-block-view">
-								<text class="view-block-title" @click="onClick(4)">日志</text>
+							<view class="view-block-view" @click="onClick(4)">
+								<text class="view-block-title">日志</text>
 								<uni-icons class="view-block-icon" type="info" color="#2F54EB" size="20"></uni-icons>
 								<u-count-to class="view-block-text" :startVal="0" :endVal="journalCount" color="#000000"
 									fontSize="2em"></u-count-to>
 							</view>
 						</uni-col>
 						<uni-col :span="10" :push="2">
-							<view class="view-block-view">
-								<text class="view-block-title" @click="onClick(5)">链接</text>
+							<view class="view-block-view" @click="onClick(5)">
+								<text class="view-block-title">链接</text>
 								<uni-icons class="view-block-icon" type="link" color="#2F54EB" size="20"></uni-icons>
 								<u-count-to class="view-block-text" :startVal="0" :endVal="linkCount" color="#000000"
 									fontSize="2em"></u-count-to>
@@ -260,6 +260,12 @@
 					case 3:
 						uni.navigateTo({
 							url: '../tags/tags'
+						});
+						break;
+					// 日志
+					case 4:
+						uni.navigateTo({
+							url: '../journals/journals'
 						});
 						break;
 

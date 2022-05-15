@@ -226,6 +226,24 @@
             }
             
         }
+        ,{
+            "path" : "pages/journals/journals",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "所有日志",
+                "enablePullDownRefresh": true
+            }
+            
+        }
+        ,{
+            "path" : "pages/journals/edit/edit",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",

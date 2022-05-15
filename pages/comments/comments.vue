@@ -233,7 +233,7 @@
 
 			// 将本地取出的文本数据转成int
 			this.sizesIndex = Number(this.sizesIndex)
-			// 根据每页显示文章数量来设置 size 大小
+			// 根据每页显示评论数量来设置 size 大小
 			switch (this.sizesIndex) {
 				case 0:
 					this.size = 4
@@ -448,10 +448,10 @@
 			},
 
 			/**
-			 * 评论中蓝色的文章标题点击事件
+			 * 评论中蓝色的评论标题点击事件
 			 */
 			onPostTitleClick: function(url) {
-				// 跳转文章网页
+				// 跳转评论网页
 				// 如果当前是批量操作模式，不进行网页跳转
 				console.log(this.mode)
 				if (this.mode !== "batch") {
@@ -656,12 +656,6 @@
 		text-overflow: ellipsis;
 	}
 
-	.block-thumbnail {}
-
-	.block-thumbnail image {
-		vertical-align: middle;
-		width: 100%;
-	}
 
 	.block-content {
 		padding: 30rpx;
@@ -708,11 +702,6 @@
 
 	.activated {
 		color: #1890FF;
-	}
-
-	.tips {
-		font-weight: bold;
-		font-size: .8em;
 	}
 
 
