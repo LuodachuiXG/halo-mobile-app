@@ -35,6 +35,9 @@ export function createApp() {
 // #endif
 
 
+/**
+ * 加密和解密方法
+ */
 Vue.prototype.encrypt = encrypt;
 Vue.prototype.decrypt = decrypt;
 
@@ -52,6 +55,9 @@ Vue.prototype.getAccessToken = function() {
 	return this.getData("access_token");
 }
 
+/**
+ * toast 方法封装
+ */
 Vue.prototype.toast = function(mTitle, mIcon = "none", mPosition = "bottom") {
 	uni.showToast({
 		title: mTitle,

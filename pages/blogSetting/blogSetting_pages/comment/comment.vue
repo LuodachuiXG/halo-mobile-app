@@ -1,8 +1,6 @@
 <template>
 	<view class="container">
-		<uni-popup ref="popup" type="message">
-			<uni-popup-message :type="popupType" :message="popupMessage"></uni-popup-message>
-		</uni-popup>
+		<u-notify ref="popup"></u-notify>
 		<view class="block">
 			<view class="view-input">
 				<view class="view-input-titleView">评论者头像：</view>
