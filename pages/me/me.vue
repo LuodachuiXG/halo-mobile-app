@@ -68,11 +68,6 @@
 			</view>
 
 			<view class="view-me-app-option block">
-				<view class="view-me-exit item" @click="onOptionClick(4)">
-					<image src="/static/images/edit.png"></image>
-					<text>问题反馈 / BUG反馈</text>
-					<view class="item-sign"></view>
-				</view>
 				<view class="view-me-exit item" @click="onOptionClick(3)">
 					<image src="/static/images/setting.png"></image>
 					<text>设置</text>
@@ -436,17 +431,17 @@
 						})
 						break;
 					// 问题反馈
-					case 4:
-						let that = this;
-						let url = "https://gitee.com/luodachui/halo-mobile-app/issues/new?issue%5Bassignee_id%5D=0&issue%5Bmilestone_id%5D=0";
-						this.openURL(url);
-						uni.setClipboardData({
-							data: url,
-							success: function () {
-								that.toast("反馈地址已复制");
-							}
-						});
-						break;
+					// case 4:
+					// 	let that = this;
+					// 	let url = "https://gitee.com/luodachui/halo-mobile-app/issues/new?issue%5Bassignee_id%5D=0&issue%5Bmilestone_id%5D=0";
+					// 	this.openURL(url);
+					// 	uni.setClipboardData({
+					// 		data: url,
+					// 		success: function () {
+					// 			that.toast("反馈地址已复制");
+					// 		}
+					// 	});
+					// 	break;
 				}
 			},
 			

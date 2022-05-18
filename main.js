@@ -187,3 +187,12 @@ Vue.prototype.hexToRgb = function(hex) {
 		a: 1
     }
 };
+
+/**
+ * 获取版本号
+ */
+Vue.prototype.getVersion = function() {
+	// #ifdef APP-PLUS
+	return plus.runtime.version;
+	// #endif
+}
