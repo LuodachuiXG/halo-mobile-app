@@ -65,7 +65,7 @@
 							<text>{{journal.likes}}</text>
 						</view>
 						<view>
-							<image src="../../static/images/comment.png"></image>
+							<image src="../../static/images/comment_1.png"></image>
 							<text>{{journal.commentCount}}</text>
 						</view>
 					</view>

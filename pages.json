@@ -148,7 +148,7 @@
 	}, {
 		"path": "pages/categories/categories",
 		"style": {
-			"navigationBarTitleText": "分类目录",
+			"navigationBarTitleText": "所有分类",
 			"enablePullDownRefresh": true
 		}
 
@@ -237,6 +237,24 @@
         }
         ,{
             "path" : "pages/journals/edit/edit",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/links/links",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "友情链接",
+                "enablePullDownRefresh": true
+            }
+            
+        }
+        ,{
+            "path" : "pages/links/edit/edit",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "",

@@ -223,4 +223,29 @@
 	.tips-warning {
 		background-color: var(--warningColor);
 	}
+	
+	.color-info{
+		color: var(--primaryColor);
+	}
+	
+	.color-error {
+		color: var(--errorColor);
+	}
+	
+	.color-warning {
+		color: var(--warningColor);
+	}
+	
+	.color-success {
+		color: var(--successColor);
+	}
+	
+	.background-error {
+		background-color: var(--errorColor);
+	}
+	
+	.background-warning {
+		background-color: var(--warningColor);
+	}
+	
 </style>

@@ -268,6 +268,12 @@
 							url: '../journals/journals'
 						});
 						break;
+					// 链接
+					case 5:
+						uni.navigateTo({
+							url: '../links/links'
+						});
+						break;
 
 				}
 			},

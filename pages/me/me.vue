@@ -11,7 +11,7 @@
 			<image class="view-login-image" src="/static/images/halo.png"></image>
 			<view class="login-view">
 				<label for="url">站点地址</label>
-				<input class="input" id="url" v-model="mUrl" type="text" placeholder="https://域名" :disabled="disable" />
+				<input class="input" id="url" v-model="mUrl" type="text" placeholder="https://" :disabled="disable" />
 			</view>
 
 			<view class="login-view">
