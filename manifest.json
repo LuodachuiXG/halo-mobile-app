@@ -2,7 +2,7 @@
     "name" : "Halo",
     "appid" : "__UNI__96B3944",
     "description" : "Halo移动端程序",
-    "versionName" : "0.0.3-beta.1",
+    "versionName" : "0.0.3-beta.2",
     "versionCode" : 500,
     "transformPx" : false,
     "app-plus" : {
@@ -22,11 +22,8 @@
             "android" : {
                 /* android打包配置 */
                 "permissions" : [
-                    "<uses-feature android:name=\"android.hardware.camera\"/>",
-                    "<uses-feature android:name=\"android.hardware.camera.autofocus\"/>",
                     "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>",
                     "<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>",
-                    "<uses-permission android:name=\"android.permission.CAMERA\"/>",
                     "<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>",
                     "<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>",
                     "<uses-permission android:name=\"android.permission.FLASHLIGHT\"/>",
