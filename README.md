@@ -3,9 +3,9 @@
 📱[Halo](https://halo.run/) admin app
 📱[Halo](https://halo.run/)博客的移动端后台管理程序
 
-Github：[LuodachuiXG/halo-mobile-app: 📱Halo博客 APP/小程序端后台管理 (github.com)](https://github.com/LuodachuiXG/halo-mobile-app)
+Github：[LuodachuiXG/halo-mobile-app: 📱Halo博客 移动端后台管理 (github.com)](https://github.com/LuodachuiXG/halo-mobile-app)
 
-Gitee：[halo-mobile-app: 📱Halo博客 APP/小程序端后台管理 (gitee.com)](https://gitee.com/luodachui/halo-mobile-app)
+Gitee：[halo-mobile-app: 📱Halo博客 移动端后台管理 (gitee.com)](https://gitee.com/luodachui/halo-mobile-app)
 
 
 
