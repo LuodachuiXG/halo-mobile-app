@@ -41,7 +41,7 @@ Gitee：[halo-mobile-app: 📱Halo博客 移动端后台管理 (gitee.com)](http
     <img src="https://ldc-1251523367.cos.ap-beijing.myqcloud.com/luodachui/halo-app_4.png" width = "600"  />
 2. 下载最新的[发行版](https://gitee.com/luodachui/halo-mobile-app/releases)安装并打开你将看到如下界面。
     <img src="https://ldc-1251523367.cos.ap-beijing.myqcloud.com/luodachui/halo-app_3.jpg" width = "300"  />
-3. 在 ”站点地址“ 中输入你的博客的网址，例如 ”https://luodachui.cn"。
+3. 在 “站点地址” 中输入你的博客的网址，例如 “https://luodachui.cn”。
 4. “用户名” 和 “密码” 就是你登录网页端后台使用的用户名和密码。
 5. 登录成功后就会看到如下页面，APP的功能基本与网页端一致。
     <img src="https://ldc-1251523367.cos.ap-beijing.myqcloud.com/luodachui/halo-app_1.jpg" width = "300"  />
