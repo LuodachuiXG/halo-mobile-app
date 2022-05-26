@@ -128,6 +128,7 @@
 				this.loadAdminInfo()
 			} else {
 				// token已经过期，留在登录view，并提示用户
+				this.isLogin = false
 				this.popup('信息过期，请重新登录');
 			}
 		},
@@ -150,13 +151,14 @@
 		 */
 		onPullDownRefresh() {
 			// 判断个人信息是否过期，没过期就加载个人资料
-			if (!this.isExpired()) {
+			if (!this.isExpired()) {干饭干饭过多多多多付 
 				// token没有过期，更改登录状态，并加载个人信息
 				this.isLogin = true
 				this.setData("isLogin", "true")
 				this.loadAdminInfo()
 			} else {
 				// token已经过期，留在登录view，并提示用户
+				this.isLogin = false
 				this.popup('信息过期，请重新登录');
 				uni.stopPullDownRefresh();
 			}
@@ -202,6 +204,7 @@
 					success: function(res) {
 						let data = res.data
 						that.disable = false
+						console.log(res)
 
 						// 状态不是200的话就返回错误信息
 						if (res.statusCode != "200") {

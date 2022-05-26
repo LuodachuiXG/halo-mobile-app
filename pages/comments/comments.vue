@@ -12,6 +12,17 @@
 							<input class="input" type="text" v-model="keyword" />
 						</view>
 						<view class="view-input">
+							<view class="view-input-titleView">评论分类：</view>
+							<view class="input">
+								<picker @change="commentTypeChange" :value="comment_typeIndex"
+									:range="comment_typeText">
+									<view style="height: 25px;line-height: 25px;">
+										{{comment_typeText[comment_typeIndex]}}
+									</view>
+								</picker>
+							</view>
+						</view>
+						<view class="view-input">
 							<view class="view-input-titleView">评论状态：</view>
 							<view class="input">
 								<picker @change="commentStatusChange" :value="comment_statusIndex"
@@ -74,15 +85,20 @@
 					</view>
 				</view>
 
-				<!-- 评论内容 -->
+				
 				<view class="block-content">
-					<view class="block-postTitle" @click="onPostTitleClick(comment.post.fullPath)">
-						{{ comment.post.title }}
+					<!-- 评论的地方 -->
+					<view class="block-postTitle" @click="onTitleClick(i)">
+						{{ type === "posts" ? comment.post.title : ""}}
+						{{ type === "sheets" ? comment.sheet.title : ""}}
+						{{ type === "journals" ? comment.journal.title : ""}}
 					</view>
+					<!-- 评论id -->
 					<text style="font-weight: bold;color: var(--primaryColor);margin-right: 5px;"
 						v-if="comment.parentId !== 0">
 						@{{comment.parentId}}
 					</text>
+					<!-- 评论内容 -->
 					<text>{{ comment.content }}</text>
 				</view>
 				
@@ -181,6 +197,11 @@
 			return {
 				// 控制评论筛选折叠面板是否打开
 				collapseOpen: false,
+				
+				// 评论筛选的评论分类的 picker 选项
+				comment_typeText: ["文章", "页面", "日志"],
+				comment_typeValue: ["posts", "sheets", "journals"],
+				comment_typeIndex: 0,
 
 				// 评论筛选的评论状态的 picker 选项
 				comment_statusText: ["所有状态", "已发布", "待审核", "回收站"],
@@ -220,6 +241,8 @@
 
 				// 当前页面是什么模式，展示评论/批量操作  all/batch
 				mode: "all",
+				// 当前显示的是什么评论，文章评论/页面评论/日志评论  posts/sheets/journals
+				type: "posts"
 			}
 		},
 
@@ -278,7 +301,8 @@
 				let size = this.size;
 				let keyword = this.keyword;
 				let status = this.comment_statusValue[this.comment_statusIndex];
-				getComments(page, size, keyword, status).then(data => {
+				let type = this.comment_typeValue[this.comment_typeIndex];
+				getComments(page, size, keyword, status, type).then(data => {
 					// 保存评论数组
 					that.comments = data.content;
 					// 清空已选择的评论
@@ -310,6 +334,19 @@
 				let that = this;
 				let comment = this.comments[i];
 				let status = comment.status;
+				let id = "";
+				switch(this.type) {
+					case "posts":
+						id = comment.post.id;
+						break;
+					case "sheets":
+						id = comment.sheet.id;
+						break;
+					case "journals":
+						id = comment.journal.id;
+						break;
+				}
+				
 				if (status === "RECYCLE" || status === "AUDITING") {
 					// 评论在回收站，充当还原(公开-PUBLISHED)功能
 					// 评论在待审核，充当通过(公开-PUBLISHED)功能
@@ -319,7 +356,7 @@
 						content: "确定要" + str + "该评论吗？",
 						success: function(res) {
 							if (res.confirm) {
-								updateCommentStatus(comment.id, "PUBLISHED").then(data => {
+								updateCommentStatus(comment.id, "PUBLISHED", that.type).then(data => {
 									that.popup(str + "成功", "success");
 									that.refreshData();
 								}).catch(err => {
@@ -340,7 +377,7 @@
 						success: function(res) {
 							if (res.confirm) {
 								let content = res.content;
-								replyComment(comment.post.id, content, comment.id).then(data => {
+								replyComment(id, content, comment.id, that.type).then(data => {
 									that.popup("回复成功", "success");
 									that.refreshData();
 								}).catch(err => {
@@ -371,7 +408,7 @@
 						content: '确定要永久删除该评论吗？此操作不可逆。',
 						success: function(res) {
 							if (res.confirm) {
-								deleteComment(comment.id).then(data => {
+								deleteComment(comment.id, that.type).then(data => {
 									that.popup("删除成功", "success");
 									that.refreshData();
 								}).catch(err => {
@@ -390,7 +427,7 @@
 						content: '确定要将该评论放入回收站吗？',
 						success: function(res) {
 							if (res.confirm) {
-								updateCommentStatus(comment.id, "RECYCLE").then(data => {
+								updateCommentStatus(comment.id, "RECYCLE", that.type).then(data => {
 									that.popup("成功放入回收站", "success");
 									that.refreshData();
 								}).catch(err => {
@@ -450,10 +487,22 @@
 			/**
 			 * 评论中蓝色的评论标题点击事件
 			 */
-			onPostTitleClick: function(url) {
+			onTitleClick: function(i) {
 				// 跳转评论网页
 				// 如果当前是批量操作模式，不进行网页跳转
-				console.log(this.mode)
+				let url = "";
+				switch(this.type) {
+					case "posts":
+						url = this.comments[i].post.fullPath;
+						break;
+					case "sheets":
+						url = this.comments[i].sheet.fullPath;
+						break;
+					case "journals":
+						url = this.comments[i].journals.fullPath;
+						break;
+				}
+				
 				if (this.mode !== "batch") {
 					this.openURL(this.getUrl() + url);
 				}
@@ -490,6 +539,27 @@
 						break;
 				}
 
+			},
+			
+			/**
+			 * 评论筛选分类选项更改事件
+			 * @param {Object} e
+			 */
+			commentTypeChange: function(e) {
+				let i = e.detail.value;
+				this.comment_typeIndex = i;
+				switch(i) {
+					case 0:
+						this.type = "posts";
+						break;
+					case 1:
+						this.type = "sheets";
+						break;
+					case 2:
+						this.type = "journals";
+						break;
+				}
+				this.refreshData();
 			},
 
 			/**
@@ -553,7 +623,7 @@
 							content: '确定要将所选的 ' + this.selectedComment.length + ' 个评论转为已发布状态吗？',
 							success: function(res) {
 								if (res.confirm) {
-									updateCommentsStatus(that.selectedComment, "PUBLISHED").then(data => {
+									updateCommentsStatus(that.selectedComment, "PUBLISHED", that.type).then(data => {
 										that.toast("发布成功", "success")
 										that.refreshData();
 									}).catch(err => {
@@ -573,7 +643,7 @@
 							content: '确定要将所选的 ' + this.selectedComment.length + ' 个评论放入回收站吗？',
 							success: function(res) {
 								if (res.confirm) {
-									updateCommentsStatus(that.selectedComment, "RECYCLE").then(data => {
+									updateCommentsStatus(that.selectedComment, "RECYCLE", that.type).then(data => {
 										that.toast("操作成功", "success")
 										that.refreshData();
 									}).catch(err => {
@@ -599,7 +669,7 @@
 										content: '确定要删除所有评论吗？',
 										success: function(res) {
 											if (res.confirm) {
-												deleteComments(thatt.selectedComment).then(data => {
+												deleteComments(thatt.selectedComment, that.type).then(data => {
 													thatt.toast("删除成功", "success")
 													thatt.refreshData();
 												}).catch(err => {
