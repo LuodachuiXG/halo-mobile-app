@@ -5,8 +5,9 @@
 			<uni-popup-dialog mode="input" title="请输入两步验证码" placeholder="验证码" :duration="2000" :before-close="false"
 				@confirm="popupCodeConfirm"></uni-popup-dialog>
 		</uni-popup>
-
-		</uni-notice-bar>
+		<view>
+		    <u-notice-bar :text="notice" mode="closable"></u-notice-bar>
+		</view>
 		<view class="view-login block" v-if="!isLogin">
 			<image class="view-login-image" src="/static/images/halo.png"></image>
 			<view class="login-view">
@@ -98,7 +99,7 @@
 
 				// 当前是否是登录状态
 				isLogin: false,
-				
+
 				// 个人资料变量
 				accessToken: "",
 				avatar: "",
@@ -110,7 +111,10 @@
 				updateTime: "",
 				description: "",
 				
-				
+				notice: "请将Halo升级到 1.5.0 以上版本，否则可能出现未知错误。" + 
+					"软件目前处于测试阶段，遇到问题请到 Gitee 或 Github 提交 Issues " + 
+					"并附上截图或问题复现步骤。",
+
 			}
 		},
 
@@ -151,7 +155,8 @@
 		 */
 		onPullDownRefresh() {
 			// 判断个人信息是否过期，没过期就加载个人资料
-			if (!this.isExpired()) {干饭干饭过多多多多付 
+			if (!this.isExpired()) {
+				干饭干饭过多多多多付
 				// token没有过期，更改登录状态，并加载个人信息
 				this.isLogin = true
 				this.setData("isLogin", "true")
@@ -326,7 +331,7 @@
 					that.createTime = data.createTime;
 					that.updateTime = data.updateTime;
 					that.description = data.description;
-					
+
 					// 计算用户已经创建多少天了
 					let now = Number(Date.parse(new Date()));
 					let createdTime = (now - Number(that.createTime)) / 1000;
@@ -421,33 +426,33 @@
 							url: "../userProfile/userProfile"
 						})
 						break;
-					// 主题管理
+						// 主题管理
 					case 2:
 						uni.navigateTo({
 							url: "../themes/themes"
 						})
 						break;
-					// 设置
+						// 设置
 					case 3:
 						uni.navigateTo({
 							url: "../setting/setting"
 						})
 						break;
-					// 问题反馈
-					// case 4:
-					// 	let that = this;
-					// 	let url = "https://gitee.com/luodachui/halo-mobile-app/issues/new?issue%5Bassignee_id%5D=0&issue%5Bmilestone_id%5D=0";
-					// 	this.openURL(url);
-					// 	uni.setClipboardData({
-					// 		data: url,
-					// 		success: function () {
-					// 			that.toast("反馈地址已复制");
-					// 		}
-					// 	});
-					// 	break;
+						// 问题反馈
+						// case 4:
+						// 	let that = this;
+						// 	let url = "https://gitee.com/luodachui/halo-mobile-app/issues/new?issue%5Bassignee_id%5D=0&issue%5Bmilestone_id%5D=0";
+						// 	this.openURL(url);
+						// 	uni.setClipboardData({
+						// 		data: url,
+						// 		success: function () {
+						// 			that.toast("反馈地址已复制");
+						// 		}
+						// 	});
+						// 	break;
 				}
 			},
-			
+
 
 			/**
 			 * popup验证码输入Dialog确认事件
@@ -458,7 +463,7 @@
 				// 登录
 				this.adminLogin(code)
 			},
-			
+
 			/**
 			 * popup弹出层
 			 */
