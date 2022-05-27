@@ -89,9 +89,9 @@
 				<view class="block-content">
 					<!-- 评论的地方 -->
 					<view class="block-postTitle" @click="onTitleClick(i)">
-						{{ type === "posts" ? comment.post.title : ""}}
-						{{ type === "sheets" ? comment.sheet.title : ""}}
-						{{ type === "journals" ? comment.journal.title : ""}}
+						{{ type == "posts" && comment.post != undefined ? comment.post.title : ""}}
+						{{ type == "sheets" && comment.sheet != undefined ? comment.sheet.title : ""}}
+						{{ type == "journals" && comment.journal != undefined ? comment.journal.title : ""}}
 					</view>
 					<!-- 评论id -->
 					<text style="font-weight: bold;color: var(--primaryColor);margin-right: 5px;"

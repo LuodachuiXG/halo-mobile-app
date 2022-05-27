@@ -33,11 +33,11 @@
 					<text class="grid-text">新建页面</text>
 				</u-grid-item>
 				<u-grid-item @click="onItemClick(6)">
-					<image src="@/static/images/home_page.png"></image>
+					<image src="@/static/images/home_journal.png"></image>
 					<text class="grid-text">日志</text>
 				</u-grid-item>
 				<u-grid-item @click="onItemClick(7)">
-					<image src="@/static/images/home_addpage.png"></image>
+					<image src="@/static/images/home_attachment.png"></image>
 					<text class="grid-text">链接</text>
 				</u-grid-item>
 			</u-grid>
