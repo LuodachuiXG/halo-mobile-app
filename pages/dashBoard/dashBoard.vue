@@ -3,7 +3,7 @@
 		<u-notify ref="popup"></u-notify>
 
 		<uni-collapse accordion class="uni-collapse">
-			<uni-collapse-item title="总览" open>
+			<uni-collapse-item title="总览" open :show-animation="true">
 				<view class="view-block">
 					<uni-row class="row">
 						<uni-col :span="10">
@@ -96,7 +96,7 @@
 					</uni-row>
 				</view>
 			</uni-collapse-item>
-			<uni-collapse-item title="最近文章">
+			<uni-collapse-item title="最近文章" :show-animation="true">
 				<view class="view-latestPost">
 					<view class="view-latestPost-block" v-for="(post, i) in posts" @click="selectPost(i)">
 						<uni-row>
