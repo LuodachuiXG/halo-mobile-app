@@ -123,6 +123,9 @@
 			this.mUrl = this.getUrl();
 			this.username = this.getData("username");
 			this.password = this.getData("password");
+			
+			// 没登录前隐藏 tarbar
+			uni.hideTabBar();
 
 			// 判断个人信息是否过期，没过期就加载个人资料
 			if (!this.isExpired()) {
@@ -156,7 +159,6 @@
 		onPullDownRefresh() {
 			// 判断个人信息是否过期，没过期就加载个人资料
 			if (!this.isExpired()) {
-				干饭干饭过多多多多付
 				// token没有过期，更改登录状态，并加载个人信息
 				this.isLogin = true
 				this.setData("isLogin", "true")
@@ -340,6 +342,9 @@
 					uni.stopPullDownRefresh();
 					uni.hideLoading();
 					that.popup('欢迎回来', 'success');
+					
+					// 获取个人资料成功，显示 tarbar
+					uni.showTabBar();
 				}).catch(err => {
 					uni.stopPullDownRefresh();
 					uni.hideLoading();
@@ -393,8 +398,12 @@
 								that.setData("expired_date", "0")
 								that.setData("isLogin", "false")
 								that.setData("access_token", "")
+								
+								// 注销，隐藏 tarbar
+								uni.hideTabBar()
 							});
 						} else {
+							// 退出程序
 							// #ifdef APP-PLUS
 							if (uni.getSystemInfoSync().platform == 'ios') {
 								plus.ios.import("UIApplication").sharedApplication().performSelector(

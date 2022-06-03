@@ -89,14 +89,6 @@
 		},
 		
 		onShow: function() {
-			// 如果未登录或过期就直接跳转到登录页
-			if (this.isExpired()) {
-				this.toast("请先登录")
-				uni.switchTab({
-					url: "/pages/me/me"
-				})
-				return
-			}
 		},
 		
 		methods: {
