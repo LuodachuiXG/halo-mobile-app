@@ -146,7 +146,7 @@
 
 			}
 		},
-
+		
 		onShow: function() {
 			// 如果未登录或过期就直接跳转到登录页
 			if (this.isExpired()) {
@@ -156,7 +156,7 @@
 				})
 				return
 			}
-
+			
 			// 加载博客统计信息
 			this.loadBlogStatistics()
 			// 加载最近文章

@@ -98,14 +98,11 @@
 
 	.item:last-child {
 		border-radius: 0px 0px 6px 6px;
+		border-bottom: none;
 	}
 
 	.item:active {
 		background-color: #e9ebec;
-	}
-
-	.item:last-child {
-		border-bottom: none;
 	}
 
 	.item text {
