@@ -11,7 +11,7 @@
 		<view class="view-login block" v-if="!isLogin">
 			<image class="view-login-image" src="/static/images/halo.png"></image>
 			<view class="login-view">
-				<label for="url">站点地址</label>
+				<label for="url">Halo 站点地址</label>
 				<input class="input" id="url" v-model="mUrl" type="text" placeholder="https://" :disabled="disable" />
 			</view>
 
@@ -23,7 +23,7 @@
 
 			<view class="login-view">
 				<label for="password">密码</label>
-				<input class="input" id="password" v-model="password" password="true" placeholder="密码"
+				<input class="input" id="password" v-model="password" password="true" placeholder="登录 Halo 后台的密码"
 					:disabled="disable" />
 			</view>
 			<button class="button" type="primary" @click="login" id="login" :disabled="disable"
@@ -112,7 +112,7 @@
 				description: "",
 				
 				notice: "请将Halo升级到 1.5.0 以上版本，否则可能出现未知错误。" + 
-					"软件目前处于测试阶段，遇到问题请到 Gitee 或 Github 提交 Issues " + 
+					"软件目前处于测试阶段，遇到问题请到 Gitee 或 Github 提交 Issue " + 
 					"并附上截图或问题复现步骤。",
 
 			}

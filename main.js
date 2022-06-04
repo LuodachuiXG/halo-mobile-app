@@ -104,6 +104,7 @@ Vue.prototype.isExpired = function() {
 	} else {
 		// token已经过期，将本地登录状态更改
 		this.setData("isLogin", "false")
+		uni.hideTabBar();
 		return true
 	}
 }

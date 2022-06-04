@@ -1,7 +1,7 @@
 {
-    "name" : "Halo",
+    "name" : "Halo Admin",
     "appid" : "__UNI__96B3944",
-    "description" : "Halo移动端程序",
+    "description" : "Halo移动端后台管理",
     "versionName" : "0.0.3-beta.2",
     "versionCode" : 500,
     "transformPx" : false,
@@ -27,7 +27,6 @@
                     "<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>",
                     "<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>",
                     "<uses-permission android:name=\"android.permission.FLASHLIGHT\"/>",
-                    "<uses-permission android:name=\"android.permission.GET_ACCOUNTS\"/>",
                     "<uses-permission android:name=\"android.permission.INTERNET\"/>",
                     "<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\"/>",
                     "<uses-permission android:name=\"android.permission.READ_LOGS\"/>",

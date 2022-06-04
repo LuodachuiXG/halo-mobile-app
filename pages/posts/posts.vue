@@ -152,7 +152,6 @@
 					{{ post.status == 'DRAFT' ? '草稿' : ''}}{{ post.status == 'RECYCLE' ? '回收站' : ''}}{{ post.status == 'INTIMATE' ? '私密' : ''}}{{ post.status == 'PUBLISHED' ? '已发布' : ''}}
 				</text>
 				<view class="block-status-time">
-					<image src="../../static/images/clock.png"></image>
 					<text>{{ format(post.createTime) }}</text>
 				</view>
 			</view>
@@ -880,12 +879,13 @@
 
 	.block-name {
 		font-weight: bold;
-		font-size: 1.1em;
+		font-size: 29rpx;
 		display: inline-block;
 		white-space: nowrap;
 		width: 100%;
 		overflow: hidden;
 		text-overflow: ellipsis;
+		line-height: 41rpx;
 	}
 
 	.block-thumbnail {}
@@ -1003,14 +1003,6 @@
 		top: 0rpx;
 	}
 
-	.block-status-time image {
-		position: absolute;
-		top: 10rpx;
-		left: -30rpx;
-		width: 25rpx;
-		height: 25rpx;
-	}
-
 	.view-sizeSelect {
 		margin: 30rpx;
 		margin-bottom: 40rpx;
@@ -1025,9 +1017,9 @@
 	}
 
 	.btn {
-		height: 60rpx;
-		line-height: 60rpx;
-		margin-right: 20rpx;
+		height: 32px;
+		line-height: 32px;
+		margin-right: 10px;
 		font-size: .9em;
 	}
 

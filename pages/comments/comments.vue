@@ -112,7 +112,6 @@
 						{{ comment.status == 'AUDITING' ? '待审核' : ''}}{{ comment.status == 'RECYCLE' ? '回收站' : ''}}{{ comment.status == 'PUBLISHED' ? '已发布' : ''}}
 					</text>
 					<view class="block-status-time">
-						<image src="../../static/images/clock.png"></image>
 						<text>{{ format(comment.createTime) }}</text>
 					</view>
 				</view>
@@ -820,14 +819,6 @@
 		position: absolute;
 		right: 30rpx;
 		top: 0rpx;
-	}
-
-	.block-status-time image {
-		position: absolute;
-		top: 10rpx;
-		left: -30rpx;
-		width: 25rpx;
-		height: 25rpx;
 	}
 
 	.view-sizeSelect {
