@@ -34,13 +34,13 @@
 				</view>
 			</view>
 			
-			<!-- 文章分类标签 -->
+			<!-- 评论量标签 -->
 			<view class="block-tag">
 				<view class="block-tag-item">
 					<u-tag :text="'评论量：' + mPage.commentCount" type="error"></u-tag>
 				</view>
 			</view>
-			<!-- 文章标签 -->
+			<!-- 访问量标签 -->
 			<view class="block-tag">
 				<view class="block-tag-item" >
 					<u-tag :text="'访问量：' + mPage.visits" type="primary"></u-tag>
@@ -160,7 +160,7 @@
 
 			// 将本地取出的文本数据转成int
 			this.sizesIndex = Number(this.sizesIndex)
-			// 根据每页显示文章数量来设置 size 大小
+			// 根据每页显示页面数量来设置 size 大小
 			switch (this.sizesIndex) {
 				case 0:
 					this.size = 4
@@ -246,9 +246,9 @@
 						}
 					});
 				} else {
-					// 编辑文章
+					// 编辑页面
 					uni.navigateTo({
-						url: "./edit/edit?id=" + this.mPages[i].id + "?type=update"
+						url: "./edit/edit?id=" + this.mPages[i].id + "&type=update"
 					})
 				}
 			},

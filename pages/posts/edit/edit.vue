@@ -147,6 +147,10 @@
 											content: err
 										});
 									});
+									// 因为当前已经创建了文章，所以切换为编辑模式
+									that.type = "update";
+									that.postId = data.id;
+									that.refreshData();
 								}).catch(err => {
 									uni.showModal({
 										title: "获取预览地址失败",
@@ -197,6 +201,11 @@
 						// 创建文章成功，保存 id
 						that.post.id = data.id;
 						that.popup("保存草稿成功", "success");
+						
+						// 因为当前已经创建了文章，所以切换为编辑模式
+						that.type = "update";
+						that.postId = data.id;
+						that.refreshData();
 					}).catch(err => {
 						uni.showModal({
 							title: "保存草稿失败",

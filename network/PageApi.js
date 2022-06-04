@@ -74,3 +74,16 @@ export function deletePage(id, status) {
 		method: "DELETE"
 	});
 }
+
+/**
+ * 根据页面 id 获取页面预览地址
+ * @param {Object} id
+ */
+export function getPagePreviewLink(id) {
+	return request({
+		url: "/api/admin/sheets/preview/" + id,
+		method: "GET",
+		allData: true
+	});
+}
+

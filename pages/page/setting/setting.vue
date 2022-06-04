@@ -138,7 +138,7 @@
 	export default {
 		data() {
 			return {
-				// 标记当前是旧文章的设置更新，还是新文章的设置发布，add/update
+				// 标记当前是旧页面的设置更新，还是新页面的设置发布，add/update
 				type: "",
 
 				page: [],
@@ -208,7 +208,7 @@
 					let pages = getCurrentPages();
 					// 上一页面实例
 					let prevPage = pages[pages.length - 2];
-					mPage = prevPage.$vm._data.page;
+					mPage = prevPage.$vm._data.mPage;
 					this.pageId =
 						(mPage.id !== undefined && mPage.id !== 0) ? mPage.id : 0;
 					this.title = mPage.title;
@@ -365,7 +365,7 @@
 					// i = 1，页面设置的保存数据
 					updatePage(json.id, json).then(data => {
 						that.popup("保存数据成功", "success");
-						that.refreshPostData();
+						that.refreshPageData();
 					}).catch(err => {
 						uni.showModal({
 							title: "保存数据失败",

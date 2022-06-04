@@ -93,10 +93,13 @@
 					case 4:
 						uni.navigateTo({
 							url: "../page/page"
-						})
+						});
 						break;
 					// 新建页面
 					case 5:
+						uni.navigateTo({
+							url: "../page/edit/edit?type=add"
+						})
 						break;
 					// 主题
 					case 6:

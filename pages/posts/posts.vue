@@ -434,7 +434,7 @@
 				} else {
 					// 编辑文章
 					uni.navigateTo({
-						url: "./edit/edit?id=" + this.posts[i].id + "?type=update"
+						url: "./edit/edit?id=" + this.posts[i].id + "&type=update"
 					})
 				}
 			},
