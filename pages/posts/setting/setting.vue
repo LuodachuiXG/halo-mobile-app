@@ -3,10 +3,6 @@
 		<u-notify ref="popup"></u-notify>
 
 		<!-- 基本设置 -->
-		<view class="block-title">
-			<text>基本设置</text>
-			<view></view>
-		</view>
 		<view class="block">
 			<!-- 文章标题 -->
 			<view class="view-input">
@@ -459,7 +455,7 @@
 			},
 			
 			/**
-			 * 是否指定 radio 点击事件
+			 * 是否置顶 radio 点击事件
 			 * @param {Object} e
 			 */
 			onToppedRadioChange: function(e) {

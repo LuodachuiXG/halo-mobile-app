@@ -1,6 +1,18 @@
 import request from "./Request.js";
 
 /**
+ * 新增页面
+ * @param {Object} page
+ */
+export function addPage(page) {
+	return request({
+		url: "/api/admin/sheets",
+		method: "POST",
+		data: page
+	});
+}
+
+/**
  * 根据页数和每页显示数量获取页面
  * @param {Object} page
  * @param {Object} size
@@ -13,6 +25,30 @@ export function getPages(page, size) {
 			page: page,
 			size: size
 		}
+	});
+}
+
+/**
+ * 根据页面 id 获取单个页面数据
+ * @param {Object} id
+ */
+export function getPage(id) {
+	return request({
+		url: "/api/admin/sheets/" + id,
+		method: "GET"
+	});
+}
+
+/**
+ * 更新页面设置
+ * @param {Object} id
+ * @param {Object} page
+ */
+export function updatePage(id, page) {
+	return request({
+		url: "/api/admin/sheets/" + id,
+		method: "PUT",
+		data: page
 	});
 }
 

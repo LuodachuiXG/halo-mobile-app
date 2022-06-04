@@ -717,12 +717,13 @@
 
 	.block-name {
 		font-weight: bold;
-		font-size: 1.1em;
+		font-size: 29rpx;
 		display: inline-block;
 		white-space: nowrap;
 		width: 100%;
 		overflow: hidden;
 		text-overflow: ellipsis;
+		line-height: 41rpx;
 	}
 
 

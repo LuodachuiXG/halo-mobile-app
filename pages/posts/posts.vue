@@ -567,9 +567,7 @@
 						this.selectedPost.splice(index, 1);
 					}
 				} else {
-					uni.navigateTo({
-						url: './detail/detail?id=' + this.posts[i].id
-					})
+					this.openURL(this.getUrl() + this.posts[i].fullPath);
 				}
 
 			},

@@ -260,7 +260,6 @@
 			onDeleteClick: function(i) {
 				let that = this;
 				let page = this.mPages[i];
-				console.log(page)
 				if (page.status === "RECYCLE") {
 					// 当前页面在回收站，永久删除
 					uni.showModal({
@@ -350,9 +349,9 @@
 			 * @param {Object} i
 			 */
 			onSettingClick: function(i) {
-				let postId = this.posts[i].id;
+				let pageId = this.mPages[i].id;
 				uni.navigateTo({
-					url: './setting/setting?id=' + postId
+					url: './setting/setting?id=' + pageId
 				})
 			},
 			
@@ -465,15 +464,6 @@
 		border-left: 1px solid #ececec;
 	}
 
-	.activated {
-		color: #1890FF;
-	}
-
-	.tips {
-		font-weight: bold;
-		font-size: .8em;
-	}
-
 	.block-tag {
 		margin-top: -20rpx;
 		padding-left: 30rpx;
@@ -543,72 +533,6 @@
 		margin-bottom: 40rpx;
 		padding: 20rpx;
 		color: #616255;
-	}
-
-	.view-input {
-		margin-top: 0rpx;
-		margin-left: 30rpx;
-		margin-right: 30rpx;
-	}
-
-	.btn {
-		height: 32px;
-		line-height: 32px;
-		margin-right: 10px;
-		font-size: .9em;
-	}
-
-	.left-btn {
-		display: inline-block;
-		width: 47%;
-		position: relative;
-
-	}
-
-	.right-btn {
-		display: inline-block;
-		width: 47%;
-		position: absolute;
-		margin-right: 0px;
-		right: 0px;
-
-	}
-
-	.recycle-sticky {
-		background-color: #FFFFFF;
-		height: 80rpx;
-		box-shadow: 0px 1px 4px rgb(50, 50, 50, .2);
-	}
-
-	.recycle-sticky button {
-		height: 60rpx;
-		font-size: .9em;
-		margin-top: 10rpx;
-		line-height: 60rpx;
-		border: none;
-	}
-
-	.recycle-sticky-picker {
-		height: 60rpx;
-		line-height: 60rpx;
-		margin-top: 10rpx;
-		text-align: center;
-	}
-
-	.red {
-		background-color: var(--errorColor);
-		color: #FFFFFF;
-	}
-	.blue {
-		background-color: var(--primaryColor);
-		color: #FFFFFF;
-	}
-	.yellow {
-		background-color: var(--warningColor);
-		color: #FFFFFF;
-	}
-	.selected {
-		filter: brightness(60%) blur(1px);
 	}
 	
 	.topped-tag {
