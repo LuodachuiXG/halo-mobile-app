@@ -82,7 +82,7 @@
 		background-color: #FFFFFF;
 		margin: 30rpx;
 		box-shadow: 0 2px 10px rgba(216, 216, 216, .5);
-		border-radius: 6px;
+		border-radius: 4px;
 	}
 
 	.item {
@@ -93,11 +93,11 @@
 	}
 
 	.item:first-child {
-		border-radius: 6px 6px 0px 0px;
+		border-radius: 4px 4px 0px 0px;
 	}
 
 	.item:last-child {
-		border-radius: 0px 0px 6px 6px;
+		border-radius: 0px 0px 4px 4px;
 		border-bottom: none;
 	}
 

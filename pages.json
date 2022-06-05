@@ -282,6 +282,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/menus/menus",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "菜单分组",
+                "enablePullDownRefresh": true
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",

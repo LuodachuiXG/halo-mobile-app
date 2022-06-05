@@ -112,6 +112,9 @@
 						break;
 					// 菜单设置
 					case 8:
+						uni.navigateTo({
+							url: "../menus/menus"
+						})
 						break;
 					// 个人资料
 					case 9:
