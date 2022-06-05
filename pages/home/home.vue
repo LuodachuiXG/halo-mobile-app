@@ -127,6 +127,9 @@
 						break;
 					// 关于
 					case 11:
+						uni.navigateTo({
+							url: "../about/about"
+						})
 						break;
 					// 附件
 					case 12:

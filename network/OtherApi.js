@@ -26,3 +26,13 @@ export function getBlogStatistics() {
 		method: "GET"
 	});
 }
+
+/**
+ * 获取博客环境信息
+ */
+export function getEnvironments() {
+	return request({
+		url: "/api/admin/environments",
+		method: "GET"
+	});
+}
