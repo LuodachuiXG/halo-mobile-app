@@ -19,7 +19,7 @@
 	@import '@/uni_modules/uni-scss';
 	/* #ifndef APP-NVUE */
 	@import '@/static/customicons.css';
-
+	/*  #endif  */
 
 
 
@@ -32,6 +32,7 @@
 		--primaryColor: #007AFF;
 		--primaryDarkColor: #0067ce;
 		--textPrimaryColor: #616255;
+		--textContentColor: #495060;
 		--activatedColor: #e2e2e2;
 		--warningColor: #f3a73f;
 		--errorColor: #e43d33;
@@ -44,7 +45,6 @@
 		background-color: #F0F2F5;
 	}
 
-	/* #endif */
 	.example-info {
 		font-size: 14px;
 		color: #333;
@@ -63,7 +63,7 @@
 		padding-left: 10px;
 		padding-right: 10px;
 		border-radius: 4px;
-		color: #595959;
+		color: var(--textPrimaryColor);
 	}
 
 	.input:hover {
@@ -75,14 +75,17 @@
 		font-size: 1.1em;
 		height: 40px;
 		line-height: 40px;
-		// background-color: #007AFF;
 	}
 
 	.block {
-		background-color: #FFFFFF;
+		background-color: white;
 		margin: 30rpx;
 		box-shadow: 0 2px 10px rgba(216, 216, 216, .5);
 		border-radius: 4px;
+	}
+	
+	.active:active{
+		background-color: var(--activatedColor);
 	}
 
 	.item {
@@ -102,13 +105,13 @@
 	}
 
 	.item:active {
-		background-color: #e9ebec;
+		background-color: var(--activatedColor);
 	}
 
 	.item text {
 		margin-left: 20rpx;
 		font-size: .9em;
-		color: #616255;
+		color: var(--textPrimaryColor);
 	}
 
 	.item image {
@@ -142,7 +145,7 @@
 		margin-left: 15rpx;
 		font-size: 1.1em;
 		font-weight: bold;
-		color: #FFFFFF;
+		color: white;
 		text-shadow: 2px 2px 5px rgba(0, 0, 0, .5);
 	}
 

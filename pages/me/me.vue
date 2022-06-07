@@ -50,18 +50,18 @@
 				</view>
 			</view>
 
-			<view class="view-me-option block">
-				<view class="view-me-option-item item" @click="onOptionClick(0)">
+			<view class="block">
+				<view class="item" @click="onOptionClick(0)">
 					<image src="/static/images/setting.png"></image>
 					<text>博客设置</text>
 					<view class="item-sign"></view>
 				</view>
-				<view class="view-me-option-item item" @click="onOptionClick(1)">
+				<view class="item" @click="onOptionClick(1)">
 					<image src="/static/images/me.png"></image>
 					<text>个人资料</text>
 					<view class="item-sign"></view>
 				</view>
-				<view class="view-me-option-item item" @click="onOptionClick(2)">
+				<view class="item" @click="onOptionClick(2)">
 					<image src="/static/images/theme.png"></image>
 					<text>主题管理</text>
 					<view class="item-sign"></view>

@@ -19,3 +19,14 @@ export function getMenusByTeam(team = "") {
 		method: "GET"
 	});
 }
+
+/**
+ * 根据菜单 id 数组删除菜单
+ */
+export function deleteMenusById(id) {
+	return request({
+		url: "/api/admin/menus/batch",
+		method: "DELETE",
+		data: id
+	});
+}
