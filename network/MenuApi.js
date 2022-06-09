@@ -23,10 +23,21 @@ export function getMenusByTeam(team = "") {
 /**
  * 根据菜单 id 数组删除菜单
  */
-export function deleteMenusById(id) {
+export function deleteMenusById(ids) {
 	return request({
 		url: "/api/admin/menus/batch",
 		method: "DELETE",
-		data: id
+		data: ids
+	});
+}
+
+/**
+ * 批量修改菜单
+ */
+export function updateMenus(menus) {
+	return request({
+		url: "/api/admin/menus/batch",
+		method: "PUT",
+		data: menus
 	});
 }
