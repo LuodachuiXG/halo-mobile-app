@@ -1,16 +1,24 @@
 <template>
 	<view class="container">
 		<u-notify ref="popup" duration="1500"></u-notify>
-		<u-action-sheet :actions="mode === 'team' ? teamOptions : menuOptions" :closeOnClickOverlay="true" :closeOnClickAction="true"
-			:show="showActionSheet" cancelText="取消" @close="onActionSheetClose" @select="onActionSheetSelect">
+		<!-- 从页面下方弹出的操作菜单 -->
+		<u-action-sheet :actions="mode === 'team' ? teamOptions : menuOptions" :closeOnClickOverlay="true"
+			:closeOnClickAction="true" :show="showActionSheet" cancelText="取消" @close="onActionSheetClose"
+			@select="onActionSheetSelect">
 		</u-action-sheet>
+		<!-- 用于给菜单选择父菜单的选择器 -->
+		<u-picker :show="showPicker" :columns="menusName" :defaultIndex="pickerValue"
+			:title="'选择【' + currentMenuName + '】的父菜单'" 
+			@confirm="onPickerChange" @close="onPickerClose" @cancel="onPickerClose"
+			:closeOnClickOverlay="true"></u-picker>
+		</picker>
 		<view v-if="mode === 'team'" class="bottom-blank">
 			<view class="block" v-for="(team, i) in teams" :key="i">
 				<uni-row class="row">
 					<uni-col :span="20">
 						<view class="block-left active" @click="onTeamClick(i)">
 							{{team === "" ? "未分组（默认）" : team}}
-							{{currentTeam === team ? "（默认）" : ""}}
+							{{currentTeamName === team ? "（默认）" : ""}}
 						</view>
 					</uni-col>
 					<uni-col :span="4">
@@ -21,13 +29,18 @@
 				</uni-row>
 			</view>
 		</view>
-		
+
 		<view v-if="mode === 'menu'" class="bottom-blank">
 			<view style="margin: 30rpx;">
 				<u-button type="warning" text="返回菜单分组" @click="teamMode"></u-button>
-				<u-button color="#007AFF" text="保存" style="margin-top: 10px;"  @click=""></u-button>
+				<u-button color="#007AFF" text="保存" style="margin-top: 10px;" @click=""></u-button>
 			</view>
-			<view class="active block block-menu" v-for="(menu, i) in menus" :key="i" @click="onMenuClick(i)">
+			<view 
+				v-for="(menu, i) in menus" 
+				class="active block block-menu"
+				:key="i"
+				:style="'margin-left:' + getMenuMarginLeft(i)"
+				 @click="onMenuClick(i)">
 				<view class="menu-top">
 					<u-icon name="list-dot" :label="menu.name"></u-icon>
 				</view>
@@ -36,6 +49,7 @@
 				</view>
 			</view>
 		</view>
+		<!-- 悬浮按钮 -->
 		<uni-fab horizontal="right" vertical="bottom" @trigger=""></uni-fab>
 	</view>
 </template>
@@ -45,6 +59,7 @@
 		getMenuTeams,
 		getMenusByTeam,
 		deleteMenusById,
+		deleteMenuById,
 		updateMenus
 	} from "@/network/MenuApi.js";
 
@@ -57,16 +72,14 @@
 			return {
 				// 用于标记当前页面是什么模式，team/menu
 				mode: "team",
-				
+
 				// 菜单分组
 				teams: [],
 				// 当前使用的菜单分组
-				currentTeam: "",
+				currentTeamName: "",
 				// 当前点击的分组索引
 				currentTeamIndex: -1,
-				
-				// 当前点击的菜单索引
-				currentMenuIndex: -1,
+
 
 				// 分组的 ActionSheet 内容
 				teamOptions: [{
@@ -99,11 +112,25 @@
 
 				// 控制操作菜单是否显示
 				showActionSheet: false,
+
+
+				// 父菜单选择 picker 是否显示
+				showPicker: false,
+				// picker 当前索引
+				pickerValue: [0],
+				// 由菜单名组成的一个字符串数组
+				menusName: [],
 				
 				
 				// 存储所选分组下面的所有菜单
 				menus: [],
+				// 当前点击的菜单名
+				currentMenuName: "",
+				// 当前点击的菜单索引
+				currentMenuIndex: -1,
 				
+				// 临时变量
+				temp: null,
 			}
 		},
 
@@ -123,14 +150,14 @@
 				uni.showLoading({
 					title: "正在加载"
 				});
-				
-				if (this.mode === "team"){
+
+				if (this.mode === "team") {
 					this.refreshMenuTeam();
 				} else if (this.mode === "menu") {
-					this.refreshMenuByTeam(this.currentTeam);
+					this.refreshMenuByTeam(this.currentTeamName);
 				}
 			},
-			
+
 			/**
 			 * 获取菜单分组
 			 */
@@ -151,14 +178,15 @@
 					});
 				});
 			},
-			
+
 			/**
 			 * 根据分组名获取菜单
 			 * @param {Object} name
 			 */
 			refreshMenuByTeam: function(name) {
 				getMenusByTeam(name).then(data => {
-					this.menus = data;
+					// 将获取的菜单进行格式化
+					this.menus = this.formatMenus(data);
 					this.menuMode(name);
 					uni.stopPullDownRefresh();
 					uni.hideLoading();
@@ -217,20 +245,177 @@
 							})
 							break;
 					}
-				} else if (mode === 'menu') {
+				} else if (this.mode === 'menu') {
+					let index = this.currentMenuIndex;
+					let currentMenu = this.menus[index];
+					let menuId = currentMenu.id;
 					switch (optionName) {
 						case "上移":
+							// 首先判断当前菜单是否有父菜单
+							if (currentMenu.parentId === 0) {
+								// 无父菜单
+								if (index > 0) {
+									// 当前菜单不在首位
+									let preMenu = this.menus[index - 1];
+									currentMenu.priority = currentMenu.priority - 1;
+									preMenu.priority = preMenu.priority + 1;
+								
+									this.menus[index] = preMenu;
+									this.menus[index - 1] = currentMenu;
+								} else if (index === 0) {
+									// 当前菜单在首尾
+									let preMenu = this.menus[this.menus.length - 1];
+									currentMenu.priority = this.menus.length - 1;
+									preMenu.priority = 0;
+								
+									this.menus[index] = preMenu;
+									this.menus[this.menus.length - 1] = currentMenu;
+								}
+							} else {
+								// 有父菜单
+								// 判断当前子菜单是否只有自己一个兄弟子菜单
+								if (this.getChildrenCountByParentId(currentMenu.parentId) === 1) {
+									// 父菜单只有一个子菜单，无法上移，提示用户
+									this.popup("上移失败，没有同级子菜单");
+								} else {
+									// 父菜单有大于 1 个子菜单
+									// 判断上一个菜单是否是父菜单
+									let preMenu = this.menus[index - 1];
+									if (preMenu.id === currentMenu.parentId) {
+										// 上一个菜单是当前菜单的父菜单
+										// 获取最后一个兄弟子菜单出现索引，并交换位置
+										let lastChildIndex = this.getLastChildIndex(preMenu.id);
+										let lastChild = this.menus[lastChildIndex];
+										lastChild.priority = 0;
+										currentMenu.priority = this.getChildrenCountByParentId(preMenu.id) - 1;
+										this.menus[lastChildIndex] = currentMenu;
+										this.menus[index] = lastChild;
+										
+									} else {
+										// 上一个菜单不是当前菜单的父菜单
+										// 跟上一个子菜单交换位置
+										let prePriority = preMenu.priority;
+										preMenu.priority = currentMenu.priority;
+										currentMenu.priority = prePriority;
+										this.menus[index - 1] = currentMenu;
+										this.menus[index] = preMenu;
+									}
+								}
+							}
 							break;
 						case "下移":
+							// 首先判断当前菜单是否有父菜单
+							if (currentMenu.parentId === 0) {
+								// 无父菜单
+								if (index < this.menus.length - 1) {
+									// 当前菜单不在尾位
+									let nextMenu = this.menus[index + 1];
+									currentMenu.priority = currentMenu.priority + 1;
+									nextMenu.priority = nextMenu.priority - 1;
+								
+									this.menus[index] = nextMenu;
+									this.menus[index + 1] = currentMenu;
+								} else if (index === this.menus.length - 1) {
+									// 当前菜单在首尾
+									let nextMenu = this.menus[0];
+									currentMenu.priority = 0;
+									nextMenu.priority = this.menus.length - 1;
+								
+									this.menus[index] = nextMenu;
+									this.menus[0] = currentMenu;
+								}
+							} else {
+								// 有父菜单
+								// 判断当前子菜单是否只有自己一个兄弟子菜单
+								if (this.getChildrenCountByParentId(currentMenu.parentId) === 1) {
+									// 父菜单只有一个子菜单，无法下移，提示用户
+									this.popup("下移失败，没有同级子菜单");
+								} else {
+									// 父菜单有大于 1 个子菜单
+									// 判断下一个菜单是否是兄弟子菜单，并且不是 menus 中最后一个菜单
+									let nextMenu = this.menus[index + 1];
+									if (index !== this.menus.length - 1 &&
+										nextMenu.parentId === currentMenu.parentId) {
+										// 下一个菜单是兄弟子菜单，直接交换位置
+										let nextPriority = nextMenu.priority;
+										nextMenu.priority = currentMenu.priority;
+										currentMenu.priority = nextPriority;
+										this.menus[index + 1] = currentMenu;
+										this.menus[index] = nextMenu;
+										
+									} else {
+										// 下一个菜单不是兄弟菜单
+										// 获取第一个兄弟子菜单出现索引，并交换位置
+										let firstChildIndex = this.getFirstChildIndex(currentMenu.parentId);
+										let firstChild = this.menus[firstChildIndex];
+										currentMenu.priority = 0;
+										firstChild.priority = this.getChildrenCountByParentId(currentMenu.parentId) - 1;
+										this.menus[firstChildIndex] = currentMenu;
+										this.menus[index] = firstChild;
+									}
+								}
+							}
 							break;
 						case "编辑":
 							break;
 						case "删除":
+							uni.showModal({
+								title: "确定要删除【" + currentMenu.name + "】菜单吗？",
+								success(res) {
+									if (res.confirm) {
+										// 删除菜单
+										deleteMenuById(menuId).then(data => {
+											// 删除成功，修改菜单变量，不重新从服务器读取
+											that.menus.splice(index, 1);
+										}).catch(err => {
+											uni.showModal({
+												title: "删除失败",
+												content: err
+											});
+										})
+									}
+								}
+							});
 							break;
 						case "父菜单":
+							// 先将所有菜单名组成一个字符串数组
+							let array = ["无"];
+							this.menusName = [];
+							for (let i = 0; i < this.menus.length; i++) {
+								if (i === index) continue;
+								array.push(this.menus[i].name);
+							}
+							this.menusName.push(array);
+							this.showPicker = true;
+							if (currentMenu.parentId !== 0) {
+								// 当前菜单有父菜单，所以需要设置 picker 默认选择项
+								let parentName = this.getMenuNameById(currentMenu.parentId);
+								this.pickerValue = [array.indexOf(parentName)];
+							} else {
+								this.pickerValue = [0];
+							}
 							break;
 					}
 				}
+			},
+
+			/**
+			 * 父菜单 picker 选项更改事件
+			 * @param {Object} e
+			 */
+			onPickerChange: function(e) {
+				// 选择的菜单名
+				let selectMenuName = e.value[0];
+				if (selectMenuName === "无") {
+					// 清除
+				}
+			},
+			
+			/**
+			 * 父菜单 picker 关闭事件
+			 */
+			onPickerClose: function() {
+				this.showPicker = false;
 			},
 
 			/**
@@ -280,7 +465,7 @@
 			getDefaultMenuTeam: function() {
 				let json = ["default_menu_team"];
 				getOptionsByMapViewsKeys(json).then(data => {
-					this.currentTeam = data.default_menu_team;
+					this.currentTeamName = data.default_menu_team;
 				}).catch(err => {
 					uni.showModal({
 						title: "获取当前使用分组失败",
@@ -316,7 +501,6 @@
 				/* 因为 Halo 分组本质上是一堆菜单
 				   所以需要先获取当前分组下所有菜单
 				   然后将每个菜单的 team 字段修改 */
-
 				let that = this;
 				let menus = [];
 				getMenusByTeam(oldName).then(data => {
@@ -330,14 +514,14 @@
 					updateMenus(menus).then(data => {
 						// 设置成功
 						// 判断 oldName 之前是否是默认菜单
-						if (thatt.currentTeam === oldName) {
+						if (thatt.currentTeamName === oldName) {
 							// oldName 之前是默认菜单
 							// 将默认菜单名也修改成 newName
 							thatt.setDefaultMenuTeam(newName);
 						} else {
 							thatt.refreshData();
 						}
-						
+
 					}).catch(err => {
 						uni.showModal({
 							title: "设置失败",
@@ -352,20 +536,20 @@
 				});
 
 			},
-			
+
 			/**
 			 * 分组点击事件
 			 * @param {Object} i
 			 */
 			onTeamClick: function(i) {
 				this.currentTeamIndex = i;
-				this.currentTeam = this.teams[i];
+				this.currentTeamName = this.teams[i];
 				// 切换到菜单模式
-				this.menuMode(this.currentTeam);
+				this.menuMode(this.currentTeamName);
 				// 刷新数据
 				this.refreshData();
 			},
-			
+
 			/**
 			 * 切换到分组模式
 			 */
@@ -374,8 +558,9 @@
 				uni.setNavigationBarTitle({
 					title: "菜单分组"
 				});
+				this.menus = [];
 			},
-			
+
 			/**
 			 * 切换到菜单模式
 			 * @param {Object} menuName 菜单名
@@ -386,15 +571,151 @@
 					title: menuName
 				});
 			},
-			
+
 			/**
 			 * 菜单点击事件
 			 * @param {Object} i
 			 */
 			onMenuClick: function(i) {
 				this.currentMenuIndex = i;
+				this.currentMenuName = this.menus[i].name;
 				this.showActionSheet = true;
 			},
+			
+			/**
+			 * 将循环嵌套的父子菜单的所有子菜单全部取到第一层
+			 * 并且将父菜单的 children 赋空
+			 * @param {Object} mMenus 要格式化的 menus 数据
+			 */
+			formatMenus: function(mMenus) {
+				this.temp = [];
+				let result = this._formatMenus(mMenus);
+				this.temp = [];
+				return result;
+			},
+			
+			_formatMenus: function(mMenus) {
+				for (let i = 0; i < mMenus.length; i++) {
+					let menu = mMenus[i];
+					if (menu.children !== undefined && menu.children.length > 0) {
+						// menu 的子菜单不为空，取出来处理并将 menu 的子菜单赋空加入 temp 数组
+						let children = menu.children;
+						menu.children = [];
+						this.temp.push(menu);
+						this._formatMenus(children);
+					} else {
+						// menu 的子菜单为空，直接加入 temp 数组
+						this.temp.push(menu);
+					}
+				}
+				return this.temp;
+			},
+			
+			/**
+			 * 根据菜单 id 获取菜单名
+			 * @param {Object} id
+			 */
+			getMenuNameById: function(id) {
+				for (let i = 0; i < this.menus.length; i++) {
+					if (this.menus[i].id === id) {
+						return this.menus[i].name;
+					}
+				}
+			},
+			
+			/**
+			 * 根据菜单 id 获取菜单
+			 * @param {Object} id
+			 */
+			getMenuById: function(id) {
+				for (let i = 0; i < this.menus.length; i++) {
+					if (this.menus[i].id === id) {
+						return this.menus[i];
+					}
+				}
+			},
+			
+			/**
+			 * 根据父菜单 id 获取子菜单数量
+			 * @param {Object} id
+			 */
+			getChildrenCountByParentId: function(id) {
+				let count = 0;
+				for (let i = 0; i < this.menus.length; i++) {
+					let menu = this.menus[i];
+					if (menu.parentId === id) {
+						count++;
+					}
+				}
+				return count;
+			},
+			
+			/**
+			 * 根据菜单 id 获取索引
+			 * @param {Object} id
+			 */
+			getIndexById: function(id) {
+				for (let i = 0; i < this.menus.length; i++) {
+					if (this.menus[i].id === id) return i;
+				}
+				return -1;
+			},
+			
+			
+			/**
+			 * 根据父菜单 id 获取子菜单在 menus 最先出现位置
+			 * @param {Object} id
+			 */
+			getFirstChildIndex: function(id) {
+				for (let i = 0; i < this.menus.length; i++) {
+					if (this.menus[i].parentId === id) {
+						return i;
+					}
+				}
+				return -1;	
+			},
+			
+			/**
+			 * 根据父菜单 id 获取子菜单在 menus 最后出现位置
+			 * @param {Object} id
+			 * @param {Object} from 从指定索引开始
+			 */
+			getLastChildIndex: function(id, from = 0) {
+				let index = -1;
+				for (let i = from; i < this.menus.length; i++) {
+					if (this.menus[i].parentId === id) {
+						index = i;
+					}
+				}
+				return index;	
+			},
+			
+			/**
+			 * 根据当前 menu 菜单父子状态返回对应的左边距
+			 * @param {Object} i
+			 */
+			getMenuMarginLeft: function(i) {
+				// 第一个 menu 不做处理
+				if (i === 0) return "";
+				// 因为菜单默认的 margin-left 就是30，所以这里再加 30
+				return (this.getMenuParentCount(i) * 50 + 30) + "rpx;";
+			},
+			
+			/**
+			 * 获取 menu 的父菜单数量（当前菜单所在层级数）
+			 * @param {Object} i
+			 */
+			getMenuParentCount: function(i) {
+				if (i === 0) return 0;
+				let count = 0;
+				let menu = this.menus[i];
+				while (menu.parentId !== 0) {
+					menu = this.getMenuById(menu.parentId);
+					count++;
+				}
+				return count;
+			},
+			
 
 			/**
 			 * popup弹出层
@@ -419,6 +740,7 @@
 		box-shadow: 0 1px 2px rgba(216, 216, 216, .5);
 		height: 78rpx;
 		line-height: 78rpx;
+		margin-bottom: -10rpx;
 	}
 
 	.block-left {
@@ -436,11 +758,11 @@
 		color: var(--textPrimaryColor);
 		border-radius: 0px 4px 4px 0px;
 	}
-	
+
 	.block-menu {
 		padding: 30rpx;
 	}
-	
+
 	.menu-url {
 		overflow: hidden;
 		text-overflow: ellipsis;
@@ -449,8 +771,12 @@
 		-webkit-line-clamp: 1;
 		color: var(--textContentColor);
 	}
-	
+
 	.bottom-blank {
 		margin-bottom: 120px;
+	}
+	
+	.marginLeft {
+		margin-left: 60rpx;
 	}
 </style>

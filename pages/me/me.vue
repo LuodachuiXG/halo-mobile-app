@@ -211,7 +211,6 @@
 					success: function(res) {
 						let data = res.data
 						that.disable = false
-						console.log(res)
 
 						// 状态不是200的话就返回错误信息
 						if (res.statusCode != "200") {

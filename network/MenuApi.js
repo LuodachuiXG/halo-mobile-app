@@ -32,6 +32,16 @@ export function deleteMenusById(ids) {
 }
 
 /**
+ * 根据菜单 id 删除菜单
+ */
+export function deleteMenuById(id) {
+	return request({
+		url: "/api/admin/menus/" + id,
+		method: "DELETE",
+	});
+}
+
+/**
  * 批量修改菜单
  */
 export function updateMenus(menus) {
