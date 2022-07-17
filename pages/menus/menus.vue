@@ -120,6 +120,8 @@
 				pickerValue: [0],
 				// 由菜单名组成的一个字符串数组
 				menusName: [],
+				// 由菜单 id 组成的一个字符串数组
+				menusId: [],
 				
 				
 				// 存储所选分组下面的所有菜单
@@ -217,6 +219,7 @@
 				let teamName = this.teams[this.currentTeamIndex];
 				let optionName = e.name;
 				if (this.mode === 'team') {
+					// 当前是菜单分组模式
 					switch (optionName) {
 						case "删除当前分组":
 							uni.showModal({
@@ -246,6 +249,7 @@
 							break;
 					}
 				} else if (this.mode === 'menu') {
+					// 当前是菜单模式
 					let index = this.currentMenuIndex;
 					let currentMenu = this.menus[index];
 					let menuId = currentMenu.id;
@@ -257,24 +261,23 @@
 								if (index > 0) {
 									// 当前菜单不在首位
 									let preMenu = this.menus[index - 1];
-									currentMenu.priority = currentMenu.priority - 1;
-									preMenu.priority = preMenu.priority + 1;
 								
 									this.menus[index] = preMenu;
 									this.menus[index - 1] = currentMenu;
 								} else if (index === 0) {
-									// 当前菜单在首尾
+									// 当前菜单在首位
 									let preMenu = this.menus[this.menus.length - 1];
-									currentMenu.priority = this.menus.length - 1;
-									preMenu.priority = 0;
-								
-									this.menus[index] = preMenu;
-									this.menus[this.menus.length - 1] = currentMenu;
+									
+									// 删除 menus 中首位 menu
+									this.menus.splice(0, 1);
+									// 将 menu 添加到 menus 末尾
+									this.menus.push(currentMenu);
 								}
 							} else {
 								// 有父菜单
 								// 判断当前子菜单是否只有自己一个兄弟子菜单
-								if (this.getChildrenCountByParentId(currentMenu.parentId) === 1) {
+								let childrenCount = this.getChildrenCountByParentId(currentMenu.parentId);
+								if (childrenCount === 1) {
 									// 父菜单只有一个子菜单，无法上移，提示用户
 									this.popup("上移失败，没有同级子菜单");
 								} else {
@@ -283,20 +286,18 @@
 									let preMenu = this.menus[index - 1];
 									if (preMenu.id === currentMenu.parentId) {
 										// 上一个菜单是当前菜单的父菜单
-										// 获取最后一个兄弟子菜单出现索引，并交换位置
+										
+										// 在 menus 中删除当前子菜单
+										this.menus.splice(index, 1);
+										// 获取最后一个兄弟子菜单出现索引，并将当前菜单移动到最后一个子菜单后方
 										let lastChildIndex = this.getLastChildIndex(preMenu.id);
-										let lastChild = this.menus[lastChildIndex];
-										lastChild.priority = 0;
-										currentMenu.priority = this.getChildrenCountByParentId(preMenu.id) - 1;
-										this.menus[lastChildIndex] = currentMenu;
-										this.menus[index] = lastChild;
+										
+										// 将 menu 添加到 lastChildIndex 后方
+										this.menus.splice(lastChildIndex + 1, 0, currentMenu);
 										
 									} else {
 										// 上一个菜单不是当前菜单的父菜单
 										// 跟上一个子菜单交换位置
-										let prePriority = preMenu.priority;
-										preMenu.priority = currentMenu.priority;
-										currentMenu.priority = prePriority;
 										this.menus[index - 1] = currentMenu;
 										this.menus[index] = preMenu;
 									}
@@ -310,24 +311,23 @@
 								if (index < this.menus.length - 1) {
 									// 当前菜单不在尾位
 									let nextMenu = this.menus[index + 1];
-									currentMenu.priority = currentMenu.priority + 1;
-									nextMenu.priority = nextMenu.priority - 1;
 								
 									this.menus[index] = nextMenu;
 									this.menus[index + 1] = currentMenu;
 								} else if (index === this.menus.length - 1) {
-									// 当前菜单在首尾
+									// 当前菜单在尾位
 									let nextMenu = this.menus[0];
-									currentMenu.priority = 0;
-									nextMenu.priority = this.menus.length - 1;
-								
-									this.menus[index] = nextMenu;
-									this.menus[0] = currentMenu;
+									
+									// 删除 menus 中尾位 menu
+									this.menus.splice(this.menus.length - 1, 1);
+									// 将 menu 添加到 menus 首位
+									this.menus.splice(0, 0, currentMenu);
 								}
 							} else {
 								// 有父菜单
 								// 判断当前子菜单是否只有自己一个兄弟子菜单
-								if (this.getChildrenCountByParentId(currentMenu.parentId) === 1) {
+								let childrenCount = this.getChildrenCountByParentId(currentMenu.parentId);
+								if (childrenCount === 1) {
 									// 父菜单只有一个子菜单，无法下移，提示用户
 									this.popup("下移失败，没有同级子菜单");
 								} else {
@@ -337,21 +337,18 @@
 									if (index !== this.menus.length - 1 &&
 										nextMenu.parentId === currentMenu.parentId) {
 										// 下一个菜单是兄弟子菜单，直接交换位置
-										let nextPriority = nextMenu.priority;
-										nextMenu.priority = currentMenu.priority;
-										currentMenu.priority = nextPriority;
 										this.menus[index + 1] = currentMenu;
 										this.menus[index] = nextMenu;
 										
 									} else {
 										// 下一个菜单不是兄弟菜单
-										// 获取第一个兄弟子菜单出现索引，并交换位置
+										// 在 menus 中删除当前子菜单
+										this.menus.splice(index, 1);
+										// 获取第一个兄弟子菜单出现索引，并将当前菜单移动到首个兄弟子菜单前方
 										let firstChildIndex = this.getFirstChildIndex(currentMenu.parentId);
-										let firstChild = this.menus[firstChildIndex];
-										currentMenu.priority = 0;
-										firstChild.priority = this.getChildrenCountByParentId(currentMenu.parentId) - 1;
-										this.menus[firstChildIndex] = currentMenu;
-										this.menus[index] = firstChild;
+										
+										// 将 menu 添加到 firstChildIndex 前方
+										this.menus.splice(firstChildIndex, 0, currentMenu);
 									}
 								}
 							}
@@ -372,25 +369,35 @@
 												title: "删除失败",
 												content: err
 											});
-										})
+										});
 									}
 								}
 							});
 							break;
 						case "父菜单":
-							// 先将所有菜单名组成一个字符串数组
-							let array = ["无"];
+							// 先将所有菜单名和 id 组成一个字符串数组
+							let arrayName = ["无"];
+							let arrayId = [0];
 							this.menusName = [];
+							this.menusId = [];
 							for (let i = 0; i < this.menus.length; i++) {
+								// 不能设置自己为父菜单
 								if (i === index) continue;
-								array.push(this.menus[i].name);
+								// 不能设置自己的子菜单为父菜单
+								if (this.isParentMenu(this.menus[i].id, currentMenu.id)) continue;
+								
+								arrayName.push(this.menus[i].name);
+								arrayId.push(Number(this.menus[i].id));
 							}
-							this.menusName.push(array);
+							// 此变量用于设置 u-picker
+							// 因为 u-picker 组件需要二维数组，所以这里 push 而不是直接赋值
+							this.menusName.push(arrayName);
+							this.menusId = arrayId;
 							this.showPicker = true;
 							if (currentMenu.parentId !== 0) {
 								// 当前菜单有父菜单，所以需要设置 picker 默认选择项
 								let parentName = this.getMenuNameById(currentMenu.parentId);
-								this.pickerValue = [array.indexOf(parentName)];
+								this.pickerValue = [arrayName.indexOf(parentName)];
 							} else {
 								this.pickerValue = [0];
 							}
@@ -406,9 +413,21 @@
 			onPickerChange: function(e) {
 				// 选择的菜单名
 				let selectMenuName = e.value[0];
-				if (selectMenuName === "无") {
-					// 清除
+				let selectIndex = e.indexs[0];
+				let selectMenuId = this.menusId[selectIndex];
+				let menu = this.menus[this.currentMenuIndex];
+				if (selectIndex === 0) {
+					// 清除父菜单
+					menu.parentId = 0;
+					this.menus[this.currentMenuIndex] = menu;
+				} else {
+					// 设置父菜单
+					menu.parentId = selectMenuId;
+					this.menus[this.currentMenuIndex] = menu;
 				}
+				this.showPicker = false;
+				// 格式化菜单位置
+				this.formatMenuLocation();
 			},
 			
 			/**
@@ -559,6 +578,7 @@
 					title: "菜单分组"
 				});
 				this.menus = [];
+				this.getDefaultMenuTeam();
 			},
 
 			/**
@@ -621,6 +641,7 @@
 						return this.menus[i].name;
 					}
 				}
+				return "";
 			},
 			
 			/**
@@ -633,6 +654,7 @@
 						return this.menus[i];
 					}
 				}
+				return [];
 			},
 			
 			/**
@@ -716,7 +738,50 @@
 				return count;
 			},
 			
-
+			/**
+			 * 根据 id 判断某菜单是否是某菜单的父菜单
+			 * @param {Object} childId
+			 * @param {Object} parentId
+			 */
+			isParentMenu: function(childId, parentId) {
+				if (childId === 0 || parentId === 0) return false;
+				
+				let menu = this.getMenuById(childId);
+				while (menu.parentId !== 0) {
+					if (menu.parentId === parentId) return true;
+					menu = this.getMenuById(menu.parentId);
+				}
+				return false;
+			},
+			
+			
+			
+			/**
+			 * 整理菜单位置
+			 * 1.子菜单位于父菜单下方；
+			 * 2.非子菜单不应位于子菜单之中；
+			 */
+			formatMenuLocation: function() {
+				for (let i = 0; i < this.menus.length; i++) {
+					let menu = this.menus[i];
+					if (menu.parentId !== undefined && Number(menu.parentId) !== 0) {
+						// 当前菜单是子菜单，将当前菜单移动到父菜单下方
+						this._moveMenuToMenuBottom(menu.id, menu.parentId);
+					}
+				}
+			},
+			
+			_moveMenuToMenuBottom: function(bottomMenuId, menuId) {
+				let bottomMenuIndex = this.getIndexById(bottomMenuId);
+				let bottomMenu = this.getMenuById(bottomMenuId);
+				// 先删除 menus 中的准备移动的菜单
+				this.menus.splice(bottomMenuIndex, 1);
+				let menuIndex = this.getIndexById(menuId);
+				// 将准备移动的菜单添加到指定菜单的下方
+				this.menus.splice(menuIndex + 1, 0, bottomMenu);
+			},
+			
+			
 			/**
 			 * popup弹出层
 			 */

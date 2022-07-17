@@ -23,7 +23,7 @@
 
 			<view class="login-view">
 				<label for="password">密码</label>
-				<input class="input" id="password" v-model="password" password="true" placeholder="登录 Halo 后台的密码"
+				<input class="input" id="password" v-model="password" password="true" placeholder="Halo 后台密码"
 					:disabled="disable" />
 			</view>
 			<button class="button" type="primary" @click="login" id="login" :disabled="disable"
