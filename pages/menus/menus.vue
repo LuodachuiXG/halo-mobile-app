@@ -126,8 +126,6 @@
 				
 				// 存储所选分组下面的所有菜单
 				menus: [],
-				tempMenus: [],
-				a: [],
 				
 				// 当前点击的菜单名
 				currentMenuName: "",
@@ -815,6 +813,7 @@
 			 */
 			formatMenuLocation: function(mMenus) {
 				this.temp = [];
+				// 传递值而不是引用
 				let m = JSON.parse(JSON.stringify(mMenus));
 				let reuslt = this._formatMenuLocation(m);
 				this.menus = reuslt;
