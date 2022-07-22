@@ -126,8 +126,8 @@
 				
 				// 存储所选分组下面的所有菜单
 				menus: [],
-				// 临时菜单变量，用于存储临时处理数据
 				tempMenus: [],
+				a: [],
 				
 				// 当前点击的菜单名
 				currentMenuName: "",
@@ -283,6 +283,7 @@
 								if (childrenCount === 1) {
 									// 父菜单只有一个子菜单，无法上移，提示用户
 									this.popup("上移失败，没有同级子菜单");
+									return ;
 								} else {
 									// 父菜单有大于 1 个子菜单
 									// 判断上一个菜单是否是父菜单
@@ -293,7 +294,7 @@
 										// 在 menus 中删除当前子菜单
 										this.menus.splice(index, 1);
 										// 获取最后一个兄弟子菜单出现索引，并将当前菜单移动到最后一个子菜单后方
-										let lastChildIndex = this.getLastChildIndex(preMenu.id);
+										let lastChildIndex = this.getLastChildIndex(this.menus, preMenu.id);
 										
 										// 将 menu 添加到 lastChildIndex 后方
 										this.menus.splice(lastChildIndex + 1, 0, currentMenu);
@@ -310,16 +311,16 @@
 							this.formatMenuLocation(this.menus);
 							break;
 						case "下移":
-							let lastChildIndex = this.getLastChildIndex(currentMenu.id);
+							let lastChildIndex = this.getLastChildIndex(this.menus, currentMenu.id);
 							// 首先判断当前菜单是否有父菜单
 							if (currentMenu.parentId === 0) {
 								// 无父菜单
 								if (index < this.menus.length - 1) {
 									// 当前菜单不在尾位
 									let nextMenu = this.menus[index + 1];
-									
-									// 下一个菜单是否是当前菜单的子菜单
+	
 									if (nextMenu.parentId === currentMenu.id) {
+										// 下一个菜单是当前菜单的子菜单
 										if (lastChildIndex === this.menus.length - 1) {
 											// 当前菜单的最后一个子菜单所在位置是 menus 末尾
 											// 证明当前菜单下移实际上是要移动到 menus 首位
@@ -338,6 +339,7 @@
 										nextMenu = this.menus[lastChildIndex + 1];
 										this.menus[lastChildIndex + 1] = currentMenu;
 									} else {
+										// 下一个菜单不是当前菜单的子菜单
 										this.menus[index + 1] = currentMenu;
 									}
 									this.menus[index] = nextMenu;
@@ -358,6 +360,7 @@
 								if (childrenCount === 1) {
 									// 父菜单只有一个子菜单，无法下移，提示用户
 									this.popup("下移失败，没有同级子菜单");
+									return ;
 								} else {
 									// 父菜单有大于 1 个子菜单
 									// 判断下一个菜单是否是兄弟子菜单，并且不是 menus 中最后一个菜单
@@ -458,6 +461,7 @@
 				this.showPicker = false;
 				// 格式化菜单位置
 				this.formatMenuLocation(this.menus);
+				
 			},
 			
 			/**
@@ -678,10 +682,10 @@
 			 * 根据菜单 id 获取菜单
 			 * @param {Object} id
 			 */
-			getMenuById: function(id) {
-				for (let i = 0; i < this.menus.length; i++) {
-					if (this.menus[i].id === id) {
-						return this.menus[i];
+			getMenuById: function(mMenus, id) {
+				for (let i = 0; i < mMenus.length; i++) {
+					if (mMenus[i].id === id) {
+						return mMenus[i];
 					}
 				}
 				return [];
@@ -691,10 +695,10 @@
 			 * 根据父菜单 id 获取子菜单数量
 			 * @param {Object} id
 			 */
-			getChildrenCountByParentId: function(menus, id) {
+			getChildrenCountByParentId: function(mMenus, id) {
 				let count = 0;
-				for (let i = 0; i < menus.length; i++) {
-					let menu = menus[i];
+				for (let i = 0; i < mMenus.length; i++) {
+					let menu = mMenus[i];
 					if (menu.parentId != undefined && menu.parentId === id) {
 						count++;
 					}
@@ -706,9 +710,9 @@
 			 * 根据菜单 id 获取索引
 			 * @param {Object} id
 			 */
-			getIndexById: function(menus, id) {
-				for (let i = 0; i < menus.length; i++) {
-					if (menus[i].id === id) return i;
+			getIndexById: function(mMenus, id) {
+				for (let i = 0; i < mMenus.length; i++) {
+					if (mMenus[i].id === id) return i;
 				}
 				return -1;
 			},
@@ -728,14 +732,14 @@
 			},
 			
 			/**
-			 * 根据父菜单 id 获取子菜单在 menus 最后出现位置
+			 * 根据父菜单 id 获取子菜单在 mMenus 最后出现位置
 			 * @param {Object} id
 			 * @param {Object} from 从指定索引开始
 			 */
-			getLastChildIndex: function(id, from = 0) {
+			getLastChildIndex: function(mMenus, id) {
 				let index = -1;
-				for (let i = from; i < this.menus.length; i++) {
-					if (this.menus[i].parentId != undefined && this.menus[i].parentId === id) {
+				for (let i = 0; i < mMenus.length; i++) {
+					if (mMenus[i].parentId != undefined && mMenus[i].parentId === id) {
 						index = i;
 					}
 				}
@@ -749,23 +753,41 @@
 			getMenuMarginLeft: function(i) {
 				// 第一个 menu 不做处理
 				if (i === 0) return "";
+				let menu = this.menus[i];
 				// 因为菜单默认的 margin-left 就是30，所以这里再加 30
-				return (this.getMenuParentCount(i) * 50 + 30) + "rpx;";
+				return (this.getMenuParentCount(this.menus, menu.id) * 50 + 30) + "rpx;";
 			},
 			
 			/**
-			 * 获取 menu 的父菜单数量（当前菜单所在层级数）
-			 * @param {Object} i
+			 * 获取菜单的父菜单数量（当前菜单所在层级数）
+			 * @param {Object} mMenus
+			 * @param {Object} id
 			 */
-			getMenuParentCount: function(i) {
-				if (i === 0) return 0;
+			getMenuParentCount: function(mMenus, id) {
 				let count = 0;
-				let menu = this.menus[i];
+				let menu = this.getMenuById(mMenus, id);
+				let name = menu.name;
 				while (menu.parentId != undefined && menu.parentId !== 0) {
-					menu = this.getMenuById(menu.parentId);
+					menu = this.getMenuById(mMenus, menu.parentId);
 					count++;
 				}
 				return count;
+			},
+			
+			/**
+			 * 在 mMenus 中是否还有指定层级（父菜单数量）的子菜单
+			 * @param {Object} mMenus
+			 * @param {Object} count
+			 */
+			isHaveSpecifiedParentCount: function(mMenus, count) {
+				for (let i = 0; i < mMenus.length; i++) {
+					let menu = mMenus[i];
+					let parentCount = this.getMenuParentCount(this.menus, menu.id);
+					if (parentCount === count) {
+						return true;
+					}
+				}
+				return false;
 			},
 			
 			/**
@@ -776,10 +798,10 @@
 			isParentMenu: function(childId, parentId) {
 				if (childId === 0 || parentId === 0) return false;
 				
-				let menu = this.getMenuById(childId);
+				let menu = this.getMenuById(this.menus, childId);
 				while (menu.parentId != undefined && menu.parentId !== 0) {
 					if (menu.parentId === parentId) return true;
-					menu = this.getMenuById(menu.parentId);
+					menu = this.getMenuById(this.menus, menu.parentId);
 				}
 				return false;
 			},
@@ -791,58 +813,69 @@
 			 * 1.子菜单位于父菜单下方；
 			 * 2.非子菜单不应位于子菜单之中；
 			 */
-			formatMenuLocation: function(menus) {
-				// for (let i = 0; i < this.menus.length; i++) {
-				// 	let menu = this.menus[i];
-				// 	if (menu.parentId !== undefined && Number(menu.parentId) !== 0) {
-				// 		// 当前菜单是子菜单，将当前菜单移动到父菜单下方
-				// 		console.log(menu.name)
-				// 		this._moveMenuToMenuBottom(menu.id, menu.parentId);
-				// 	}
-				// }
-				this.tempMenus = [];
-				this._formatMenuLocation(menus);
-				this.menus = this.tempMenus;
+			formatMenuLocation: function(mMenus) {
+				this.temp = [];
+				let m = JSON.parse(JSON.stringify(mMenus));
+				let reuslt = this._formatMenuLocation(m);
+				this.menus = reuslt;
 			},
 			
-			_formatMenuLocation: function(menus) {
-				while(menus.length > 0) {
-					let menu = menus[0];
+			_formatMenuLocation: function(mMenus) {
+				// 处理子菜单时先处理只有一个父菜单的子菜单
+				let parentCount = 1;
+				while(mMenus.length > 0) {
+					let menu = mMenus[0];
 					if (menu.parentId != undefined && Number(menu.parentId) === 0) {
 						// 没有父菜单
-						this.tempMenus.push(menu);
-						menus.splice(0, 1);
+						this.temp.push(menu);
+						mMenus.splice(0, 1);
 					} else {
 						// 有父菜单
-						let parentIndex = this.getIndexById(menus, menu.parentId);
-						if (parentIndex === -1 && this.getIndexById(this.tempMenus, menu.parentId) !== -1) {
-							// menus 中没有父菜单，并且父菜单已经在 this.tempMenus 中
-							// 获取父菜单在 this.tempMenus 中索引
-							parentIndex = this.getIndexById(this.tempMenus, menu.parentId);
+						let parentIndex = this.getIndexById(mMenus, menu.parentId);
+						if (parentIndex === -1 && this.getIndexById(this.temp, menu.parentId) !== -1) {
+							// mMenus 中没有父菜单，并且父菜单已经在 this.temp 中
 							
-							// 插入所有同级子菜单到父菜单后方
-							for (let j = 0; j < menus.length; j++) {
-								if (menus[j].parentId === menu.parentId) {
-									// 插入同级子菜单
-									this.tempMenus.splice(parentIndex + 1, 0, menus[j]);
-									menus.splice(j, 1);
-									// 如果子菜单还有子菜单
-									if (Number(this.getChildrenCountByParentId(menus, menu.id)) > 0) {
-										this._formatMenuLocation(menus);
-									}
+							
+							let currentMenuParentCount = this.getMenuParentCount(this.menus, menu.id);
+							if (currentMenuParentCount === parentCount) {
+								// 当前菜单父菜单数量和正在处理的指定数量相同
+								
+								// 获取父菜单在 this.temp 中索引
+								parentIndex = this.getIndexById(this.temp, menu.parentId);
+								// 获取父菜单在 this.temp 中的子菜单最后索引
+								let lastChildIndex = this.getLastChildIndex(this.temp, menu.parentId);
+								if (lastChildIndex !== -1) {
+									// 插入菜单到同级子菜单最后出现索引 + 1
+									this.temp.splice(lastChildIndex + 1, 0, menu);
+								} else {
+									// 插入菜单到父菜单索引 + 1
+									this.temp.splice(parentIndex + 1, 0, menu);
 								}
+								mMenus.splice(0, 1);
+							} else {
+								// 当前菜单父菜单数量和正在处理的指定数量不同
+								// 先将菜单移动到 mMenus 最后，直到正在处理的指定数量相同
+								mMenus.push(mMenus[0]);
+								mMenus.splice(0, 1);
+							}
+							
+							if (!this.isHaveSpecifiedParentCount(mMenus, parentCount)) {
+								// 当前在 mMenus 中指定处理的父菜单数量的菜单已经处理完成
+								// 处理数量 + 1，处理父菜单更多的菜单（处理嵌套子菜单）
+								parentCount = parentCount + 1;
 							}
 						} else {
-							// menus 有父菜单，并且父菜单不在 this.tempMenus 中
-							// 先将当前子菜单移动到 menus 最后，直到父菜单已经在 this.tempMenus 中
-							menus.push(menus[0]);
-							menus.splice(0, 1);
+							// mMenus 有父菜单，并且父菜单不在 this.temp 中
+							// 先将当前子菜单移动到 mMenus 最后，直到父菜单已经在 this.temp 中
+							mMenus.push(mMenus[0]);
+							mMenus.splice(0, 1);
 						}
 						
 					}
 				}
+				return this.temp;
 			},
-			
+		
 			
 			/**
 			 * popup弹出层
