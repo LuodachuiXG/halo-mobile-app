@@ -115,7 +115,7 @@
 		</uni-pagination>
 
 		<!-- 悬浮按钮 -->
-		<uni-fab horizontal="right" vertical="bottom" @trigger="onFabClick" :content="content">
+		<uni-fab horizontal="right" vertical="bottom" @fabClick="onFabClick">
 		</uni-fab>
 
 	</view>
@@ -154,13 +154,6 @@
 
 				sizes: ["4条/页", "8条/页", "16条/页", "24条/页", "48条/页", "96条/页"],
 				sizesIndex: 1,
-				
-				// 悬浮按钮弹出菜单
-				content: [{
-					"text": "写日志",
-					"iconPath": "/static/images/edit.png"
-				}],
-
 			}
 		},
 
@@ -322,16 +315,11 @@
 			/**
 			 * 悬浮按钮点击事件
 			 */
-			onFabClick: function(e) {
-				switch (e.index) {
-					// 写日志
-					case 0:
-						uni.navigateTo({
-							url: "./edit/edit?type=add"
-						});
-						break;
-				}
-
+			onFabClick: function() {
+				// 写日志
+				uni.navigateTo({
+					url: "./edit/edit?type=add"
+				});
 			},
 
 			/**

@@ -77,7 +77,7 @@
 		</view>
 
 		<!-- 悬浮按钮 -->
-		<uni-fab horizontal="right" vertical="bottom" @trigger="onFabClick" :content="content">
+		<uni-fab horizontal="right" vertical="bottom" @fabClick="onFabClick">
 		</uni-fab>
 
 	</view>
@@ -93,14 +93,6 @@
 			return {
 				// 存放链接信息
 				links: [],
-
-
-				// 悬浮按钮弹出菜单
-				content: [{
-					"text": "添加链接",
-					"iconPath": "/static/images/link.png"
-				}],
-
 			}
 		},
 
@@ -192,16 +184,11 @@
 			/**
 			 * 悬浮按钮点击事件
 			 */
-			onFabClick: function(e) {
-				switch (e.index) {
-					// 写日志
-					case 0:
-						uni.navigateTo({
-							url: "./edit/edit?type=add"
-						});
-						break;
-				}
-
+			onFabClick: function() {
+				// 写日志
+				uni.navigateTo({
+					url: "./edit/edit?type=add"
+				});
 			},
 
 			/**

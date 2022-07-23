@@ -98,7 +98,8 @@
 			</uni-collapse-item>
 			<uni-collapse-item title="最近文章" :show-animation="true">
 				<view class="view-latestPost">
-					<view class="view-latestPost-block" v-for="(post, i) in posts" @click="selectPost(i)">
+					<view class="view-latestPost-block" v-for="(post, i) in posts" @click="selectPost(i)"
+						:style="post.status === 'RECYCLE' ? 'color:gray;' : ''">
 						<uni-row>
 							<uni-col :span="15">
 								<text>{{ post.title }}</text>
@@ -219,7 +220,12 @@
 			 * @param {Object} i
 			 */
 			selectPost: function(i) {
-				let url = this.getUrl() + this.posts[i].fullPath
+				let post = this.posts[i];
+				if (post.status === "RECYCLE") {
+					this.popup("当前文章在回收站，无法查看");
+					return ;
+				}
+				let url = this.getUrl() + post.fullPath
 				this.openURL(url)
 			},
 
@@ -279,10 +285,6 @@
 					this.$refs.popup.success(message);
 				}
 			},
-
-			a: function() {
-				return 2
-			}
 		}
 	}
 </script>

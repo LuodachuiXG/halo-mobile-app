@@ -286,6 +286,15 @@
 		onPullDownRefresh() {
 			this.refreshData();
 		},
+		
+		onBackPress(event) {
+			if (event.from === "backbutton" && this.mode !== "all") {
+				this.onReturnAllClick();
+				return true;
+			}
+			return false;
+		},
+		
 		methods: {
 			/**
 			 * 刷新数据
