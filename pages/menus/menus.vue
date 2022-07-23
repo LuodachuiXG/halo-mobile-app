@@ -33,7 +33,7 @@
 		<view v-if="mode === 'menu'" class="bottom-blank">
 			<view style="margin: 30rpx;">
 				<u-button type="warning" text="返回菜单分组" @click="teamMode"></u-button>
-				<u-button color="#007AFF" text="保存" style="margin-top: 10px;" @click=""></u-button>
+				<u-button color="#007AFF" text="保存" style="margin-top: 10px;" @click="onMenuSaveClick"></u-button>
 			</view>
 			<view 
 				v-for="(menu, i) in menus" 
@@ -126,6 +126,8 @@
 				
 				// 存储所选分组下面的所有菜单
 				menus: [],
+				// 刷新时菜单数据存档，用于比对 menus 是否修改
+				originalMenus: [],
 				
 				// 当前点击的菜单名
 				currentMenuName: "",
@@ -146,12 +148,31 @@
 		},
 		
 		onBackPress(event) {
+			let that = this;
 			if (event.from === "backbutton" && this.mode === "menu") {
 				// 当触发返回并且当前处于菜单模式，就转为分组模式并取消返回事件
-				this.teamMode();
-				return true;
+				if (this.menus != this.originalMenus) {
+					uni.showModal({
+						title: "数据已改变",
+						content: "菜单数据已经修改，还没有保存，确定要返回吗？",
+						complete: function(res) {
+							if (res.confirm) {
+								that.teamMode();
+								return true;
+							} else if (res.cancel) {
+								return true;
+							}
+						}
+					})
+					return true;
+				} else {
+					this.teamMode();
+					return true;
+				}
+			} else {
+				return false;
 			}
-			return false;
+			
 		},
 
 		methods: {
@@ -198,7 +219,9 @@
 			refreshMenuByTeam: function(name) {
 				getMenusByTeam(name).then(data => {
 					// 将获取的菜单进行格式化
-					this.menus = this.formatMenus(data);
+					let mMenus = this.formatMenus(data);
+					this.menus = mMenus;
+					this.originalMenus = mMenus;
 					this.menuMode(name);
 					uni.stopPullDownRefresh();
 					uni.hideLoading();
@@ -736,6 +759,26 @@
 				return [];
 			},
 			
+			
+			/**
+			 * 根据父菜单 id，获取所有子菜单 id 组成的数组
+			 * @param {Object} mMenus
+			 * @param {Object} id
+			 */
+			getChildrenIdByParentId: function(mMenus, id) {
+				let array = [];
+				if (this.getChildrenCountByParentId(mMenus, id) <= 0)  return array;
+				
+				for (let i = 0; i < mMenus.length; i++) {
+					let menu = mMenus[i];
+					if (menu.parentId === id) {
+						array.push(menu.id);
+					}
+				}
+				return array;
+			},
+			
+			
 			/**
 			 * 根据父菜单 id 获取子菜单数量
 			 * @param {Object} mMenus
@@ -762,6 +805,24 @@
 					if (mMenus[i].id === id) return i;
 				}
 				return -1;
+			},
+			
+			/**
+			 * 根据子菜单 id，获取当前子菜单在所有同级兄弟菜单中的位置
+			 * @param {Object} mMenus
+			 * @param {Object} childId
+			 */
+			getChildPositionByChildId: function(mMenus, childId) {
+				let index = -1;
+				let menu = this.getMenuById(mMenus, childId);
+				if (menu.parentId === undefined || menu.parentId === 0) {
+					return index;
+				}
+				
+				// 获取所有同级子菜单数组
+				let childrenIds = this.getChildrenIdByParentId(mMenus, menu.parentId);
+				index = childrenIds.indexOf(childId);
+				return index;
 			},
 			
 			
@@ -811,7 +872,7 @@
 					// 判断是否是嵌套子菜单
 					while (this.isParentMenu(mMenus, menu.id, id)) {
 						// 当前菜单是嵌套子菜单
-						if (index + 1 >= mMenus.length - 1) {
+						if (index >= mMenus.length - 1) {
 							// 当前菜单 index 已经位于 mMenus 末尾，返回 index
 							return index;
 						}
@@ -825,6 +886,7 @@
 					return index - 1;
 				}
 			},
+			
 			
 			/**
 			 * 根据当前 menu 菜单父子状态返回对应的左边距
@@ -910,67 +972,109 @@
 			 * @param {Object} mMenus
 			 */
 			formatMenuLocation: function(mMenus) {
-				this.temp = [];
 				// 传递值而不是引用
-				let m = JSON.parse(JSON.stringify(mMenus));
-				let reuslt = this._formatMenuLocation(m);
-				this.menus = reuslt;
-			},
-			
-			_formatMenuLocation: function(mMenus) {
+				let menus = JSON.parse(JSON.stringify(mMenus));
+				let result = [];
+				
 				// 处理子菜单时先处理只有一个父菜单的子菜单
 				let parentCount = 1;
-				while(mMenus.length > 0) {
-					let menu = mMenus[0];
+				while(menus.length > 0) {
+					let menu = menus[0];
 					if (menu.parentId != undefined && Number(menu.parentId) === 0) {
 						// 没有父菜单
-						this.temp.push(menu);
-						mMenus.splice(0, 1);
+						result.push(menu);
+						menus.splice(0, 1);
 					} else {
 						// 有父菜单
-						let parentIndex = this.getIndexById(mMenus, menu.parentId);
-						if (parentIndex === -1 && this.getIndexById(this.temp, menu.parentId) !== -1) {
-							// mMenus 中没有父菜单，并且父菜单已经在 this.temp 中
+						let parentIndex = this.getIndexById(menus, menu.parentId);
+						if (parentIndex === -1 && this.getIndexById(result, menu.parentId) !== -1) {
+							// menus 中没有父菜单，并且父菜单已经在 result 中
 							
 							
-							let currentMenuParentCount = this.getMenuParentCount(this.menus, menu.id);
+							let currentMenuParentCount = this.getMenuParentCount(mMenus, menu.id);
 							if (currentMenuParentCount === parentCount) {
 								// 当前菜单父菜单数量和正在处理的指定数量相同
 								
-								// 获取父菜单在 this.temp 中索引
-								parentIndex = this.getIndexById(this.temp, menu.parentId);
-								// 获取父菜单在 this.temp 中的子菜单最后索引
-								let lastChildIndex = this.getLastChildIndex(this.temp, menu.parentId);
+								// 获取父菜单在 result 中索引
+								parentIndex = this.getIndexById(result, menu.parentId);
+								// 获取父菜单在 result 中的子菜单最后索引
+								let lastChildIndex = this.getLastChildIndex(result, menu.parentId);
 								if (lastChildIndex !== -1) {
 									// 插入菜单到同级子菜单最后出现索引 + 1
-									this.temp.splice(lastChildIndex + 1, 0, menu);
+									result.splice(lastChildIndex + 1, 0, menu);
 								} else {
 									// 插入菜单到父菜单索引 + 1
-									this.temp.splice(parentIndex + 1, 0, menu);
+									result.splice(parentIndex + 1, 0, menu);
 								}
-								mMenus.splice(0, 1);
+								menus.splice(0, 1);
 							} else {
 								// 当前菜单父菜单数量和正在处理的指定数量不同
-								// 先将菜单移动到 mMenus 最后，直到正在处理的指定数量相同
-								mMenus.push(mMenus[0]);
-								mMenus.splice(0, 1);
+								// 先将菜单移动到 menus 最后，直到正在处理的指定数量相同
+								menus.push(menus[0]);
+								menus.splice(0, 1);
 							}
 							
-							if (!this.isHaveSpecifiedParentCount(mMenus, parentCount)) {
-								// 当前在 mMenus 中指定处理的父菜单数量的菜单已经处理完成
+							if (!this.isHaveSpecifiedParentCount(menus, parentCount)) {
+								// 当前在 menus 中指定处理的父菜单数量的菜单已经处理完成
 								// 处理数量 + 1，处理父菜单更多的菜单（处理嵌套子菜单）
 								parentCount = parentCount + 1;
 							}
 						} else {
-							// mMenus 有父菜单，并且父菜单不在 this.temp 中
-							// 先将当前子菜单移动到 mMenus 最后，直到父菜单已经在 this.temp 中
-							mMenus.push(mMenus[0]);
-							mMenus.splice(0, 1);
+							// menus 有父菜单，并且父菜单不在 result 中
+							// 先将当前子菜单移动到 menus 最后，直到父菜单已经在 result 中
+							menus.push(menus[0]);
+							menus.splice(0, 1);
 						}
 						
 					}
 				}
-				return this.temp;
+				this.menus = result;
+				this.formatMenuPriority();
+			},
+			
+			/**
+			 * 根据 mMenus 中菜单位置以及父子关系，设置 priority 
+			 * 在执行前需执行一次 formatMenuLocation 方法，防止数据出错
+			 * @param {Object} mMenus
+			 */
+			formatMenuPriority: function() {
+				// 传递值而不是引用
+				let result = [];
+				let menus = JSON.parse(JSON.stringify(this.menus));
+				let menuPriority = 0;
+				while(menus.length > 0) {
+					let menu = menus[0];
+					if (menu.parentId !== undefined && Number(menu.parentId) === 0) {
+						// 没有父菜单
+						menu.priority = menuPriority;
+						result.push(menu);
+						menus.splice(0, 1);
+						menuPriority++;
+					} else {
+						// 有父菜单
+						// 获取当前子菜单在所有同级子菜单中的位置
+						let position = this.getChildPositionByChildId(this.menus, menu.id);
+						menu.priority = position;
+						result.push(menu);
+						menus.splice(0, 1);
+					}
+				}
+				this.menus = result;
+			},
+			
+			/**
+			 * 保存菜单按钮点击事件
+			 */
+			onMenuSaveClick: function() {
+				let that = this;
+				updateMenus(this.menus).then(data => {
+					that.popup("保存成功", "success");
+				}).catch(err => {
+					uni.showModal({
+						title: "保存数据失败",
+						content: err
+					});
+				});
 			},
 		
 			
