@@ -32,9 +32,12 @@
 
 		<view v-if="mode === 'menu'" class="bottom-blank">
 			<view style="margin: 30rpx;">
-				<u-button type="warning" text="返回菜单分组" @click="teamMode"></u-button>
-				<u-button color="#007AFF" text="保存" style="margin-top: 10px;" @click="onMenuSaveClick"></u-button>
+				<u-button color="#007AFF" text="保存" style="margin-top: 10px;" 
+					@click="onMenuSaveClick" :disabled="menus.length === 0 ? true : false"></u-button>
 			</view>
+			<u-empty mode="data" v-if="menus.length === 0"
+				icon="http://cdn.uviewui.com/uview/empty/data.png"
+				text="菜单为空,快创建一个吧"></u-empty>
 			<view 
 				v-for="(menu, i) in menus" 
 				class="active block block-menu"
@@ -50,7 +53,7 @@
 			</view>
 		</view>
 		<!-- 悬浮按钮 -->
-		<uni-fab horizontal="right" vertical="bottom" @trigger=""></uni-fab>
+		<uni-fab horizontal="right" vertical="bottom" @fabClick="onFabClick"></uni-fab>
 	</view>
 </template>
 
@@ -72,7 +75,7 @@
 			return {
 				// 用于标记当前页面是什么模式，team/menu
 				mode: "team",
-
+				
 				// 菜单分组
 				teams: [],
 				// 当前使用的菜单分组
@@ -139,7 +142,7 @@
 			}
 		},
 
-		mounted() {
+		onShow() {
 			this.refreshData();
 		},
 
@@ -453,6 +456,11 @@
 							this.formatMenuLocation(this.menus);
 							break;
 						case "编辑":
+							// 编辑菜单
+							uni.navigateTo({
+								url: "./edit/edit?type=update&teamName=" + 
+									this.currentTeamName + "&id=" + menuId
+							});
 							break;
 						case "删除":
 							uni.showModal({
@@ -679,7 +687,7 @@
 					title: "菜单分组"
 				});
 				this.menus = [];
-				this.getDefaultMenuTeam();
+				this.refreshData();
 			},
 
 			/**
@@ -1077,6 +1085,40 @@
 						content: err
 					});
 				});
+			},
+			
+			/**
+			 * 添加菜单分组
+			 * @param {Object} teamName
+			 */
+			addMenuTeam: function(teamName) {
+				// 实际上并没有添加任何东西
+				// 这里只是获取 teamName 分组下的菜单并切换到 menu 模式
+				this.currentTeamName = teamName;
+				this.refreshMenuByTeam(teamName);
+			},
+			
+			/**
+			 * 悬浮按钮点击事件
+			 */
+			onFabClick: function() {
+				let that =this;
+				if (this.mode === "team") {
+					uni.showModal({
+						title: "添加菜单分组",
+						editable: true,
+						success: function(res) {
+							if (res.confirm && res.content !== undefined && res.content.length > 0) {
+								that.addMenuTeam(res.content);
+							}
+						}
+					});
+				} else if (this.mode === "menu") {
+					// 新建菜单
+					uni.navigateTo({
+						url: "./edit/edit?type=add&teamName=" + this.currentTeamName
+					});
+				}
 			},
 		
 			

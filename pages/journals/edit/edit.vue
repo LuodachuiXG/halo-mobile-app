@@ -13,7 +13,7 @@
 			</view>
 			
 			<view class="view-input" style="position: relative;margin-top: 20px;">
-				<button class="btn" type="primary" @click="releasePost">发布</button>
+				<button class="btn" type="primary" @click="releaseJournal">发布</button>
 			</view>
 		</view>
 
@@ -114,7 +114,7 @@
 			/**
 			 * 发布按钮点击事件
 			 */
-			releasePost: function() {
+			releaseJournal: function() {
 				let that = this;
 				if (this.journalContent.length <= 0) {
 					this.popup("日志内容不能为空");
