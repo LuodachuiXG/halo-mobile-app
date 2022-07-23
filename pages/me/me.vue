@@ -52,39 +52,39 @@
 			
 			<view class="block" v-if="newVersion">
 				<view class="item newVersion" @click="onOptionClick(4)" style="border-radius: 4px;">
-					<image src="/static/images/update.png"></image>
-					<text style="color: white;">新版发布</text>
+					<text class="iconfont item-icon" style="color: white;">&#xe80b;</text>
+					<text class="item-title" style="color: white;">新版发布</text>
 					<view class="item-sign" style="background-color: white;"></view>
 				</view>
 			</view>
 
 			<view class="block">
 				<view class="item" @click="onOptionClick(0)">
-					<image src="/static/images/setting.png"></image>
-					<text>博客设置</text>
+					<text class="iconfont item-icon">&#xe7f5;</text>
+					<text class="item-title">博客设置</text>
 					<view class="item-sign"></view>
 				</view>
 				<view class="item" @click="onOptionClick(1)">
-					<image src="/static/images/me.png"></image>
-					<text>个人资料</text>
+					<text class="iconfont item-icon">&#xe8a5;</text>
+					<text class="item-title">个人资料</text>
 					<view class="item-sign"></view>
 				</view>
 				<view class="item" @click="onOptionClick(2)">
-					<image src="/static/images/theme.png"></image>
-					<text>主题管理</text>
+					<text class="iconfont item-icon">&#xe74a;</text>
+					<text class="item-title">主题管理</text>
 					<view class="item-sign"></view>
 				</view>
 			</view>
 
 			<view class="view-me-app-option block">
 				<view class="view-me-exit item" @click="onOptionClick(3)">
-					<image src="/static/images/setting.png"></image>
-					<text>设置</text>
+					<text class="iconfont item-icon">&#xe7f5;</text>
+					<text class="item-title">设置</text>
 					<view class="item-sign"></view>
 				</view>
 				<view class="view-me-exit item" @click="exit">
-					<image src="/static/images/exit.png"></image>
-					<text>退出</text>
+					<text class="iconfont item-icon">&#xe7bf;</text>
+					<text class="item-title">退出</text>
 					<view class="item-sign"></view>
 				</view>
 			</view>

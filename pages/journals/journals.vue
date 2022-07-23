@@ -61,11 +61,11 @@
 					
 					<view class="block-status-data">
 						<view>
-							<image src="../../static/images/like.png"></image>
+							<text class="iconfont" style="font-size: 32rpx;">&#xe789;</text>
 							<text>{{journal.likes}}</text>
 						</view>
 						<view>
-							<image src="../../static/images/comment_1.png"></image>
+							<text class="iconfont" style="font-size: 32rpx;">&#xe8a6;</text>
 							<text>{{journal.commentCount}}</text>
 						</view>
 					</view>

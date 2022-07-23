@@ -17,10 +17,21 @@
 	@import '@/uni_modules/uview-ui/index.scss';
 	/*每个页面公共css */
 	@import '@/uni_modules/uni-scss';
-	/* #ifndef APP-NVUE */
-	@import '@/static/customicons.css';
-	/*  #endif  */
 
+	// 图标集
+	@font-face {
+		font-family: 'iconfont';
+		src: url('@/static/iconfont.ttf?t=1658598266679') format('truetype'),
+			url('@/static/iconfont.woff2?t=1658598266679') format('woff2'),
+			url('@/static/iconfont.woff?t=1658598266679') format('woff');
+	}
+	// 图标集
+	.iconfont {
+		font-family: "iconfont" !important;
+		font-style: normal;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
 
 
 	// 设置整个项目的背景色
@@ -107,18 +118,18 @@
 	.item:active {
 		background-color: var(--activatedColor);
 	}
-
-	.item text {
-		margin-left: 20rpx;
-		font-size: .9em;
+	
+	.item-icon {
 		color: var(--textPrimaryColor);
-	}
-
-	.item image {
+		font-size: 40rpx;
 		position: relative;
-		top: 9rpx;
-		width: 35rpx;
-		height: 35rpx;
+		top: 5rpx;
+	}
+	
+	.item-title {
+		margin-left: 18rpx;
+		font-size: 28rpx;
+		color: var(--textPrimaryColor);
 	}
 
 	.item-sign {

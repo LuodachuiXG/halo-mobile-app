@@ -12,6 +12,11 @@
 			<u-link href="https://ext.dcloud.net.cn/plugin?id=412"
 				text="t-color-picker 颜色选择器"></u-link>
 		</view>
+		<view class="link">
+			<u-link href="https://www.iconfont.cn/collections/detail?spm=a313x.7781069.1998910419.d9df05512&cid=19238"
+				text="阿里巴巴国际站官方图标库 @刘付雪妮"></u-link>
+		</view>
+		
 	</view>
 </template>
 

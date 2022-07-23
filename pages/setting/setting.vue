@@ -2,23 +2,23 @@
 	<view>
 		<view class="block">
 			<view class="item" @click="onOptionClick(3)">
-				<image src="/static/images/data.png"></image>
-				<text>查看所有发行版</text>
+				<text class="iconfont item-icon">&#xe75d;</text>
+				<text class="item-title">查看所有发行版</text>
 				<view class="item-sign"></view>
 			</view>
 			<view class="item" @click="onOptionClick(2)">
-				<image src="/static/images/edit.png"></image>
-				<text>问题反馈 / BUG反馈</text>
+				<text class="iconfont item-icon">&#xe7cf;</text>
+				<text class="item-title">问题反馈 / BUG反馈</text>
 				<view class="item-sign"></view>
 			</view>
 			<view class="item" @click="onOptionClick(1)">
-				<image src="/static/images/earth.png"></image>
-				<text>开源框架及插件</text>
+				<text class="iconfont item-icon">&#xe7e4;</text>
+				<text class="item-title">感谢</text>
 				<view class="item-sign"></view>
 			</view>
 			<view class="item" @click="onOptionClick(0)">
-				<image src="/static/images/about.png"></image>
-				<text>关于</text>
+				<text class="iconfont item-icon">&#xe7b9;</text>
+				<text class="item-title">关于</text>
 				<view class="item-sign"></view>
 			</view>
 		</view>

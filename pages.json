@@ -162,7 +162,7 @@
 	}, {
 		"path": "pages/setting/setting_pages/frameUsed/frameUsed",
 		"style": {
-			"navigationBarTitleText": "用到的框架及插件",
+			"navigationBarTitleText": "感谢",
 			"enablePullDownRefresh": false
 		}
 

@@ -6,38 +6,38 @@
 		</view>
 		<view class="block">
 			<view class="item" @click="onOptionClick(0)">
-				<image src="/static/images/spanner.png"></image>
-				<text>常规设置</text>
+				<text class="iconfont item-icon">&#xe7f5;</text>
+				<text class="item-title">常规设置</text>
 				<view class="item-sign"></view>
 			</view>
 			<view class="item" @click="onOptionClick(1)">
-				<image src="/static/images/earth.png"></image>
-				<text>SEO 设置</text>
+				<text class="iconfont item-icon">&#xe781;</text>
+				<text class="item-title">SEO 设置</text>
 				<view class="item-sign"></view>
 			</view>
 			<view class="item" @click="onOptionClick(2)">
-				<image src="/static/images/article.png"></image>
-				<text>文章设置</text>
+				<text class="iconfont item-icon">&#xe892;</text>
+				<text class="item-title">文章设置</text>
 				<view class="item-sign"></view>
 			</view>
 			<view class="item" @click="onOptionClick(3)">
-				<image src="/static/images/comment.png"></image>
-				<text>评论设置</text>
+				<text class="iconfont item-icon">&#xe8a6;</text>
+				<text class="item-title">评论设置</text>
 				<view class="item-sign"></view>
 			</view>
 			<view class="item" @click="onOptionClick(4)">
-				<image src="/static/images/attachment.png"></image>
-				<text>附件设置</text>
+				<text class="iconfont item-icon">&#xe751;</text>
+				<text class="item-title">附件设置</text>
 				<view class="item-sign"></view>
 			</view>
 			<view class="item" @click="onOptionClick(5)">
-				<image src="/static/images/email.png"></image>
-				<text>SMTP 服务</text>
+				<text class="iconfont item-icon">&#xe77f;</text>
+				<text class="item-title">SMTP 服务</text>
 				<view class="item-sign"></view>
 			</view>
 			<view class="item" @click="onOptionClick(6)">
-				<image src="/static/images/other.png"></image>
-				<text>其他设置</text>
+				<text class="iconfont item-icon">&#xe8eb;</text>
+				<text class="item-title">其他设置</text>
 				<view class="item-sign"></view>
 			</view>
 		</view>
@@ -48,18 +48,18 @@
 		</view>
 		<view class="block">
 			<view class="item" @click="onOptionClick(7)">
-				<image src="/static/images/link.png"></image>
-				<text>固定链接</text>
+				<text class="iconfont item-icon">&#xe797;</text>
+				<text class="item-title">固定链接</text>
 				<view class="item-sign"></view>
 			</view>
 			<view class="item" @click="onOptionClick(8)">
-				<image src="/static/images/api.png"></image>
-				<text>API设置</text>
+				<text class="iconfont item-icon">&#xe7b8;</text>
+				<text class="item-title">API设置</text>
 				<view class="item-sign"></view>
 			</view>
 			<view class="item" @click="onOptionClick(9)">
-				<image src="/static/images/other.png"></image>
-				<text>其他设置</text>
+				<text class="iconfont item-icon">&#xe8eb;</text>
+				<text class="item-title">其他设置</text>
 				<view class="item-sign"></view>
 			</view>
 		</view>
