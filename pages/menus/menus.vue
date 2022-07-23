@@ -1068,6 +1068,8 @@
 			onMenuSaveClick: function() {
 				let that = this;
 				updateMenus(this.menus).then(data => {
+					// 保存成功后不重新读取数据，直接给 originalMenus 赋 menus 的值
+					this.originalMenus = this.menus;
 					that.popup("保存成功", "success");
 				}).catch(err => {
 					uni.showModal({
