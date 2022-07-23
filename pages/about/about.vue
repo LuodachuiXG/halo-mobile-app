@@ -1,6 +1,10 @@
 <template>
 	<view class="container">
 		<view>Halo 版本：{{environments.version}}</view>
+		<!-- #ifndef APP-NVUE -->
+		<view>HaloApp 版本：{{version}}</view>
+		<!-- #endif -->
+		
 		<view>数据库：{{environments.database}}</view>
 		<view>运行模式：{{environments.mode}}</view>
 		<view>启动时间：{{this.format(environments.startTime)}}</view>
@@ -16,6 +20,8 @@
 		data() {
 			return {
 				environments: [],
+				
+				version: "",
 			}
 		},
 		
@@ -26,6 +32,10 @@
 		
 		mounted() {
 			this.refreshData();
+			
+			// #ifdef APP-PLUS
+				this.version = this.getVersion();
+			// #endif
 		},
 		
 		methods: {

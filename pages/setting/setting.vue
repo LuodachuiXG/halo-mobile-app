@@ -3,7 +3,7 @@
 		<view class="block">
 			<view class="item" @click="onOptionClick(3)">
 				<image src="/static/images/data.png"></image>
-				<text>检查更新</text>
+				<text>查看所有发行版</text>
 				<view class="item-sign"></view>
 			</view>
 			<view class="item" @click="onOptionClick(2)">

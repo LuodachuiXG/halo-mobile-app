@@ -197,3 +197,5 @@ Vue.prototype.getVersion = function() {
 	return plus.runtime.version;
 	// #endif
 }
+
+

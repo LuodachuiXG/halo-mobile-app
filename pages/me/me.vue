@@ -49,6 +49,14 @@
 					<text>{{ createdDay }} 天</text>
 				</view>
 			</view>
+			
+			<view class="block" v-if="newVersion">
+				<view class="item newVersion" @click="onOptionClick(4)" style="border-radius: 4px;">
+					<image src="/static/images/update.png"></image>
+					<text style="color: white;">新版发布</text>
+					<view class="item-sign" style="background-color: white;"></view>
+				</view>
+			</view>
 
 			<view class="block">
 				<view class="item" @click="onOptionClick(0)">
@@ -114,6 +122,9 @@
 				notice: "请将Halo升级到 1.5.0 以上版本，否则可能出现未知错误。" + 
 					"软件目前处于测试阶段，遇到问题请到 Gitee 或 Github 提交 Issue " + 
 					"并附上截图或问题复现步骤。",
+					
+				// 用于标记当前是否有新版本
+				newVersion: false,
 
 			}
 		},
@@ -352,6 +363,9 @@
 						content: err
 					});
 				});
+				// #ifdef APP-PLUS
+				this.checkUpdate();
+				// #endif
 			},
 
 			/**
@@ -422,43 +436,54 @@
 			 */
 			onOptionClick: function(i) {
 				switch (i) {
-					// 博客设置
 					case 0:
+						// 博客设置
 						uni.navigateTo({
 							url: "../blogSetting/blogSetting"
 						})
 						break;
-						// 个人资料
 					case 1:
+						// 个人资料
 						uni.navigateTo({
 							url: "../userProfile/userProfile"
 						})
 						break;
-						// 主题管理
 					case 2:
+						// 主题管理
 						uni.navigateTo({
 							url: "../themes/themes"
 						})
 						break;
-						// 设置
 					case 3:
+						// 设置
 						uni.navigateTo({
 							url: "../setting/setting"
 						})
 						break;
-						// 问题反馈
-						// case 4:
-						// 	let that = this;
-						// 	let url = "https://gitee.com/luodachui/halo-mobile-app/issues/new?issue%5Bassignee_id%5D=0&issue%5Bmilestone_id%5D=0";
-						// 	this.openURL(url);
-						// 	uni.setClipboardData({
-						// 		data: url,
-						// 		success: function () {
-						// 			that.toast("反馈地址已复制");
-						// 		}
-						// 	});
-						// 	break;
+					case 4:
+						// 版本更新
+						this.toast("当前版本：" + this.getVersion());
+						this.openURL("https://gitee.com/luodachui/halo-mobile-app/releases")
+						break;
 				}
+			},
+			
+			/**
+			 * 检查更新
+			 */
+			checkUpdate: function() {
+				let that = this;
+				uni.request({
+					url: "https://sp-msg.luodachui.cn/haloapp/versionCode",
+					method: "GET",
+					success: function(res) {
+						let versionCode = res.data;
+						let currentVersionCode = plus.runtime.versionCode;
+						if (Number(currentVersionCode) < Number(versionCode)) {
+							that.newVersion = true;
+						}
+					}
+				})
 			},
 
 
@@ -471,6 +496,7 @@
 				// 登录
 				this.adminLogin(code)
 			},
+
 
 			/**
 			 * popup弹出层
@@ -584,5 +610,13 @@
 
 	.view-me-app-option {
 		margin-bottom: 150rpx;
+	}
+	
+	.newVersion {
+		background-color: var(--errorColor);
+	}
+	
+	.newVersion:active {
+		background-color: #d0362d;
 	}
 </style>
