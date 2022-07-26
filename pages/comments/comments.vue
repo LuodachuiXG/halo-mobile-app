@@ -1,6 +1,12 @@
 <template>
 	<view>
 		<u-notify ref="popup" duration="1500"></u-notify>
+		
+		<!-- 页面下方弹出的操作菜单 -->
+		<u-action-sheet :actions="batchOptions" :closeOnClickOverlay="true"
+			:closeOnClickAction="true" :show="showActionSheet" cancelText="取消" @close="onActionSheetClose"
+			@select="onActionSheetSelect">
+		</u-action-sheet>
 
 		<!-- 评论筛选组件 -->
 		<u-sticky v-if="mode === 'all'">
@@ -55,10 +61,10 @@
 						</u-checkbox-group>
 					</uni-col>
 					<uni-col :span="5">
-						<picker @change="batchBatchChange" :value="batchBatchIndex" :range="batchBatch"
+						<button class="blue" @click="onBatchClick"
 							:disabled="selectedComment.length === 0">
-							<button class="blue" :disabled="selectedComment.length === 0">批量操作</button>
-						</picker>
+							批量操作
+						</button>
 					</uni-col>
 					<uni-col :span="9" :push="1">
 						<button class="yellow" @click="onReturnAllClick">关闭批量操作模式</button>
@@ -226,10 +232,11 @@
 
 				sizes: ["4条/页", "8条/页", "16条/页", "24条/页", "48条/页", "96条/页"],
 				sizesIndex: 1,
-
-				// 批量操作模式的批量操作的 picker 选项
-				batchBatch: ["通过", "放入回收站", "永久删除"],
-				batchBatchIndex: 0,
+				
+				// 批量操作模式的批量操作的选项
+				batchOptions: [{name: "通过"}, {name: "放入回收站"}, {name: "永久删除"}],
+				// 是否显示操作菜单
+				showActionSheet: false,
 
 				// 悬浮按钮弹出菜单
 				content: [{
@@ -612,19 +619,29 @@
 					}
 				}
 			},
-
-
-
+			
 			/**
-			 * 批量操作模式的批量操作 picker 选择事件
+			 * 操作菜单取消按钮事件
+			 */
+			onActionSheetClose: function() {
+				this.showActionSheet = false;
+			},
+			
+			/**
+			 * 批量操作按钮点击事件
+			 */
+			onBatchClick: function() {
+				this.showActionSheet = true;
+			},
+			
+			/**
+			 * 操作菜单选择事件
 			 * @param {Object} e
 			 */
-			// ["通过", "放入回收站", "永久删除"]
-			batchBatchChange: function(e) {
+			onActionSheetSelect: function(e) {
 				let that = this;
-				switch (e.detail.value) {
-					// 通过
-					case 0:
+				switch (e.name) {
+					case "通过":
 						uni.showModal({
 							title: '提示',
 							content: '确定要将所选的 ' + this.selectedComment.length + ' 个评论转为已发布状态吗？',
@@ -643,8 +660,7 @@
 							}
 						});
 						break;
-					// 放入回收站
-					case 1:
+					case "放入回收站":
 						uni.showModal({
 							title: '提示',
 							content: '确定要将所选的 ' + this.selectedComment.length + ' 个评论放入回收站吗？',
@@ -663,8 +679,7 @@
 							}
 						});
 						break;
-					// 永久删除
-					case 2:
+					case "永久删除":
 						uni.showModal({
 							title: '提示',
 							content: '确定要将所选的 ' + this.selectedComment.length + ' 个评论永久删除吗？此操作不可逆。',
