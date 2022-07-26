@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<u-notify ref="popup" duration="1500"></u-notify>
-		
+
 		<!-- 页面下方弹出的操作菜单 -->
 		<u-action-sheet :actions="mode === 'recycle' ? recycleOptions : batchOptions" :closeOnClickOverlay="true"
 			:closeOnClickAction="true" :show="showActionSheet" cancelText="取消" @close="onActionSheetClose"
@@ -43,7 +43,7 @@
 				</uni-collapse-item>
 			</uni-collapse>
 		</u-sticky>
-		
+
 		<!-- 批量操作模式的吸顶按钮 -->
 		<u-sticky v-if="mode === 'batch'">
 			<view class="recycle-sticky">
@@ -57,19 +57,17 @@
 						</u-checkbox-group>
 					</uni-col>
 					<uni-col :span="5">
-						<button class="blue" @click="onShowActionSheet"
-							:disabled="selectedPost.length === 0">
+						<button class="blue" @click="onShowActionSheet" :disabled="selectedPost.length === 0">
 							批量操作
 						</button>
 					</uni-col>
 					<uni-col :span="9" :push="1">
-						<button class="yellow" 
-							@click="onReturnAllClick">关闭批量操作模式</button>
+						<button class="yellow" @click="onReturnAllClick">关闭批量操作模式</button>
 					</uni-col>
 				</uni-row>
 			</view>
 		</u-sticky>
-		
+
 
 		<!-- 回收站模式的吸顶按钮 -->
 		<u-sticky v-if="mode === 'recycle'">
@@ -84,14 +82,13 @@
 						</u-checkbox-group>
 					</uni-col>
 					<uni-col :span="5">
-						<button class="blue"  @click="onShowActionSheet"
-							:disabled="selectedPost.length === 0">
+						<button class="blue" @click="onShowActionSheet" :disabled="selectedPost.length === 0">
 							批量操作
 						</button>
 
 					</uni-col>
 					<uni-col :span="6" :push="1">
-						<button class="red" :disabled="posts.length === 0" 
+						<button class="red" :disabled="posts.length === 0"
 							@click="onDeleteCurrentPageClick">删除当前页</button>
 					</uni-col>
 					<uni-col :span="5" :push="2">
@@ -100,21 +97,17 @@
 				</uni-row>
 			</view>
 		</u-sticky>
-		
-		<u-empty 
-			v-if="posts.length === 0"
-			mode="list"
-			icon="http://cdn.uviewui.com/uview/empty/list.png">
+
+		<u-empty v-if="posts.length === 0" mode="list" icon="http://cdn.uviewui.com/uview/empty/list.png">
 		</u-empty>
 
-		<view class="block" v-for="(post, i) in posts"  
-			:class="(selectedPost.indexOf(post.id) >= 0) ? 'selected' : ''">
+		<view class="block" v-for="(post, i) in posts" :class="(selectedPost.indexOf(post.id) >= 0) ? 'selected' : ''">
 			<view @click="onPostClick(i)">
 				<!-- 文章名 -->
 				<view class="block-name-view">
 					<view class="block-name">
-						<view class="tips-info topped-tag"
-							style="margin-right: 15rpx;display: ;" v-if="post.topped && mode !== 'recycle'">
+						<view class="tips-info topped-tag" style="margin-right: 15rpx;display: ;"
+							v-if="post.topped && mode !== 'recycle'">
 							置顶
 						</view>
 						{{ post.title }}
@@ -144,8 +137,8 @@
 			<!-- 文章标签 -->
 			<view class="block-tag" v-if="post.tags.length > 0">
 				<view class="block-tag-item" v-for="(tag, j) in post.tags">
-					<u-tag :text="tag.name" plain plainFill type="success"
-						:bgColor="tag.color" :borderColor="tag.color" color="#000000"></u-tag>
+					<u-tag :text="tag.name" plain plainFill type="success" :bgColor="tag.color" :borderColor="tag.color"
+						color="#000000"></u-tag>
 				</view>
 			</view>
 
@@ -169,7 +162,8 @@
 					<uni-col :span="6">
 						<view class="block-action-item" @click="onEditClick(i)">
 							<!-- 如果当前文章在回收站，就将编辑改为 删除 ，且垃圾桶颜色改为红色 -->
-							<text class="iconfont block-action-icon" :class="post.status == 'RECYCLE' ? 'color-error' : ''">
+							<text class="iconfont block-action-icon"
+								:class="post.status == 'RECYCLE' ? 'color-error' : ''">
 								{{ post.status == "RECYCLE" ? "&#xe74e;" : "&#xe892;"}}
 							</text>
 							<text :class="post.status == 'RECYCLE' ? 'color-error' : ''">
@@ -192,7 +186,8 @@
 					<uni-col :span="6">
 						<view class="block-action-item border" @click="onDeleteClick(i)">
 							<!-- 如果当前文章在回收站，就将文字改为 还原 ，且垃圾桶颜色改为黄色 -->
-							<text class="iconfont block-action-icon" :class="post.status == 'RECYCLE' ? 'color-warning' : ''">
+							<text class="iconfont block-action-icon"
+								:class="post.status == 'RECYCLE' ? 'color-warning' : ''">
 								&#xe74e;
 							</text>
 							<text :class="post.status == 'RECYCLE' ? 'color-warning' : ''">
@@ -209,18 +204,13 @@
 				<view>{{sizes[sizesIndex]}}</view>
 			</picker>
 		</view>
-		<uni-pagination 
-			style="padding-bottom: 200rpx;margin-left: 20rpx;margin-right: 20rpx;" 
-			title="文章"
-			:pageSize="size" 
-			:total="total" 
-			:current="page + 1"
-			@change="pageChange"
-			v-if="posts.length > 0"></uni-pagination>
+		<uni-pagination style="padding-bottom: 200rpx;margin-left: 20rpx;margin-right: 20rpx;" title="文章"
+			:pageSize="size" :total="total" :current="page + 1" @change="pageChange" v-if="posts.length > 0">
+		</uni-pagination>
 
 		<!-- 回收站模式不显示悬浮按钮 -->
-		<uni-fab horizontal="right" vertical="bottom" @trigger="onFabClick" :content="content"
-			v-if="mode === 'all'"></uni-fab>
+		<uni-fab horizontal="right" vertical="bottom" @trigger="onFabClick" :content="content" v-if="mode === 'all'">
+		</uni-fab>
 	</view>
 </template>
 
@@ -232,7 +222,7 @@
 		deletePosts,
 		deletePost
 	} from "@/network/PostApi.js";
-	
+
 	import {
 		getCategories
 	} from "@/network/CategoryApi.js";
@@ -274,8 +264,7 @@
 				sizesIndex: 1,
 
 				// 回收站模式的批量操作的 选项
-				recycleOptions: [
-					{
+				recycleOptions: [{
 						name: "发布",
 					},
 					{
@@ -285,10 +274,9 @@
 						name: "永久删除",
 					},
 				],
-				
+
 				// 批量操作模式的批量操作的选项
-				batchOptions: [
-					{
+				batchOptions: [{
 						name: "发布",
 					},
 					{
@@ -365,7 +353,7 @@
 			this.refreshData()
 			this.refreshCategoryData();
 		},
-		
+
 		onBackPress(event) {
 			if (event.from === "backbutton" && this.mode !== "all") {
 				this.onReturnAllClick();
@@ -373,7 +361,7 @@
 			}
 			return false;
 		},
-		
+
 		methods: {
 			/**
 			 * 刷新数据
@@ -628,12 +616,12 @@
 							url: "./edit/edit?type=add"
 						});
 						break;
-					// 批量操作
+						// 批量操作
 					case 1:
 						this.mode = "batch";
 						this.selectedPost = [];
 						break;
-					// 回收站
+						// 回收站
 					case 2:
 						uni.setNavigationBarTitle({
 							title: "回收站"
@@ -699,7 +687,7 @@
 				});
 				this.refreshData();
 			},
-			
+
 			/**
 			 * 全选按钮点击事件
 			 */
@@ -713,7 +701,7 @@
 					}
 				}
 			},
-			
+
 			/**
 			 * 回收站删除当前页点击事件
 			 * @param {Object} e
@@ -742,148 +730,105 @@
 					}
 				});
 			},
-			
-			
+
+
 			/**
 			 * 操作菜单取消按钮事件
 			 */
 			onActionSheetClose: function() {
 				this.showActionSheet = false;
 			},
-			
+
 			/**
 			 * 显示操作菜单
 			 */
 			onShowActionSheet: function() {
 				this.showActionSheet = true;
 			},
-			
+
 			/**
 			 * 操作菜单选择事件
 			 * @param {Object} e
 			 */
 			onActionSheetSelect: function(e) {
 				let that = this;
-				if (this.mode === "recycle") {
-					switch (e.name) {
-						case "发布":
-							uni.showModal({
-								title: '提示',
-								content: '确定要将所选的 ' + this.selectedPost.length + ' 个文章转为已发布状态吗？',
-								success: function(res) {
-									if (res.confirm) {
-										updatePostsStatus(that.selectedPost, "PUBLISHED").then(data => {
-											that.toast("发布成功", "success");
-											that.refreshData();
-										}).catch(err => {
-											uni.showModal({
-												title: "发布失败",
-												content: err
-											});
+				switch (e.name) {
+					case "发布":
+						uni.showModal({
+							title: '提示',
+							content: '确定要将所选的 ' + this.selectedPost.length + ' 个文章转为已发布状态吗？',
+							success: function(res) {
+								if (res.confirm) {
+									updatePostsStatus(that.selectedPost, "PUBLISHED").then(data => {
+										that.toast("发布成功", "success");
+										that.refreshData();
+									}).catch(err => {
+										uni.showModal({
+											title: "发布失败",
+											content: err
 										});
-									}
+									});
 								}
-							});
-							break;
-						case "转为草稿":
-							uni.showModal({
-								title: '提示',
-								content: '确定要将所选的 ' + this.selectedPost.length + ' 个文章转为草稿状态吗？',
-								success: function(res) {
-									if (res.confirm) {
-										updatePostsStatus(that.selectedPost, "DRAFT").then(data => {
-											that.toast("操作成功", "success");
-											that.refreshData();
-										}).catch(err => {
-											uni.showModal({
-												title: "操作失败",
-												content: err
-											});
+							}
+						});
+						break;
+					case "转为草稿":
+						uni.showModal({
+							title: '提示',
+							content: '确定要将所选的 ' + this.selectedPost.length + ' 个文章转为草稿状态吗？',
+							success: function(res) {
+								if (res.confirm) {
+									updatePostsStatus(that.selectedPost, "DRAFT").then(data => {
+										that.toast("操作成功", "success");
+										that.refreshData();
+									}).catch(err => {
+										uni.showModal({
+											title: "操作失败",
+											content: err
 										});
-									}
+									});
 								}
-							});
-							break;
-						case "永久删除":
-							uni.showModal({
-								title: '提示',
-								content: '确定要将所选的 ' + this.selectedPost.length + ' 个文章永久删除吗？',
-								success: function(res) {
-									if (res.confirm) {
-										deletePosts(that.selectedPost).then(data => {
-											that.toast("删除成功", "success");
-											that.refreshData();
-										}).catch(err => {
-											uni.showModal({
-												title: "删除失败",
-												content: err
-											});
+							}
+						});
+						break;
+					case "永久删除":
+						uni.showModal({
+							title: '提示',
+							content: '确定要将所选的 ' + this.selectedPost.length + ' 个文章永久删除吗？',
+							success: function(res) {
+								if (res.confirm) {
+									deletePosts(that.selectedPost).then(data => {
+										that.toast("删除成功", "success");
+										that.refreshData();
+									}).catch(err => {
+										uni.showModal({
+											title: "删除失败",
+											content: err
 										});
-									}
+									});
 								}
-							});
-							break;
-					} 
-				} else if (this.mode === "batch") {
-					switch (e.name) {
-						case "发布":
-							uni.showModal({
-								title: '提示',
-								content: '确定要将所选的 ' + this.selectedPost.length + ' 个文章转为已发布状态吗？',
-								success: function(res) {
-									if (res.confirm) {
-										updatePostsStatus(that.selectedPost, "PUBLISHED").then(data => {
-											that.popup("发布成功", "success");
-											that.refreshData();
-										}).catch(err => {
-											uni.showModal({
-												title: "发布失败",
-												content: err
-											});
+							}
+						});
+						break;
+					case "回收站":
+						uni.showModal({
+							title: '提示',
+							content: '确定要将所选的 ' + this.selectedPost.length + ' 个文章转为回收站状态吗？',
+							success: function(res) {
+								if (res.confirm) {
+									updatePostsStatus(that.selectedPost, "RECYCLE").then(data => {
+										that.toast("操作成功", "success");
+										that.refreshData();
+									}).catch(err => {
+										uni.showModal({
+											title: "操作失败",
+											content: err
 										});
-									}
+									});
 								}
-							});
-							break;
-						case "转为草稿":
-							uni.showModal({
-								title: '提示',
-								content: '确定要将所选的 ' + this.selectedPost.length + ' 个文章转为草稿状态吗？',
-								success: function(res) {
-									if (res.confirm) {
-										updatePostsStatus(that.selectedPost, "DRAFT").then(data => {
-											that.popup("操作成功", "success");
-											that.refreshData();
-										}).catch(err => {
-											uni.showModal({
-												title: "操作失败",
-												content: err
-											});
-										});
-									}
-								}
-							});
-							break;
-						case "回收站":
-							uni.showModal({
-								title: '提示',
-								content: '确定要将所选的 ' + this.selectedPost.length + ' 个文章转为回收站状态吗？',
-								success: function(res) {
-									if (res.confirm) {
-										updatePostsStatus(that.selectedPost, "RECYCLE").then(data => {
-											that.popup("操作成功", "success");
-											that.refreshData();
-										}).catch(err => {
-											uni.showModal({
-												title: "操作失败",
-												content: err
-											});
-										});
-									}
-								}
-							});
-							break;
-					}
+							}
+						});
+						break;
 				}
 			},
 
@@ -907,7 +852,7 @@
 		margin-bottom: 50rpx;
 	}
 
-	.block-name-view{
+	.block-name-view {
 		padding: 20rpx;
 		padding-bottom: 10rpx;
 		padding-left: 30rpx;
@@ -968,7 +913,7 @@
 		position: relative;
 		top: 5rpx;
 	}
-	
+
 
 	.border {
 		border-left: 1px solid #ececec;
@@ -1100,18 +1045,21 @@
 		background-color: var(--errorColor);
 		color: #FFFFFF;
 	}
+
 	.blue {
 		background-color: var(--primaryColor);
 		color: #FFFFFF;
 	}
+
 	.yellow {
 		background-color: var(--warningColor);
 		color: #FFFFFF;
 	}
+
 	.selected {
 		filter: brightness(60%) blur(1px);
 	}
-	
+
 	.topped-tag {
 		background-color: var(--errorColor);
 	}
