@@ -181,7 +181,8 @@
 	}
 
 	.block-name {
-		padding: 30rpx;
+		padding: 20rpx;
+		padding-left: 30rpx;
 		border-bottom: 1px solid #ececec;
 		font-weight: bold;
 		font-size: 1.1em;
@@ -201,7 +202,7 @@
 
 	.block-action-item {
 		position: relative;
-		padding: 30rpx;
+		padding: 20rpx;
 		text-align: center;
 	}
 

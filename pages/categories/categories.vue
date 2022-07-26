@@ -168,8 +168,9 @@
 
 <style>
 	.block-name {
-		padding: 30rpx;
-		padding-bottom: 20rpx;
+		padding: 20rpx;
+		padding-bottom: 10rpx;
+		padding-left: 30rpx;
 		border-bottom: 1px solid #ececec;
 	}
 
@@ -203,7 +204,6 @@
 	}
 
 	.block-tag-item {
-		margin-top: 0rpx;
 		margin-left: 20rpx;
 		font-weight: bold;
 		display: inline-block;
@@ -220,7 +220,7 @@
 
 	.block-action-item {
 		position: relative;
-		padding: 30rpx;
+		padding: 20rpx;
 		text-align: center;
 	}
 

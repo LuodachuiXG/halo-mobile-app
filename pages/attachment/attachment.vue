@@ -79,7 +79,7 @@
 				<view class="block-thumbnail">
 					<!-- 判断缩略图是否是绝对地址 -->
 					<image v-if="attachment.thumbPath" :src="attachment.thumbPath.indexOf('http') < 0  ? 
-						getUrl() + attachment.thumbPath : attachment.thumbPath"></image>
+						getUrl() + attachment.thumbPath : attachment.thumbPath" mode="aspectFill" lazy-load="true"></image>
 				</view>
 			</view>
 
@@ -87,13 +87,13 @@
 			<view class="block-action">
 				<uni-row>
 					<uni-col :span="12">
-						<view class="block-action-item" @click="onEditClick(i)">
+						<view class="block-action-item" @click="onInfoClick(i)">
 							<text class="iconfont block-action-icon">&#xe7d2;</text>
 							详情
 						</view>
 					</uni-col>
 					<uni-col :span="12">
-						<view class="block-action-item border" @click="onSettingClick(i)">
+						<view class="block-action-item border" @click="onDelClick(i)">
 							<text class="iconfont block-action-icon">&#xe74e;</text>
 							删除
 						</view>
@@ -291,38 +291,12 @@
 
 
 			/**
-			 * 文章编辑按钮，当文章在回收站时，该按钮充当删除功能
+			 * 附件信息点击事件
 			 * @param {Object} i
 			 */
-			// onEditClick: function(i) {
-			// 	let that = this;
-			// 	let post = this.posts[i];
-			// 	if (post.status == "RECYCLE") {
-			// 		// 文章在回收站，充当删除功能
-			// 		uni.showModal({
-			// 			title: '提示',
-			// 			content: '确定要永久删除【' + that.posts[i].title + '】文章吗？此操作不可逆。',
-			// 			success: function(res) {
-			// 				if (res.confirm) {
-			// 					deletePost(post.id).then(data => {
-			// 						that.popup("删除成功", "success");
-			// 						that.refreshData();
-			// 					}).catch(err => {
-			// 						uni.showModal({
-			// 							title: "删除失败",
-			// 							content: err
-			// 						});
-			// 					});
-			// 				}
-			// 			}
-			// 		});
-			// 	} else {
-			// 		// 编辑文章
-			// 		uni.navigateTo({
-			// 			url: "./edit/edit?id=" + this.posts[i].id + "&type=update"
-			// 		})
-			// 	}
-			// },
+			onInfoClick: function(i) {
+				
+			},
 
 			/**
 			 * 文章数据单击事件
@@ -458,15 +432,12 @@
 			// },
 
 			/**
-			 * 文章设置点击事件
+			 * 附件删除点击事件
 			 * @param {Object} i
 			 */
-			// onSettingClick: function(i) {
-			// 	let postId = this.posts[i].id;
-			// 	uni.navigateTo({
-			// 		url: './setting/setting?id=' + postId
-			// 	})
-			// },
+			onDelClick: function(i) {
+				
+			},
 
 			/**
 			 * 悬浮按钮点击事件
@@ -745,8 +716,9 @@
 	}
 
 	.block-name-view {
-		padding: 30rpx;
-		padding-bottom: 20rpx;
+		padding: 20rpx;
+		padding-bottom: 10rpx;
+		padding-left: 30rpx;
 		border-bottom: 1px solid #ececec;
 	}
 
@@ -761,7 +733,8 @@
 		line-height: 41rpx;
 	}
 
-	.block-thumbnail {}
+	.block-thumbnail {
+	}
 
 	.block-thumbnail image {
 		vertical-align: middle;
@@ -784,14 +757,13 @@
 	}
 
 	.block-action {
-		margin-top: 20rpx;
 		border-top: 1px solid #ececec;
 		color: #898989;
 	}
 
 	.block-action-item {
 		position: relative;
-		padding: 30rpx;
+		padding: 20rpx;
 		text-align: center;
 	}
 

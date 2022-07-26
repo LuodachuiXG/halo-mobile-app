@@ -399,7 +399,7 @@
 
 	.block-action-item {
 		position: relative;
-		padding: 30rpx;
+		padding: 20rpx;
 		text-align: center;
 	}
 
