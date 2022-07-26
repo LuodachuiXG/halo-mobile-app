@@ -396,6 +396,10 @@
 		border-top: 1px solid #ececec;
 		color: #898989;
 	}
+	
+	.block-action text {
+		color: #898989;
+	}
 
 	.block-action-item {
 		position: relative;

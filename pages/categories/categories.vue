@@ -40,13 +40,13 @@
 					<uni-col :span="12">
 						<view class="block-action-item" @click="onEditClick(i)">
 							<text class="iconfont item-icon">&#xe892;</text>
-							编辑
+							<text>编辑</text>
 						</view>
 					</uni-col>
 					<uni-col :span="12">
 						<view class="block-action-item border" @click="onDeleteClick(i)">
 							<text class="iconfont item-icon">&#xe74e;</text>
-							删除
+							<text>删除</text>
 						</view>
 					</uni-col>
 				</uni-row>
@@ -215,6 +215,10 @@
 
 	.block-action {
 		border-top: 1px solid #ececec;
+		color: #898989;
+	}
+	
+	.block-action text {
 		color: #898989;
 	}
 

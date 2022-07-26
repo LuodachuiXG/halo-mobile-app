@@ -121,7 +121,7 @@
 				let that = this;
 				// 如果当前删除的是启用的主题就报错
 				if (i == 0) {
-					that.toast("无法删除启用的主题");
+					that.popup("无法删除启用的主题");
 					return;
 				}
 				uni.showModal({
@@ -197,6 +197,10 @@
 
 	.block-action {
 		border-top: 1px solid #ececec;
+		color: #898989;
+	}
+	
+	.block-action text {
 		color: #898989;
 	}
 

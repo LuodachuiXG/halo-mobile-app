@@ -111,7 +111,7 @@
 			:pageSize="size" :total="total" :current="page + 1" @change="pageChange" v-if="attachments.length > 0">
 		</uni-pagination>
 
-		<!-- 回收站模式不显示悬浮按钮 -->
+		<!-- 批量操作模式不显示悬浮按钮 -->
 		<uni-fab horizontal="right" vertical="bottom" @trigger="onFabClick" :content="content" v-if="mode === 'all'">
 		</uni-fab>
 	</view>
@@ -167,6 +167,14 @@
 
 				// 当前页面是什么模式，展示附件/批量操作/  all/batch
 				mode: "all",
+				
+				// 悬浮按钮弹出菜单
+				content: [
+					{
+						"text": "批量操作",
+						"iconPath": "/static/images/checkbox.png"
+					},
+				],
 			}
 		},
 

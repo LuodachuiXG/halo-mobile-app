@@ -118,7 +118,7 @@
 				<view class="block-thumbnail">
 					<!-- 判断缩略图是否是绝对地址 -->
 					<image v-if="post.thumbnail" :src="post.thumbnail.indexOf('http') < 0  ? 
-						getUrl() + post.thumbnail : post.thumbnail"></image>
+						getUrl() + post.thumbnail : post.thumbnail" mode="aspectFill"></image>
 				</view>
 
 				<!-- 文章总结 -->
