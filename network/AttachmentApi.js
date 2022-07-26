@@ -36,3 +36,26 @@ export function getAttachementMediaTypes() {
 		method: "GET"
 	});
 }
+
+/**
+ * 根据附件 id 删除附件
+ * @param {Object} array
+ */
+export function deleteAttachmentById(id) {
+	return request({
+		url: "/api/admin/attachments/" + id,
+		method: "DELETE"
+	});
+}
+
+/**
+ * 根据附件 id 数组删除附件
+ * @param {Object} array
+ */
+export function deleteAttachmentByIds(array) {
+	return request({
+		url: "/api/admin/attachments",
+		method: "DELETE",
+		data: array
+	});
+}

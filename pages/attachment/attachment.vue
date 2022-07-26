@@ -1,6 +1,12 @@
 <template>
 	<view>
 		<u-notify ref="popup" duration="1500"></u-notify>
+		
+		<!-- 页面下方弹出的操作菜单 -->
+		<u-action-sheet :actions="batchOptions" :closeOnClickOverlay="true"
+			:closeOnClickAction="true" :show="showActionSheet" cancelText="取消" @close="onActionSheetClose"
+			@select="onActionSheetSelect">
+		</u-action-sheet>
 
 		<!-- 附件组件 -->
 		<u-sticky v-if="mode === 'all'">
@@ -39,7 +45,7 @@
 		</u-sticky>
 
 		<!-- 批量操作模式的吸顶按钮 -->
-		<!-- <u-sticky v-if="mode === 'batch'">
+		<u-sticky v-if="mode === 'batch'">
 			<view class="recycle-sticky">
 				<uni-row>
 					<uni-col :span="5">
@@ -51,17 +57,17 @@
 						</u-checkbox-group>
 					</uni-col>
 					<uni-col :span="5">
-						<picker @change="batchBatchChange" :value="batchBatchIndex" :range="batchBatch"
+						<button class="blue" @click="onBatchClick"
 							:disabled="selectedAttachments.length === 0">
-							<button class="blue" :disabled="selectedAttachments.length === 0">批量操作</button>
-						</picker>
+							批量操作
+						</button>
 					</uni-col>
 					<uni-col :span="9" :push="1">
 						<button class="yellow" @click="onReturnAllClick">关闭批量操作模式</button>
 					</uni-col>
 				</uni-row>
 			</view>
-		</u-sticky> -->
+		</u-sticky>
 
 		<u-empty v-if="attachments.length === 0" mode="list" icon="http://cdn.uviewui.com/uview/empty/list.png">
 		</u-empty>
@@ -121,7 +127,9 @@
 	import {
 		getAttachments,
 		getAttachementTypes,
-		getAttachementMediaTypes
+		getAttachementMediaTypes,
+		deleteAttachmentById,
+		deleteAttachmentByIds
 	} from "@/network/AttachmentApi.js";
 	export default {
 		data() {
@@ -162,8 +170,10 @@
 				sizesIndex: 2,
 
 				// 批量操作模式的批量操作的 picker 选项
-				batchBatch: ["删除"],
-				batchBatchIndex: 0,
+				batchOptions: [{name: "删除"}],
+				// 是否显示操作菜单
+				showActionSheet: false,
+				
 
 				// 当前页面是什么模式，展示附件/批量操作/  all/batch
 				mode: "all",
@@ -306,76 +316,6 @@
 				
 			},
 
-			/**
-			 * 文章数据单击事件
-			 * @param {Object} i
-			 */
-			// onPostDataClick: function(i) {
-			// 	let that = this;
-			// 	let post = this.posts[i];
-			// 	uni.showModal({
-			// 		showCancel: false,
-			// 		content: "文章ID：" + post.id + "\n" +
-			// 			"文章标题：" + post.title + "\n" +
-			// 			"文章别名：" + post.slug + "\n" +
-			// 			"编辑类型：" + post.editorType + "\n" +
-			// 			"更新时间：" + that.format(post.updateTime) + "\n" +
-			// 			"创建时间：" + that.format(post.createTime) + "\n" +
-			// 			"编辑时间：" + that.format(post.editTime) + "\n" +
-			// 			"浏览次数：" + post.visits + "\n" +
-			// 			"喜欢次数：" + post.likes + "\n" +
-			// 			"全部字数：" + post.wordCount + "\n" +
-			// 			"评论数量：" + post.commentCount + "\n" +
-			// 			"是否置顶：" + (post.topped ? "是" : "否")
-			// 	})
-			// },
-
-			/**
-			 * 将文章回收单击事件
-			 * @param {Object} i
-			 */
-			// onDeleteClick: function(i) {
-			// 	let that = this;
-			// 	if (this.posts[i].status == "RECYCLE") {
-			// 		// 当前文章在回收站，准备还原
-			// 		uni.showModal({
-			// 			title: '提示',
-			// 			content: '确定要发布【' + that.posts[i].title + '】文章吗？',
-			// 			success: function(res) {
-			// 				if (res.confirm) {
-			// 					updatePostStatus(that.posts[i].id, "PUBLISHED").then(data => {
-			// 						that.popup("发布成功", "success");
-			// 						that.refreshData();
-			// 					}).catch(err => {
-			// 						uni.showModal({
-			// 							title: "发布失败",
-			// 							content: err
-			// 						});
-			// 					});
-			// 				}
-			// 			}
-			// 		});
-			// 	} else {
-			// 		// 当前文章是正常状态，准备回收
-			// 		uni.showModal({
-			// 			title: '提示',
-			// 			content: '确定要将【' + that.posts[i].title + '】放入回收站吗？',
-			// 			success: function(res) {
-			// 				if (res.confirm) {
-			// 					updatePostStatus(that.posts[i].id, "RECYCLE").then(data => {
-			// 						that.popup("成功放入回收站", "success");
-			// 						that.refreshData();
-			// 					}).catch(err => {
-			// 						uni.showModal({
-			// 							title: "放入回收站失败",
-			// 							content: err
-			// 						});
-			// 					});
-			// 				}
-			// 			}
-			// 		});
-			// 	}
-			// },
 
 			/**
 			 * 改变页面事件
@@ -423,35 +363,58 @@
 			 * 附件点击事件
 			 * @param {Object} i
 			 */
-			// onAttachmentClick: function(i) {
-			// 	// 如果当前不是展示文章模式（处于回收站或批量操作模式下），点击文章是选择文章，而不是查看文章内容
-			// 	if (this.mode !== "all") {
-			// 		let id = this.posts[i].id;
-			// 		let index = this.selectedAttachments.indexOf(id);
-			// 		if (index < 0) {
-			// 			this.selectedAttachments.push(id);
-			// 		} else {
-			// 			this.selectedAttachments.splice(index, 1);
-			// 		}
-			// 	} else {
-			// 		this.openURL(this.getUrl() + this.posts[i].fullPath);
-			// 	}
+			onAttachmentClick: function(i) {
+				// 如果当前不是展示附件模式（处于批量操作模式下），点击附件是选择附件，而不是查看附件
+				if (this.mode !== "all") {
+					let id = this.attachments[i].id;
+					let index = this.selectedAttachments.indexOf(id);
+					if (index < 0) {
+						this.selectedAttachments.push(id);
+					} else {
+						this.selectedAttachments.splice(index, 1);
+					}
+				} else {
+					// this.openURL(this.getUrl() + this.posts[i].fullPath);
+				}
 
-			// },
+			},
 
 			/**
 			 * 附件删除点击事件
 			 * @param {Object} i
 			 */
 			onDelClick: function(i) {
-				
+				let that = this;
+				uni.showModal({
+					title: '提示',
+					content: '确定要将当前附件永久删除吗？',
+					success: function(res) {
+						if (res.confirm) {
+							deleteAttachmentById(that.attachments[i].id).then(data => {
+								that.popup("操作成功", "success");
+								that.refreshData();
+							}).catch(err => {
+								uni.showModal({
+									title: "操作失败",
+									content: err
+								});
+							});
+						}
+					}
+				});
 			},
 
 			/**
 			 * 悬浮按钮点击事件
 			 */
 			onFabClick: function(e) {
-				
+				switch (e.index) {
+					// 批量操作
+					case 0:
+						this.mode = "batch";
+						this.selectedAttachments = [];
+						break;
+				}
 			},
 
 			/**
@@ -483,198 +446,26 @@
 			},
 
 			/**
-			 * 返回展示所有文章模式
+			 * 返回展示附件模式
 			 */
-			// onReturnAllClick: function() {
-			// 	this.mode = "all";
-			// 	uni.setNavigationBarTitle({
-			// 		title: "所有文章"
-			// 	});
-			// 	this.refreshData();
-			// },
+			onReturnAllClick: function() {
+				this.mode = "all";
+				this.refreshData();
+			},
 
 			/**
 			 * 全选按钮点击事件
 			 */
-			// onSelectAllClick: function() {
-			// 	if (this.posts.length === this.selectedAttachments.length) {
-			// 		this.selectedAttachments = [];
-			// 	} else {
-			// 		this.selectedAttachments = [];
-			// 		for (var i = 0; i < this.posts.length; i++) {
-			// 			this.selectedAttachments.push(this.posts[i].id);
-			// 		}
-			// 	}
-			// },
-
-			// /**
-			//  * 回收站批量操作 picker 选择事件
-			//  * @param {Object} e
-			//  */
-			// recycleBatchChange: function(e) {
-			// 	let that = this;
-			// 	switch (e.detail.value) {
-			// 		// 发布
-			// 		case 0:
-			// 			uni.showModal({
-			// 				title: '提示',
-			// 				content: '确定要将所选的 ' + this.selectedAttachments.length + ' 个文章转为已发布状态吗？',
-			// 				success: function(res) {
-			// 					if (res.confirm) {
-			// 						updatePostsStatus(that.selectedAttachments, "PUBLISHED").then(data => {
-			// 							that.toast("发布成功", "success");
-			// 							that.refreshData();
-			// 						}).catch(err => {
-			// 							uni.showModal({
-			// 								title: "发布失败",
-			// 								content: err
-			// 							});
-			// 						});
-			// 					}
-			// 				}
-			// 			});
-			// 			break;
-			// 			// 转为草稿
-			// 		case 1:
-			// 			uni.showModal({
-			// 				title: '提示',
-			// 				content: '确定要将所选的 ' + this.selectedAttachments.length + ' 个文章转为草稿状态吗？',
-			// 				success: function(res) {
-			// 					if (res.confirm) {
-			// 						updatePostsStatus(that.selectedAttachments, "DRAFT").then(data => {
-			// 							that.toast("操作成功", "success");
-			// 							that.refreshData();
-			// 						}).catch(err => {
-			// 							uni.showModal({
-			// 								title: "操作失败",
-			// 								content: err
-			// 							});
-			// 						});
-			// 					}
-			// 				}
-			// 			});
-			// 			break;
-			// 			// 永久删除
-			// 		case 2:
-			// 			uni.showModal({
-			// 				title: '提示',
-			// 				content: '确定要将所选的 ' + this.selectedAttachments.length + ' 个文章永久删除吗？',
-			// 				success: function(res) {
-			// 					if (res.confirm) {
-			// 						deletePosts(that.selectedAttachments).then(data => {
-			// 							that.toast("删除成功", "success");
-			// 							that.refreshData();
-			// 						}).catch(err => {
-			// 							uni.showModal({
-			// 								title: "删除失败",
-			// 								content: err
-			// 							});
-			// 						});
-			// 					}
-			// 				}
-			// 			});
-			// 			break;
-			// 	}
-			// },
-
-			/**
-			 * 回收站删除当前页点击事件
-			 * @param {Object} e
-			 */
-			// onDeleteCurrentPageClick: function() {
-			// 	let that = this;
-			// 	uni.showModal({
-			// 		title: '提示',
-			// 		content: '确定要永久删除当前页的 ' + this.posts.length + ' 个文章吗？',
-			// 		success: function(res) {
-			// 			if (res.confirm) {
-			// 				let ids = [];
-			// 				for (var i = 0; i < that.posts.length; i++) {
-			// 					ids.push(that.posts[i].id);
-			// 				}
-			// 				deletePosts(ids).then(data => {
-			// 					that.popup("删除成功", "success");
-			// 					that.refreshData();
-			// 				}).catch(err => {
-			// 					uni.showModal({
-			// 						title: "删除失败",
-			// 						content: err
-			// 					});
-			// 				});
-			// 			}
-			// 		}
-			// 	});
-			// },
-
-			/**
-			 * 批量操作模式的批量操作 picker 选择事件
-			 * @param {Object} e
-			 */
-			// batchBatchChange: function(e) {
-			// 	let that = this;
-			// 	switch (e.detail.value) {
-			// 		// 发布
-			// 		case 0:
-			// 			uni.showModal({
-			// 				title: '提示',
-			// 				content: '确定要将所选的 ' + this.selectedAttachments.length + ' 个文章转为已发布状态吗？',
-			// 				success: function(res) {
-			// 					if (res.confirm) {
-			// 						updatePostsStatus(that.selectedAttachments, "PUBLISHED").then(data => {
-			// 							that.popup("发布成功", "success");
-			// 							that.refreshData();
-			// 						}).catch(err => {
-			// 							uni.showModal({
-			// 								title: "发布失败",
-			// 								content: err
-			// 							});
-			// 						});
-			// 					}
-			// 				}
-			// 			});
-			// 			break;
-			// 			// 转为草稿
-			// 		case 1:
-			// 			uni.showModal({
-			// 				title: '提示',
-			// 				content: '确定要将所选的 ' + this.selectedAttachments.length + ' 个文章转为草稿状态吗？',
-			// 				success: function(res) {
-			// 					if (res.confirm) {
-			// 						updatePostsStatus(that.selectedAttachments, "DRAFT").then(data => {
-			// 							that.popup("操作成功", "success");
-			// 							that.refreshData();
-			// 						}).catch(err => {
-			// 							uni.showModal({
-			// 								title: "操作失败",
-			// 								content: err
-			// 							});
-			// 						});
-			// 					}
-			// 				}
-			// 			});
-			// 			break;
-			// 			// 删除到回收站
-			// 		case 2:
-			// 			uni.showModal({
-			// 				title: '提示',
-			// 				content: '确定要将所选的 ' + this.selectedAttachments.length + ' 个文章转为回收站状态吗？',
-			// 				success: function(res) {
-			// 					if (res.confirm) {
-			// 						updatePostsStatus(that.selectedAttachments, "RECYCLE").then(data => {
-			// 							that.popup("操作成功", "success");
-			// 							that.refreshData();
-			// 						}).catch(err => {
-			// 							uni.showModal({
-			// 								title: "操作失败",
-			// 								content: err
-			// 							});
-			// 						});
-			// 					}
-			// 				}
-			// 			});
-			// 			break;
-			// 	}
-			// },
+			onSelectAllClick: function() {
+				if (this.attachments.length === this.selectedAttachments.length) {
+					this.selectedAttachments = [];
+				} else {
+					this.selectedAttachments = [];
+					for (var i = 0; i < this.attachments.length; i++) {
+						this.selectedAttachments.push(this.attachments[i].id);
+					}
+				}
+			},
 			
 			/**
 			 * 根据附件存储位置英文返回对应的中文
@@ -700,6 +491,50 @@
 						return "腾讯云";
 					case "UPOSS":
 						return "又拍云";
+				}
+			},
+			
+			/**
+			 * 操作菜单取消按钮事件
+			 */
+			onActionSheetClose: function() {
+				this.showActionSheet = false;
+			},
+			
+			/**
+			 * 批量操作按钮点击事件
+			 */
+			onBatchClick: function() {
+				this.showActionSheet = true;
+			},
+			
+			/**
+			 * 操作菜单选择事件
+			 * @param {Object} e
+			 */
+			onActionSheetSelect: function(e) {
+				let that = this;
+				switch (e.name) {
+					case "删除":
+						// 删除
+						uni.showModal({
+							title: '提示',
+							content: '确定要将所选的 ' + this.selectedAttachments.length + ' 个附件永久删除吗？',
+							success: function(res) {
+								if (res.confirm) {
+									deleteAttachmentByIds(that.selectedAttachments).then(data => {
+										that.popup("操作成功", "success");
+										that.refreshData();
+									}).catch(err => {
+										uni.showModal({
+											title: "操作失败",
+											content: err
+										});
+									});
+								}
+							}
+						});
+						break;
 				}
 			},
 

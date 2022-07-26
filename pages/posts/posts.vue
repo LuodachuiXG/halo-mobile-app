@@ -1,6 +1,12 @@
 <template>
 	<view>
 		<u-notify ref="popup" duration="1500"></u-notify>
+		
+		<!-- 页面下方弹出的操作菜单 -->
+		<u-action-sheet :actions="mode === 'recycle' ? recycleOptions : batchOptions" :closeOnClickOverlay="true"
+			:closeOnClickAction="true" :show="showActionSheet" cancelText="取消" @close="onActionSheetClose"
+			@select="onActionSheetSelect">
+		</u-action-sheet>
 
 		<!-- 文章筛选组件，回收站模式不显示 -->
 		<u-sticky v-if="mode === 'all'">
@@ -51,10 +57,10 @@
 						</u-checkbox-group>
 					</uni-col>
 					<uni-col :span="5">
-						<picker @change="batchBatchChange" :value="batchBatchIndex"
-							:range="batchBatch" :disabled="selectedPost.length === 0">
-							<button class="blue" :disabled="selectedPost.length === 0">批量操作</button>
-						</picker>
+						<button class="blue" @click="onShowActionSheet"
+							:disabled="selectedPost.length === 0">
+							批量操作
+						</button>
 					</uni-col>
 					<uni-col :span="9" :push="1">
 						<button class="yellow" 
@@ -78,10 +84,11 @@
 						</u-checkbox-group>
 					</uni-col>
 					<uni-col :span="5">
-						<picker @change="recycleBatchChange" :value="recycleBatchIndex"
-							:range="recycleBatch" :disabled="selectedPost.length === 0">
-							<button class="blue" :disabled="selectedPost.length === 0">批量操作</button>
-						</picker>
+						<button class="blue"  @click="onShowActionSheet"
+							:disabled="selectedPost.length === 0">
+							批量操作
+						</button>
+
 					</uni-col>
 					<uni-col :span="6" :push="1">
 						<button class="red" :disabled="posts.length === 0" 
@@ -266,13 +273,34 @@
 				sizes: ["4条/页", "8条/页", "16条/页", "24条/页", "48条/页", "96条/页"],
 				sizesIndex: 1,
 
-				// 回收站模式的批量操作的 picker 选项
-				recycleBatch: ["发布", "转为草稿", "永久删除"],
-				recycleBatchIndex: 0,
+				// 回收站模式的批量操作的 选项
+				recycleOptions: [
+					{
+						name: "发布",
+					},
+					{
+						name: "转为草稿",
+					},
+					{
+						name: "永久删除",
+					},
+				],
 				
-				// 批量操作模式的批量操作的 picker 选项
-				batchBatch: ["发布", "转为草稿", "删除"],
-				batchBatchIndex: 0,
+				// 批量操作模式的批量操作的选项
+				batchOptions: [
+					{
+						name: "发布",
+					},
+					{
+						name: "转为草稿",
+					},
+					{
+						name: "回收站",
+					},
+				],
+				// 控制操作菜单是否显示
+				showActionSheet: false,
+
 
 				// 悬浮按钮弹出菜单
 				content: [{
@@ -687,76 +715,6 @@
 			},
 			
 			/**
-			 * 回收站批量操作 picker 选择事件
-			 * @param {Object} e
-			 */
-			recycleBatchChange: function(e) {
-				let that = this;
-				switch (e.detail.value) {
-					// 发布
-					case 0:
-						uni.showModal({
-							title: '提示',
-							content: '确定要将所选的 ' + this.selectedPost.length + ' 个文章转为已发布状态吗？',
-							success: function(res) {
-								if (res.confirm) {
-									updatePostsStatus(that.selectedPost, "PUBLISHED").then(data => {
-										that.toast("发布成功", "success");
-										that.refreshData();
-									}).catch(err => {
-										uni.showModal({
-											title: "发布失败",
-											content: err
-										});
-									});
-								}
-							}
-						});
-						break;
-					// 转为草稿
-					case 1:
-						uni.showModal({
-							title: '提示',
-							content: '确定要将所选的 ' + this.selectedPost.length + ' 个文章转为草稿状态吗？',
-							success: function(res) {
-								if (res.confirm) {
-									updatePostsStatus(that.selectedPost, "DRAFT").then(data => {
-										that.toast("操作成功", "success");
-										that.refreshData();
-									}).catch(err => {
-										uni.showModal({
-											title: "操作失败",
-											content: err
-										});
-									});
-								}
-							}
-						});
-						break;
-					// 永久删除
-					case 2:
-						uni.showModal({
-							title: '提示',
-							content: '确定要将所选的 ' + this.selectedPost.length + ' 个文章永久删除吗？',
-							success: function(res) {
-								if (res.confirm) {
-									deletePosts(that.selectedPost).then(data => {
-										that.toast("删除成功", "success");
-										that.refreshData();
-									}).catch(err => {
-										uni.showModal({
-											title: "删除失败",
-											content: err
-										});
-									});
-								}
-							}
-						});
-						break;
-				}
-			},
-			
-			/**
 			 * 回收站删除当前页点击事件
 			 * @param {Object} e
 			 */
@@ -785,73 +743,147 @@
 				});
 			},
 			
+			
 			/**
-			 * 批量操作模式的批量操作 picker 选择事件
+			 * 操作菜单取消按钮事件
+			 */
+			onActionSheetClose: function() {
+				this.showActionSheet = false;
+			},
+			
+			/**
+			 * 显示操作菜单
+			 */
+			onShowActionSheet: function() {
+				this.showActionSheet = true;
+			},
+			
+			/**
+			 * 操作菜单选择事件
 			 * @param {Object} e
 			 */
-			batchBatchChange: function(e) {
+			onActionSheetSelect: function(e) {
 				let that = this;
-				switch (e.detail.value) {
-					// 发布
-					case 0:
-						uni.showModal({
-							title: '提示',
-							content: '确定要将所选的 ' + this.selectedPost.length + ' 个文章转为已发布状态吗？',
-							success: function(res) {
-								if (res.confirm) {
-									updatePostsStatus(that.selectedPost, "PUBLISHED").then(data => {
-										that.popup("发布成功", "success");
-										that.refreshData();
-									}).catch(err => {
-										uni.showModal({
-											title: "发布失败",
-											content: err
+				if (this.mode === "recycle") {
+					switch (e.name) {
+						case "发布":
+							uni.showModal({
+								title: '提示',
+								content: '确定要将所选的 ' + this.selectedPost.length + ' 个文章转为已发布状态吗？',
+								success: function(res) {
+									if (res.confirm) {
+										updatePostsStatus(that.selectedPost, "PUBLISHED").then(data => {
+											that.toast("发布成功", "success");
+											that.refreshData();
+										}).catch(err => {
+											uni.showModal({
+												title: "发布失败",
+												content: err
+											});
 										});
-									});
+									}
 								}
-							}
-						});
-						break;
-					// 转为草稿
-					case 1:
-						uni.showModal({
-							title: '提示',
-							content: '确定要将所选的 ' + this.selectedPost.length + ' 个文章转为草稿状态吗？',
-							success: function(res) {
-								if (res.confirm) {
-									updatePostsStatus(that.selectedPost, "DRAFT").then(data => {
-										that.popup("操作成功", "success");
-										that.refreshData();
-									}).catch(err => {
-										uni.showModal({
-											title: "操作失败",
-											content: err
+							});
+							break;
+						case "转为草稿":
+							uni.showModal({
+								title: '提示',
+								content: '确定要将所选的 ' + this.selectedPost.length + ' 个文章转为草稿状态吗？',
+								success: function(res) {
+									if (res.confirm) {
+										updatePostsStatus(that.selectedPost, "DRAFT").then(data => {
+											that.toast("操作成功", "success");
+											that.refreshData();
+										}).catch(err => {
+											uni.showModal({
+												title: "操作失败",
+												content: err
+											});
 										});
-									});
+									}
 								}
-							}
-						});
-						break;
-					// 删除到回收站
-					case 2:
-						uni.showModal({
-							title: '提示',
-							content: '确定要将所选的 ' + this.selectedPost.length + ' 个文章转为回收站状态吗？',
-							success: function(res) {
-								if (res.confirm) {
-									updatePostsStatus(that.selectedPost, "RECYCLE").then(data => {
-										that.popup("操作成功", "success");
-										that.refreshData();
-									}).catch(err => {
-										uni.showModal({
-											title: "操作失败",
-											content: err
+							});
+							break;
+						case "永久删除":
+							uni.showModal({
+								title: '提示',
+								content: '确定要将所选的 ' + this.selectedPost.length + ' 个文章永久删除吗？',
+								success: function(res) {
+									if (res.confirm) {
+										deletePosts(that.selectedPost).then(data => {
+											that.toast("删除成功", "success");
+											that.refreshData();
+										}).catch(err => {
+											uni.showModal({
+												title: "删除失败",
+												content: err
+											});
 										});
-									});
+									}
 								}
-							}
-						});
-						break;
+							});
+							break;
+					} 
+				} else if (this.mode === "batch") {
+					switch (e.name) {
+						case "发布":
+							uni.showModal({
+								title: '提示',
+								content: '确定要将所选的 ' + this.selectedPost.length + ' 个文章转为已发布状态吗？',
+								success: function(res) {
+									if (res.confirm) {
+										updatePostsStatus(that.selectedPost, "PUBLISHED").then(data => {
+											that.popup("发布成功", "success");
+											that.refreshData();
+										}).catch(err => {
+											uni.showModal({
+												title: "发布失败",
+												content: err
+											});
+										});
+									}
+								}
+							});
+							break;
+						case "转为草稿":
+							uni.showModal({
+								title: '提示',
+								content: '确定要将所选的 ' + this.selectedPost.length + ' 个文章转为草稿状态吗？',
+								success: function(res) {
+									if (res.confirm) {
+										updatePostsStatus(that.selectedPost, "DRAFT").then(data => {
+											that.popup("操作成功", "success");
+											that.refreshData();
+										}).catch(err => {
+											uni.showModal({
+												title: "操作失败",
+												content: err
+											});
+										});
+									}
+								}
+							});
+							break;
+						case "回收站":
+							uni.showModal({
+								title: '提示',
+								content: '确定要将所选的 ' + this.selectedPost.length + ' 个文章转为回收站状态吗？',
+								success: function(res) {
+									if (res.confirm) {
+										updatePostsStatus(that.selectedPost, "RECYCLE").then(data => {
+											that.popup("操作成功", "success");
+											that.refreshData();
+										}).catch(err => {
+											uni.showModal({
+												title: "操作失败",
+												content: err
+											});
+										});
+									}
+								}
+							});
+							break;
+					}
 				}
 			},
 
