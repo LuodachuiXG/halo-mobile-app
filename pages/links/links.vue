@@ -51,9 +51,7 @@
 					<uni-col :span="12">
 						<view @click="onEditClick(i)">
 							<view class="block-action-item">
-								<image src="../../static/images/edit.png"
-									style="width: 30rpx;height: 30rpx;top: 5rpx;margin-top: -5rpx;margin-right: 5rpx;">
-								</image>
+								<text class="iconfont item-icon">&#xe892;</text>
 								<text>
 									编辑
 								</text>
@@ -64,8 +62,7 @@
 
 					<uni-col :span="12">
 						<view class="block-action-item border" @click="onDeleteClick(i)">
-							<image src="../../static/images/trash.png"
-								style="width: 35rpx; height: 35rpx;top: 7rpx;margin-top: -7rpx;"></image>
+							<text class="iconfont item-icon">&#xe74e;</text>
 							<text>
 								删除
 							</text>
@@ -264,12 +261,10 @@
 		background-color: var(--activatedColor);
 	}
 
-	.block-action-item image {
+	.block-action-icon {
+		font-size: 40rpx;
 		position: relative;
-		top: 10rpx;
-		margin-top: -10rpx;
-		width: 40rpx;
-		height: 40rpx;
+		top: 5rpx;
 	}
 
 	.border {

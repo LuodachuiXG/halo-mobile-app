@@ -162,10 +162,9 @@
 					<uni-col :span="6">
 						<view class="block-action-item" @click="onEditClick(i)">
 							<!-- 如果当前文章在回收站，就将编辑改为 删除 ，且垃圾桶颜色改为红色 -->
-							<image
-								:src="post.status == 'RECYCLE' ? '../../static/images/trash_red.png' : '../../static/images/edit.png'"
-								style="width: 30rpx;height: 30rpx;top: 5rpx;margin-top: -5rpx;margin-right: 5rpx;">
-							</image>
+							<text class="iconfont block-action-icon" :class="post.status == 'RECYCLE' ? 'color-error' : ''">
+								{{ post.status == "RECYCLE" ? "&#xe74e;" : "&#xe892;"}}
+							</text>
 							<text :class="post.status == 'RECYCLE' ? 'color-error' : ''">
 								{{ post.status == "RECYCLE" ? '删除' : '编辑'}}
 							</text>
@@ -173,24 +172,22 @@
 					</uni-col>
 					<uni-col :span="6">
 						<view class="block-action-item border" @click="onSettingClick(i)">
-							<image src="../../static/images/setting.png"
-								style="width: 35rpx; height: 35rpx;top: 8rpx;margin-top: -8rpx;"></image>
+							<text class="iconfont block-action-icon">&#xe7f5;</text>
 							设置
 						</view>
 					</uni-col>
 					<uni-col :span="6">
 						<view class="block-action-item border" @click="onPostDataClick(i)">
-							<image src="../../static/images/data.png"
-								style="width: 35rpx; height: 35rpx;top: 8rpx;margin-top: -8rpx;"></image>
+							<text class="iconfont block-action-icon">&#xe8ad;</text>
 							数据
 						</view>
 					</uni-col>
 					<uni-col :span="6">
 						<view class="block-action-item border" @click="onDeleteClick(i)">
 							<!-- 如果当前文章在回收站，就将文字改为 还原 ，且垃圾桶颜色改为黄色 -->
-							<image
-								:src="post.status == 'RECYCLE' ? '../../static/images/trash_yellow.png' : '../../static/images/trash.png'"
-								style="width: 35rpx; height: 35rpx;top: 7rpx;margin-top: -7rpx;"></image>
+							<text class="iconfont block-action-icon" :class="post.status == 'RECYCLE' ? 'color-warning' : ''">
+								&#xe74e;
+							</text>
 							<text :class="post.status == 'RECYCLE' ? 'color-warning' : ''">
 								{{ post.status == "RECYCLE" ? '还原' : '回收'}}
 							</text>
@@ -933,13 +930,12 @@
 		background-color: var(--activatedColor);
 	}
 
-	.block-action-item image {
+	.block-action-icon {
+		font-size: 40rpx;
 		position: relative;
-		top: 10rpx;
-		margin-top: -10rpx;
-		width: 40rpx;
-		height: 40rpx;
+		top: 5rpx;
 	}
+	
 
 	.border {
 		border-left: 1px solid #ececec;

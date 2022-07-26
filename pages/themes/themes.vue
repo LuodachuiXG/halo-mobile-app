@@ -14,22 +14,22 @@
 					<uni-col :span="8">
 						<view class="block-action-item" :class="theme.activated ? 'activated':''"
 							@click="onActivatedClick(i)">
-							<image :src="theme.activated ? '../../static/images/unlock.png' : 
-								'../../static/images/lock.png'"></image>
-							{{theme.activated ? "已启用" : "启用"}}
+							<text class="iconfont item-icon">
+								&#xe7cc;
+							</text>
+							<text>{{ theme.activated ? "已启用" : "启用" }}</text>
 						</view>
 					</uni-col>
 					<uni-col :span="8">
 						<view class="block-action-item border" @click="onSettingClick(i)">
-							<image src="../../static/images/setting.png"
-								style="width: 35rpx; height: 35rpx;top: 8rpx;margin-top: -8rpx;"></image>
+							<text class="iconfont item-icon">&#xe7f5;</text>
 							设置
 						</view>
 					</uni-col>
 					<uni-col :span="8">
-						<view class="block-action-item" @click="onMoreClick(i)">
-							<image src="../../static/images/more.png"></image>
-							更多
+						<view class="block-action-item" @click="onDelClick(i)">
+							<text class="iconfont item-icon">&#xe74e;</text>
+							删除
 						</view>
 					</uni-col>
 				</uni-row>
@@ -114,43 +114,32 @@
 			},
 
 			/**
-			 * 更多单击事件
+			 * 删除单击事件
 			 * @param {Object} i
 			 */
-			onMoreClick: function(i) {
+			onDelClick: function(i) {
 				let that = this;
-				uni.showActionSheet({
-					itemList: ['删除'],
+				// 如果当前删除的是启用的主题就报错
+				if (i == 0) {
+					that.toast("无法删除启用的主题");
+					return;
+				}
+				uni.showModal({
+					title: '提示',
+					content: '确定要删除 ' + thatt.themes[i].name + ' 吗？',
 					success: function(res) {
-						let thatt = that;
-						switch (res.tapIndex) {
-							// 删除
-							case 0:
-								// 如果当前删除的是启用的主题就报错
-								if (i == 0) {
-									that.toast("无法删除启用的主题");
-									return;
-								}
+						if (res.confirm) {
+							deleteTheme(thatt.themes[i].id).then(data => {
+								thatt.popup("删除成功", "success");
+								thatt.refreshData();
+							}).catch(err => {
+								uni.stopPullDownRefresh();
 								uni.showModal({
-									title: '提示',
-									content: '确定要删除 ' + thatt.themes[i].name + ' 吗？',
-									success: function(res) {
-										if (res.confirm) {
-											deleteTheme(thatt.themes[i].id).then(data => {
-												thatt.popup("删除成功", "success");
-												thatt.refreshData();
-											}).catch(err => {
-												uni.stopPullDownRefresh();
-												uni.showModal({
-													title: "删除主题失败",
-													content: err
-												});
-											});
-										}
-									}
+									title: "删除主题失败",
+									content: err
 								});
-								break;
-						};
+							});
+						}
 					}
 				});
 			},
@@ -220,12 +209,10 @@
 		background-color: var(--activatedColor);
 	}
 
-	.block-action-item image {
+	.block-action-icon {
+		font-size: 40rpx;
 		position: relative;
-		top: 10rpx;
-		margin-top: -10rpx;
-		width: 40rpx;
-		height: 40rpx;
+		top: 5rpx;
 	}
 
 	.border {
@@ -233,7 +220,7 @@
 		border-right: 1px solid #ececec;
 	}
 
-	.activated {
+	.activated text{
 		color: #1890FF;
 	}
 

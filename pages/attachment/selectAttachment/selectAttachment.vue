@@ -27,7 +27,7 @@
 
 <script>
 	import {
-		getAttachments,
+		getAttachments
 	} from "@/network/AttachmentApi.js";
 	export default {
 		data() {

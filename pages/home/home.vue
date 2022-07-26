@@ -136,6 +136,9 @@
 						break;
 					// 附件
 					case 12:
+						uni.navigateTo({
+							url: "../attachment/attachment"
+						})
 						break;
 					// 评论
 					case 13:

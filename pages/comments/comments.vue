@@ -127,10 +127,9 @@
 							<view class="block-action-item">
 								<view v-if="comment.status !== 'RECYCLE'">
 									<!-- 如果当前评论是待审核，就将回复改为通过 -->
-									<image
-										:src="comment.status == 'AUDITING' ? '../../static/images/ok_green.png' : '../../static/images/edit.png'"
-										style="width: 30rpx;height: 30rpx;top: 5rpx;margin-top: -5rpx;margin-right: 5rpx;">
-									</image>
+									<text class="iconfont block-action-icon" :class="comment.status == 'AUDITING' ? 'color-success' : ''">
+										{{ comment.status == "AUDITING" ? "&#xe764;" : "&#xe892;"}}
+									</text>
 									<text :class="comment.status == 'AUDITING' ? 'color-success' : ''">
 										{{ comment.status == "AUDITING" ? '通过' : '回复'}}
 									</text>
@@ -138,9 +137,9 @@
 
 								<!-- 回收站状态 -->
 								<view v-else>
-									<image src="../../static/images/trash_yellow.png"
-										style="width: 30rpx;height: 30rpx;top: 5rpx;margin-top: -5rpx;margin-right: 5rpx;">
-									</image>
+									<text class="iconfont block-action-icon color-warning">
+										&#xe74e;
+									</text>
 									<text class="color-warning">
 										还原
 									</text>
@@ -153,9 +152,9 @@
 					<uni-col :span="12">
 						<view class="block-action-item border" @click="onDeleteClick(i)">
 							<!-- 如果当前评论在回收站，就将文字改为删除 -->
-							<image
-								:src="comment.status == 'RECYCLE' ? '../../static/images/trash_red.png' : '../../static/images/trash.png'"
-								style="width: 35rpx; height: 35rpx;top: 7rpx;margin-top: -7rpx;"></image>
+							<text class="iconfont block-action-icon" :class="comment.status == 'RECYCLE' ? 'color-error' : ''">
+								&#xe74e;
+							</text>
 							<text :class="comment.status == 'RECYCLE' ? 'color-error' : ''">
 								{{ comment.status == "RECYCLE" ? '删除' : '回收站'}}
 							</text>
@@ -767,12 +766,10 @@
 		background-color: var(--activatedColor);
 	}
 
-	.block-action-item image {
+	.block-action-icon {
+		font-size: 40rpx;
 		position: relative;
-		top: 10rpx;
-		margin-top: -10rpx;
-		width: 40rpx;
-		height: 40rpx;
+		top: 5rpx;
 	}
 
 	.border {

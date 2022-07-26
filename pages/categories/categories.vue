@@ -39,16 +39,13 @@
 				<uni-row>
 					<uni-col :span="12">
 						<view class="block-action-item" @click="onEditClick(i)">
-							<image src="../../static/images/edit.png"
-								style="width: 30rpx;height: 30rpx;top: 5rpx;margin-top: -5rpx;margin-right: 5rpx;">
-							</image>
+							<text class="iconfont item-icon">&#xe892;</text>
 							编辑
 						</view>
 					</uni-col>
 					<uni-col :span="12">
 						<view class="block-action-item border" @click="onDeleteClick(i)">
-							<image src="../../static/images/trash.png"
-								style="width: 35rpx; height: 35rpx;top: 8rpx;margin-top: -8rpx;"></image>
+							<text class="iconfont item-icon">&#xe74e;</text>
 							删除
 						</view>
 					</uni-col>
@@ -231,12 +228,10 @@
 		background-color: var(--activatedColor);
 	}
 
-	.block-action-item image {
+	.block-action-icon {
+		font-size: 40rpx;
 		position: relative;
-		top: 10rpx;
-		margin-top: -10rpx;
-		width: 40rpx;
-		height: 40rpx;
+		top: 5rpx;
 	}
 
 	.border {

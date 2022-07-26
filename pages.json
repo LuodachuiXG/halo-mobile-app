@@ -301,6 +301,15 @@
 		    
 		}
 		
+        ,{
+            "path" : "pages/attachment/attachment",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "附件管理",
+                "enablePullDownRefresh": true
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",

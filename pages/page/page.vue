@@ -67,10 +67,9 @@
 					<uni-col :span="8">
 						<view class="block-action-item" @click="onEditClick(i)">
 							<!-- 如果当前页面在回收站，就将编辑改为 还原 ，且垃圾桶颜色改为黄色 -->
-							<image
-								:src="mPage.status == 'RECYCLE' ? '../../static/images/trash_yellow.png' : '../../static/images/edit.png'"
-								style="width: 30rpx;height: 30rpx;top: 5rpx;margin-top: -5rpx;margin-right: 5rpx;">
-							</image>
+						<text class="iconfont item-icon" :class="mPage.status == 'RECYCLE' ? 'color-warning' : ''">
+							{{ mPage.status == "RECYCLE" ? "&#xe74e;" : "&#xe892;"}}
+						</text>
 							<text :class="mPage.status == 'RECYCLE' ? 'color-warning' : ''">
 								{{ mPage.status == "RECYCLE" ? '还原' : '编辑'}}
 							</text>
@@ -79,9 +78,9 @@
 					<uni-col :span="8">
 						<view class="block-action-item border" @click="onDeleteClick(i)">
 							<!-- 如果当前页面在回收站，就将删除改为 永久删除 ，且垃圾桶颜色改为红色 -->
-					 		<image
-								:src="mPage.status == 'RECYCLE' ? '../../static/images/trash_red.png' : '../../static/images/trash.png'"
-								style="width: 35rpx; height: 35rpx;top: 7rpx;margin-top: -7rpx;"></image>
+					 		<text class="iconfont item-icon" :class="mPage.status == 'RECYCLE' ? 'color-error' : ''">
+								&#xe74e;
+							</text>
 							<text :class="mPage.status == 'RECYCLE' ? 'color-error' : ''">
 								{{ mPage.status == "RECYCLE" ? '永久删除' : '删除'}}
 							</text>
@@ -89,8 +88,7 @@
 					</uni-col>
 					<uni-col :span="8">
 						<view class="block-action-item border" @click="onSettingClick(i)">
-							<image src="../../static/images/setting.png"
-								style="width: 35rpx; height: 35rpx;top: 8rpx;margin-top: -8rpx;"></image>
+							<text class="iconfont item-icon">&#xe7f5;</text>
 							设置
 						</view>
 					</uni-col>
@@ -441,12 +439,10 @@
 		background-color: var(--activatedColor);
 	}
 
-	.block-action-item image {
+	.block-action-icon {
+		font-size: 40rpx;
 		position: relative;
-		top: 10rpx;
-		margin-top: -10rpx;
-		width: 40rpx;
-		height: 40rpx;
+		top: 5rpx;
 	}
 
 	.border {
