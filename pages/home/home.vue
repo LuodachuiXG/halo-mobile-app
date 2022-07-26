@@ -1,50 +1,92 @@
 <template>
 	<view class="container">
-		<uni-collapse class="collapse" accordion="">
-			<uni-collapse-item title="文章" :show-animation="true">
-				<u-cell-group :border="false">
-					<u-cell icon="list" title="所有文章" clickable size="large" @click="click(0)"></u-cell>
-					<u-cell icon="edit-pen" title="写文章" clickable size="large" @click="click(1)"></u-cell>
-					<u-cell icon="grid" title="分类目录" clickable size="large" @click="click(2)"></u-cell>
-					<u-cell icon="tags" title="标签" :border="false" clickable size="large" @click="click(3)"></u-cell>
-				</u-cell-group>
-			</uni-collapse-item>
-			
-			<uni-collapse-item title="页面" :show-animation="true">
-				<u-cell-group :border="false">
-					<u-cell icon="grid" title="所有页面" clickable size="large" @click="click(4)"></u-cell>
-					<u-cell icon="plus-circle" title="新建页面" :border="false" clickable size="large" @click="click(5)"></u-cell>
-				</u-cell-group>
-			</uni-collapse-item>
-			
-			<uni-collapse-item title="外观" :show-animation="true">
-				<u-cell-group :border="false">
-					<u-cell icon="star" title="主题" clickable size="large" @click="click(6)"></u-cell>
-					<u-cell icon="setting" title="主题编辑" clickable size="large" @click="click(7)"></u-cell>
-					<u-cell icon="setting" title="菜单设置" :border="false" clickable size="large" @click="click(8)"></u-cell>
-				</u-cell-group>
-			</uni-collapse-item>
-			
-			<uni-collapse-item title="用户" :show-animation="true">
-				<u-cell-group :border="false">
-					<u-cell icon="account" title="个人资料" :border="false" clickable size="large" @click="click(9)"></u-cell>
-				</u-cell-group>
-			</uni-collapse-item>
-			
-			<uni-collapse-item title="系统" :show-animation="true">
-				<u-cell-group :border="false">
-					<u-cell icon="setting" title="博客设置" clickable size="large" @click="click(10)"></u-cell>
-					<u-cell icon="info-circle" title="关于" :border="false" clickable size="large" @click="click(11)"></u-cell>
-				</u-cell-group>
-			</uni-collapse-item>
-			
-			<uni-collapse-item title="其他" :show-animation="true">
-				<u-cell-group :border="false">
-					<u-cell icon="attach" title="附件" size="large" @click="click(12)"></u-cell>
-					<u-cell icon="chat" title="评论" :border="false" size="large" @click="click(13)"></u-cell>
-				</u-cell-group>
-			</uni-collapse-item>
-		</uni-collapse>
+		<view class="view-me-app-option block">
+			<view class="view-me-exit item" @click="click(0)">
+				<text class="iconfont item-icon">&#xe7f4;</text>
+				<text class="item-title">所有文章</text>
+				<view class="item-sign"></view>
+			</view>
+			<view class="view-me-exit item" @click="click(1)">
+				<text class="iconfont item-icon">&#xe6f6;</text>
+				<text class="item-title">写文章</text>
+				<view class="item-sign"></view>
+			</view>
+			<view class="view-me-exit item" @click="click(2)">
+				<text class="iconfont item-icon">&#xe7d6;</text>
+				<text class="item-title">分类目录</text>
+				<view class="item-sign"></view>
+			</view>
+			<view class="view-me-exit item" @click="click(3)">
+				<text class="iconfont item-icon">&#xe776;</text>
+				<text class="item-title">标签</text>
+				<view class="item-sign"></view>
+			</view>
+		</view>
+		
+		<view class="view-me-app-option block">
+			<view class="view-me-exit item" @click="click(4)">
+				<text class="iconfont item-icon">&#xe7ed;</text>
+				<text class="item-title">所有页面</text>
+				<view class="item-sign"></view>
+			</view>
+			<view class="view-me-exit item" @click="click(5)">
+				<text class="iconfont item-icon">&#xe8a1;</text>
+				<text class="item-title">新建页面</text>
+				<view class="item-sign"></view>
+			</view>
+		</view>
+		
+		<view class="view-me-app-option block">
+			<view class="view-me-exit item" @click="click(6)">
+				<text class="iconfont item-icon">&#xe74a;</text>
+				<text class="item-title">主题</text>
+				<view class="item-sign"></view>
+			</view>
+			<view class="view-me-exit item" @click="click(7)">
+				<text class="iconfont item-icon">&#xe6f6;</text>
+				<text class="item-title">主题编辑</text>
+				<view class="item-sign"></view>
+			</view>
+			<view class="view-me-exit item" @click="click(8)">
+				<text class="iconfont item-icon">&#xe7fc;</text>
+				<text class="item-title">菜单设置</text>
+				<view class="item-sign"></view>
+			</view>
+		</view>
+		
+		<view class="view-me-app-option block">
+			<view class="view-me-exit item" @click="click(9)">
+				<text class="iconfont item-icon">&#xe8a5;</text>
+				<text class="item-title">个人资料</text>
+				<view class="item-sign"></view>
+			</view>
+		</view>
+		
+		<view class="view-me-app-option block">
+			<view class="view-me-exit item" @click="click(10)">
+				<text class="iconfont item-icon">&#xe7f5;</text>
+				<text class="item-title">博客设置</text>
+				<view class="item-sign"></view>
+			</view>
+			<view class="view-me-exit item" @click="click(11)">
+				<text class="iconfont item-icon">&#xe7b9;</text>
+				<text class="item-title">关于</text>
+				<view class="item-sign"></view>
+			</view>
+		</view>
+		
+		<view class="view-me-app-option block">
+			<view class="view-me-exit item" @click="click(12)">
+				<text class="iconfont item-icon">&#xe751;</text>
+				<text class="item-title">附件</text>
+				<view class="item-sign"></view>
+			</view>
+			<view class="view-me-exit item" @click="click(13)">
+				<text class="iconfont item-icon">&#xe8a6;</text>
+				<text class="item-title">评论</text>
+				<view class="item-sign"></view>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -154,10 +196,6 @@
 
 <style>
 	.container {
-		padding: 30rpx;
-	}
-
-	.collapse {
-		margin-bottom: 75px;
+		padding-bottom: 50px;
 	}
 </style>

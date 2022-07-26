@@ -374,7 +374,15 @@
 						this.selectedAttachments.splice(index, 1);
 					}
 				} else {
-					// this.openURL(this.getUrl() + this.posts[i].fullPath);
+					// 预览图片
+					let url = this.attachments[i].path;
+					if (url.indexOf("http") < 0) {
+						url = this.getUrl() + url;
+					}
+					uni.previewImage({
+						current: "0",
+						urls: [url]
+					})
 				}
 
 			},
