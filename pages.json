@@ -310,6 +310,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/attachment/addAttachment/addAttachment",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "添加附件",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",

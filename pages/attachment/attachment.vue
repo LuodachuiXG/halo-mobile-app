@@ -120,7 +120,7 @@
 		<uni-fab horizontal="right" vertical="bottom" @trigger="onFabClick" :content="content" v-if="mode === 'all'">
 		</uni-fab>
 
-		
+
 		<!-- 附件详情弹出层 -->
 		<u-popup :show="infoShow" @close="onInfoClose" mode="bottom" :round="4">
 			<slot name="info">
@@ -136,38 +136,37 @@
 						<view class="info-title">附件类型：</view>
 						<text class="info-text">{{ infoAttachement.mediaType }}</text>
 					</view>
-					
+
 					<view class="info-view">
 						<view class="info-title">存储位置：</view>
 						<text class="info-text">{{ getTypeText(infoAttachement.type) }}</text>
 					</view>
-					
+
 					<view class="info-view">
 						<view class="info-title">附件大小：</view>
 						<text class="info-text">{{ formatByte(infoAttachement.size) }}</text>
 					</view>
-					
-					<view class="info-view" 
+
+					<view class="info-view"
 						v-if="infoAttachement.mediaType !== undefined && infoAttachement.mediaType.indexOf('image') >= 0">
 						<view class="info-title">图片尺寸：</view>
 						<text class="info-text">{{ infoAttachement.width + " × " +  infoAttachement.height }}</text>
 					</view>
-					
+
 					<view class="info-view">
 						<view class="info-title">上传日期：</view>
 						<text class="info-text">{{ format(infoAttachement.createTime) }}</text>
 					</view>
-					
+
 					<view class="info-view">
 						<view class="info-title">普通链接：
 							<text class="iconfont info-icon" @click="onPathCopyClick">&#xe6f4;</text>
 						</view>
-						<text class="info-text" @click="onPathClick"
-							style="color:var(--primaryColor);">
+						<text class="info-text" @click="onPathClick" style="color:var(--primaryColor);">
 							{{ infoAttachement.path }}
 						</text>
 					</view>
-					
+
 					<view class="info-view"
 						v-if="infoAttachement.mediaType !== undefined && infoAttachement.mediaType.indexOf('image') >= 0">
 						<view class="info-title">Markdown 格式：
@@ -175,7 +174,7 @@
 						</view>
 						<text class="info-text">![{{ infoAttachement.name }}]({{ infoAttachement.path }})</text>
 					</view>
-					
+
 					<view class="info-btn" @click="onInfoClose">
 						关闭
 					</view>
@@ -238,7 +237,7 @@
 				}],
 				// 是否显示操作菜单
 				showActionSheet: false,
-				
+
 				// 是否显示附件详情弹出层
 				infoShow: false,
 
@@ -248,10 +247,15 @@
 
 				// 悬浮按钮弹出菜单
 				content: [{
-					"text": "批量操作",
-					"iconPath": "/static/images/checkbox.png"
-				}, ],
-				
+						"text": "添加附件",
+						"iconPath": "/static/images/add.png"
+					},
+					{
+						"text": "批量操作",
+						"iconPath": "/static/images/checkbox.png"
+					}
+				],
+
 				// 查看详情的附件
 				infoAttachement: [],
 				// 查看详情的附件索引
@@ -334,6 +338,19 @@
 					that.total = data.total;
 					// 保存总页数
 					that.pages = data.pages;
+					
+					// 如果附件里的地址是相对地址，就改为绝对地址
+					for (let i = 0; i < that.attachments.length; i++) {
+						let attachment = that.attachments[i];
+						if (attachment.path.indexOf("http") < 0) {
+							attachment.path = that.getUrl() + attachment.path;
+						}
+						
+						if (attachment.thumbPath.indexOf("http") < 0) {
+							attachment.thumbPath = that.getUrl() + attachment.thumbPath;
+						}
+						that.attachments[i] = attachment;
+					}
 
 					uni.stopPullDownRefresh();
 					uni.hideLoading();
@@ -345,7 +362,7 @@
 						content: err
 					});
 				});
-
+				
 				// 获取所有附件存储位置
 				getAttachementTypes().then(data => {
 					that.typeText = ["所有位置"];
@@ -389,14 +406,14 @@
 				this.infoIndex = i;
 				this.infoShow = true;
 			},
-			
+
 			/**
 			 * 附件信息弹窗关闭事件
 			 */
 			onInfoClose: function() {
 				this.infoShow = false;
 			},
-			
+
 
 			/**
 			 * 改变页面事件
@@ -504,8 +521,14 @@
 			 */
 			onFabClick: function(e) {
 				switch (e.index) {
-					// 批量操作
 					case 0:
+						// 添加附件
+						uni.navigateTo({
+							url: "./addAttachment/addAttachment"
+						})
+						break;
+					case 1:
+						// 批量操作
 						this.mode = "batch";
 						this.selectedAttachments = [];
 						break;
@@ -634,14 +657,14 @@
 						break;
 				}
 			},
-			
+
 			/**
 			 * 附件详情的普通链接点击事件
 			 */
 			onPathClick: function() {
 				this.openURL(this.infoAttachement.path);
 			},
-			
+
 			/**
 			 * 附件详情的普通链接复制按钮点击事件
 			 */
@@ -655,7 +678,7 @@
 					}
 				});
 			},
-			
+
 			/**
 			 * 附件详情的 Markdown 复制按钮点击事件
 			 */
@@ -670,14 +693,14 @@
 					}
 				});
 			},
-			
+
 			/**
 			 * 附件详情的修改附件名点击事件
 			 */
 			onInfoNameClick: function() {
 				// 关闭附件详情面板
 				this.infoShow = false;
-				
+
 				let that = this;
 				let attachment = this.infoAttachement;
 				uni.showModal({
@@ -705,8 +728,8 @@
 					}
 				})
 			},
-			
-			
+
+
 			/**
 			 * popup弹出层
 			 */
@@ -932,45 +955,45 @@
 	.selected {
 		filter: brightness(60%) blur(1px);
 	}
-	
+
 	.info-popup {
 		padding: 20rpx;
 		padding-left: 30rpx;
 		padding-right: 30rpx;
 	}
-	
+
 	.info-view {
 		border-bottom: 1px solid var(--activatedColor);
 		padding-bottom: 20rpx;
 		margin-top: 20rpx;
 	}
-	
+
 	.info-view:first-child {
 		margin-top: 0px;
 	}
-	
+
 	.info-view:last-child {
 		border-bottom: none;
 		padding-bottom: 0px;
 	}
-	
+
 	.info-title {
 		color: var(--textPrimaryColor);
 		margin-bottom: 12rpx;
 	}
-	
+
 	.info-text {
 		color: var(--textContentColor);
 		word-wrap: break-word;
 	}
-	
+
 	.info-icon {
 		color: var(--primaryColor);
 		font-size: 38rpx;
 		position: relative;
 		top: 5rpx;
 	}
-	
+
 	.info-btn {
 		text-align: center;
 		margin-top: 20px;
