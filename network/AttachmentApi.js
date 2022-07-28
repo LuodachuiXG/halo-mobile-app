@@ -59,3 +59,17 @@ export function deleteAttachmentByIds(array) {
 		data: array
 	});
 }
+
+/**
+ * 根据附件 id 修改附件名
+ * @param {Object} array
+ */
+export function updateAttachmentName(id, name) {
+	return request({
+		url: "/api/admin/attachments/" + id,
+		method: "PUT",
+		data: {
+			name: name
+		}
+	});
+}

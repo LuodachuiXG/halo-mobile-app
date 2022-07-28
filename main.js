@@ -153,7 +153,7 @@ Vue.prototype.openURL = function(url) {
  * @param {Object} res
  */
 Vue.prototype.isExpiredByRequest = function(res) {
-	if (res.data.message === "未登录，请登录后访问" || 
+	if (res.data.message === "未登录，请登录后访问" ||
 		res.data.message === "Token 已过期或不存在" ||
 		res.data.message === undefined) {
 		// token已经过期，将本地登录状态更改
@@ -181,12 +181,12 @@ Vue.prototype.arrayRemove = function(array, value) {
  * @param {Object} opacity
  */
 Vue.prototype.hexToRgb = function(hex) {
-    return {
-        r: parseInt("0x" + hex.slice(1, 3)),
-        g: parseInt("0x" + hex.slice(3, 5)),
-        b: parseInt("0x" + hex.slice(5, 7)),
+	return {
+		r: parseInt("0x" + hex.slice(1, 3)),
+		g: parseInt("0x" + hex.slice(3, 5)),
+		b: parseInt("0x" + hex.slice(5, 7)),
 		a: 1
-    }
+	}
 };
 
 /**
@@ -198,4 +198,15 @@ Vue.prototype.getVersion = function() {
 	// #endif
 }
 
-
+/**
+ * 根据字节返回格式化后的大小文本
+ */
+Vue.prototype.formatByte = function(size) {
+	size = (Number(size) / 1024).toFixed(2);
+	if (size < 1024) {
+		return size + " KB";
+	} else {
+		size = (size / 1024).toFixed(2);
+		return size + " MB";
+	}
+}

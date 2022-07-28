@@ -1,11 +1,10 @@
 <template>
 	<view>
 		<u-notify ref="popup" duration="1500"></u-notify>
-		
+
 		<!-- 页面下方弹出的操作菜单 -->
-		<u-action-sheet :actions="batchOptions" :closeOnClickOverlay="true"
-			:closeOnClickAction="true" :show="showActionSheet" cancelText="取消" @close="onActionSheetClose"
-			@select="onActionSheetSelect">
+		<u-action-sheet :actions="batchOptions" :closeOnClickOverlay="true" :closeOnClickAction="true"
+			:show="showActionSheet" cancelText="取消" @close="onActionSheetClose" @select="onActionSheetSelect">
 		</u-action-sheet>
 
 		<!-- 附件组件 -->
@@ -57,8 +56,7 @@
 						</u-checkbox-group>
 					</uni-col>
 					<uni-col :span="5">
-						<button class="blue" @click="onBatchClick"
-							:disabled="selectedAttachments.length === 0">
+						<button class="blue" @click="onBatchClick" :disabled="selectedAttachments.length === 0">
 							批量操作
 						</button>
 					</uni-col>
@@ -72,7 +70,8 @@
 		<u-empty v-if="attachments.length === 0" mode="list" icon="http://cdn.uviewui.com/uview/empty/list.png">
 		</u-empty>
 
-		<view class="block" v-for="(attachment, i) in attachments" :class="(selectedAttachments.indexOf(attachment.id) >= 0) ? 'selected' : ''">
+		<view class="block" v-for="(attachment, i) in attachments"
+			:class="(selectedAttachments.indexOf(attachment.id) >= 0) ? 'selected' : ''">
 			<view @click="onAttachmentClick(i)">
 				<!-- 附件名 -->
 				<view class="block-name-view">
@@ -84,13 +83,13 @@
 				<!-- 缩略图 -->
 				<view class="block-thumbnail">
 					<!-- 判断缩略图是否是绝对地址 -->
-					<image v-if="attachment.thumbPath" :src="attachment.thumbPath.indexOf('http') < 0  ? 
-						getUrl() + attachment.thumbPath : attachment.thumbPath" mode="aspectFill" lazy-load="true"></image>
+					<image v-if="attachment.thumbPath && attachment.mediaType.indexOf('image') >= 0" :src="attachment.thumbPath.indexOf('http') < 0  ? 
+						getUrl() + attachment.thumbPath : attachment.thumbPath" mode="aspectFill"></image>
 				</view>
 			</view>
 
 			<!-- 操作按钮 -->
-			<view class="block-action">
+			<view class="block-action" :style="attachment.mediaType.indexOf('image') < 0 ? 'border:none;' : ''">
 				<uni-row>
 					<uni-col :span="12">
 						<view class="block-action-item" @click="onInfoClick(i)">
@@ -120,6 +119,69 @@
 		<!-- 批量操作模式不显示悬浮按钮 -->
 		<uni-fab horizontal="right" vertical="bottom" @trigger="onFabClick" :content="content" v-if="mode === 'all'">
 		</uni-fab>
+
+		
+		<!-- 附件详情弹出层 -->
+		<u-popup :show="infoShow" @close="onInfoClose" mode="bottom" :round="4">
+			<slot name="info">
+				<view class="info-popup">
+					<view class="info-view">
+						<view class="info-title">附件名：
+							<text class="iconfont info-icon" @click="onInfoNameClick">&#xe774;</text>
+						</view>
+						<text class="info-text">{{ infoAttachement.name }}</text>
+					</view>
+
+					<view class="info-view">
+						<view class="info-title">附件类型：</view>
+						<text class="info-text">{{ infoAttachement.mediaType }}</text>
+					</view>
+					
+					<view class="info-view">
+						<view class="info-title">存储位置：</view>
+						<text class="info-text">{{ getTypeText(infoAttachement.type) }}</text>
+					</view>
+					
+					<view class="info-view">
+						<view class="info-title">附件大小：</view>
+						<text class="info-text">{{ formatByte(infoAttachement.size) }}</text>
+					</view>
+					
+					<view class="info-view" 
+						v-if="infoAttachement.mediaType !== undefined && infoAttachement.mediaType.indexOf('image') >= 0">
+						<view class="info-title">图片尺寸：</view>
+						<text class="info-text">{{ infoAttachement.width + " × " +  infoAttachement.height }}</text>
+					</view>
+					
+					<view class="info-view">
+						<view class="info-title">上传日期：</view>
+						<text class="info-text">{{ format(infoAttachement.createTime) }}</text>
+					</view>
+					
+					<view class="info-view">
+						<view class="info-title">普通链接：
+							<text class="iconfont info-icon" @click="onPathCopyClick">&#xe6f4;</text>
+						</view>
+						<text class="info-text" @click="onPathClick"
+							style="color:var(--primaryColor);">
+							{{ infoAttachement.path }}
+						</text>
+					</view>
+					
+					<view class="info-view"
+						v-if="infoAttachement.mediaType !== undefined && infoAttachement.mediaType.indexOf('image') >= 0">
+						<view class="info-title">Markdown 格式：
+							<text class="iconfont info-icon" @click="onMarkdownCopyClick">&#xe6f4;</text>
+						</view>
+						<text class="info-text">![{{ infoAttachement.name }}]({{ infoAttachement.path }})</text>
+					</view>
+					
+					<view class="info-btn" @click="onInfoClose">
+						关闭
+					</view>
+				</view>
+			</slot>
+		</u-popup>
 	</view>
 </template>
 
@@ -129,7 +191,8 @@
 		getAttachementTypes,
 		getAttachementMediaTypes,
 		deleteAttachmentById,
-		deleteAttachmentByIds
+		deleteAttachmentByIds,
+		updateAttachmentName
 	} from "@/network/AttachmentApi.js";
 	export default {
 		data() {
@@ -162,7 +225,7 @@
 
 				// 存放附件信息
 				attachments: [],
-				
+
 				// 批量模式选中的附件
 				selectedAttachments: [],
 
@@ -170,21 +233,29 @@
 				sizesIndex: 2,
 
 				// 批量操作模式的批量操作的 picker 选项
-				batchOptions: [{name: "删除"}],
+				batchOptions: [{
+					name: "删除"
+				}],
 				// 是否显示操作菜单
 				showActionSheet: false,
 				
+				// 是否显示附件详情弹出层
+				infoShow: false,
+
 
 				// 当前页面是什么模式，展示附件/批量操作/  all/batch
 				mode: "all",
-				
+
 				// 悬浮按钮弹出菜单
-				content: [
-					{
-						"text": "批量操作",
-						"iconPath": "/static/images/checkbox.png"
-					},
-				],
+				content: [{
+					"text": "批量操作",
+					"iconPath": "/static/images/checkbox.png"
+				}, ],
+				
+				// 查看详情的附件
+				infoAttachement: [],
+				// 查看详情的附件索引
+				infoIndex: -1,
 			}
 		},
 
@@ -197,7 +268,7 @@
 			}
 
 			this.sizesIndex = Number(this.sizesIndex)
-			
+
 			// 根据每页显示附件数量来设置 size 大小
 			switch (this.sizesIndex) {
 				case 0:
@@ -247,7 +318,7 @@
 					title: "正在加载"
 				});
 				let that = this;
-				
+
 				// 获取附件数据
 				let page = this.page;
 				let size = this.size;
@@ -274,7 +345,7 @@
 						content: err
 					});
 				});
-				
+
 				// 获取所有附件存储位置
 				getAttachementTypes().then(data => {
 					that.typeText = ["所有位置"];
@@ -289,7 +360,7 @@
 						content: err
 					});
 				});
-				
+
 				// 获取所有附件类型
 				getAttachementMediaTypes().then(data => {
 					that.mediaTypeText = ["所有类型"];
@@ -304,7 +375,7 @@
 						content: err
 					});
 				});
-				
+
 			},
 
 
@@ -313,9 +384,19 @@
 			 * @param {Object} i
 			 */
 			onInfoClick: function(i) {
-				
+				let attachment = this.attachments[i];
+				this.infoAttachement = attachment;
+				this.infoIndex = i;
+				this.infoShow = true;
 			},
-
+			
+			/**
+			 * 附件信息弹窗关闭事件
+			 */
+			onInfoClose: function() {
+				this.infoShow = false;
+			},
+			
 
 			/**
 			 * 改变页面事件
@@ -374,7 +455,13 @@
 						this.selectedAttachments.splice(index, 1);
 					}
 				} else {
+					let attachment = this.attachments[i];
 					// 预览图片
+					if (attachment.mediaType.indexOf("image") < 0) {
+						this.popup("当前文件不支持预览");
+						return;
+					}
+
 					let url = this.attachments[i].path;
 					if (url.indexOf("http") < 0) {
 						url = this.getUrl() + url;
@@ -430,6 +517,7 @@
 			 * @param {Object} e
 			 */
 			typeChange: function(e) {
+				this.page = 0;
 				this.typeIndex = e.detail.value;
 				this.refreshData();
 			},
@@ -439,6 +527,7 @@
 			 * @param {Object} e
 			 */
 			mediaTypeChange: function(e) {
+				this.page = 0;
 				this.mediaTypeIndex = e.detail.value;
 				this.refreshData();
 			},
@@ -448,8 +537,8 @@
 			 */
 			reset: function() {
 				this.keyword = "";
-				this.post_statusIndex = 0;
-				this.categoriesIndex = 0;
+				this.typeIndex = 0;
+				this.mediaTypeIndex = 0;
 				this.refreshData();
 			},
 
@@ -474,7 +563,7 @@
 					}
 				}
 			},
-			
+
 			/**
 			 * 根据附件存储位置英文返回对应的中文
 			 * @param {Object} type
@@ -501,21 +590,21 @@
 						return "又拍云";
 				}
 			},
-			
+
 			/**
 			 * 操作菜单取消按钮事件
 			 */
 			onActionSheetClose: function() {
 				this.showActionSheet = false;
 			},
-			
+
 			/**
 			 * 批量操作按钮点击事件
 			 */
 			onBatchClick: function() {
 				this.showActionSheet = true;
 			},
-			
+
 			/**
 			 * 操作菜单选择事件
 			 * @param {Object} e
@@ -545,7 +634,79 @@
 						break;
 				}
 			},
-
+			
+			/**
+			 * 附件详情的普通链接点击事件
+			 */
+			onPathClick: function() {
+				this.openURL(this.infoAttachement.path);
+			},
+			
+			/**
+			 * 附件详情的普通链接复制按钮点击事件
+			 */
+			onPathCopyClick: function() {
+				let that = this;
+				uni.setClipboardData({
+					data: this.infoAttachement.path,
+					showToast: false,
+					success: function() {
+						that.toast("复制成功");
+					}
+				});
+			},
+			
+			/**
+			 * 附件详情的 Markdown 复制按钮点击事件
+			 */
+			onMarkdownCopyClick: function() {
+				let that = this;
+				let data = "![" + this.infoAttachement.name + "](" + this.infoAttachement.path + ")";
+				uni.setClipboardData({
+					data: data,
+					showToast: false,
+					success: function() {
+						that.toast("复制成功");
+					}
+				});
+			},
+			
+			/**
+			 * 附件详情的修改附件名点击事件
+			 */
+			onInfoNameClick: function() {
+				// 关闭附件详情面板
+				this.infoShow = false;
+				
+				let that = this;
+				let attachment = this.infoAttachement;
+				uni.showModal({
+					title: "修改附件名",
+					content: attachment.name,
+					editable: true,
+					placeholderText: attachment.name,
+					success: function(res) {
+						let thatt = that;
+						if (res.confirm) {
+							if (res.content.length > 0 && res.content !== attachment.name) {
+								// 修改附件名
+								updateAttachmentName(attachment.id, res.content).then(data => {
+									// 修改成功，返回修改后数据，替换原有数据
+									that.attachments.splice(thatt.infoIndex, 1, data);
+									thatt.toast("修改成功");
+								}).catch(err => {
+									uni.showModal({
+										title: "修改附件名失败",
+										content: err
+									});
+								});
+							}
+						}
+					}
+				})
+			},
+			
+			
 			/**
 			 * popup弹出层
 			 */
@@ -555,7 +716,7 @@
 				} else {
 					this.$refs.popup.success(message);
 				}
-			},
+			}
 		}
 	}
 </script>
@@ -584,8 +745,7 @@
 		line-height: 41rpx;
 	}
 
-	.block-thumbnail {
-	}
+	.block-thumbnail {}
 
 	.block-thumbnail image {
 		vertical-align: middle;
@@ -621,7 +781,7 @@
 	.block-action-item:active {
 		background-color: var(--activatedColor);
 	}
-	
+
 	.block-action-icon {
 		font-size: 40rpx;
 		position: relative;
@@ -771,5 +931,54 @@
 
 	.selected {
 		filter: brightness(60%) blur(1px);
+	}
+	
+	.info-popup {
+		padding: 20rpx;
+		padding-left: 30rpx;
+		padding-right: 30rpx;
+	}
+	
+	.info-view {
+		border-bottom: 1px solid var(--activatedColor);
+		padding-bottom: 20rpx;
+		margin-top: 20rpx;
+	}
+	
+	.info-view:first-child {
+		margin-top: 0px;
+	}
+	
+	.info-view:last-child {
+		border-bottom: none;
+		padding-bottom: 0px;
+	}
+	
+	.info-title {
+		color: var(--textPrimaryColor);
+		margin-bottom: 12rpx;
+	}
+	
+	.info-text {
+		color: var(--textContentColor);
+		word-wrap: break-word;
+	}
+	
+	.info-icon {
+		color: var(--primaryColor);
+		font-size: 38rpx;
+		position: relative;
+		top: 5rpx;
+	}
+	
+	.info-btn {
+		text-align: center;
+		margin-top: 20px;
+		margin-bottom: 10px;
+		background-color: var(--primaryColor);
+		color: white;
+		padding-top: 5px;
+		padding-bottom: 5px;
+		border-radius: 4px;
 	}
 </style>

@@ -37,6 +37,19 @@
 		</view>
 		
 		<view class="view-me-app-option block">
+			<view class="view-me-exit item" @click="click(12)">
+				<text class="iconfont item-icon">&#xe751;</text>
+				<text class="item-title">附件</text>
+				<view class="item-sign"></view>
+			</view>
+			<view class="view-me-exit item" @click="click(13)">
+				<text class="iconfont item-icon">&#xe8a6;</text>
+				<text class="item-title">评论</text>
+				<view class="item-sign"></view>
+			</view>
+		</view>
+		
+		<view class="view-me-app-option block">
 			<view class="view-me-exit item" @click="click(6)">
 				<text class="iconfont item-icon">&#xe74a;</text>
 				<text class="item-title">主题</text>
@@ -71,19 +84,6 @@
 			<view class="view-me-exit item" @click="click(11)">
 				<text class="iconfont item-icon">&#xe7b9;</text>
 				<text class="item-title">关于</text>
-				<view class="item-sign"></view>
-			</view>
-		</view>
-		
-		<view class="view-me-app-option block">
-			<view class="view-me-exit item" @click="click(12)">
-				<text class="iconfont item-icon">&#xe751;</text>
-				<text class="item-title">附件</text>
-				<view class="item-sign"></view>
-			</view>
-			<view class="view-me-exit item" @click="click(13)">
-				<text class="iconfont item-icon">&#xe8a6;</text>
-				<text class="item-title">评论</text>
 				<view class="item-sign"></view>
 			</view>
 		</view>
