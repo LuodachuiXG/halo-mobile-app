@@ -561,6 +561,7 @@
 			 */
 			commentTypeChange: function(e) {
 				let i = e.detail.value;
+				this.page = 0;
 				this.comment_typeIndex = i;
 				switch(i) {
 					case 0:
@@ -581,6 +582,7 @@
 			 * @param {Object} e
 			 */
 			commentStatusChange: function(e) {
+				this.page = 0;
 				this.comment_statusIndex = e.detail.value;
 				this.refreshData();
 			},

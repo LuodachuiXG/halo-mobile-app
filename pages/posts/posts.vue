@@ -639,6 +639,7 @@
 			 * @param {Object} e
 			 */
 			postStatusChange: function(e) {
+				this.page = 0;
 				this.post_statusIndex = e.detail.value;
 				this.refreshData();
 			},
@@ -648,6 +649,7 @@
 			 * @param {Object} e
 			 */
 			categoriesChange: function(e) {
+				this.page = 0;
 				this.categoriesIndex = e.detail.value;
 				this.refreshData();
 			},
@@ -656,6 +658,7 @@
 			 * 重置文章筛选选项
 			 */
 			reset: function() {
+				this.page = 0;
 				this.keyword = "";
 				this.post_statusIndex = 0;
 				this.categoriesIndex = 0;
@@ -669,6 +672,7 @@
 			onCategoryTagClick: function(id) {
 				// 只有展示所有文章模式时才会筛选文章
 				if (this.mode === "all") {
+					this.page = 0;
 					this.categoriesIndex = this.categoriesValue.indexOf(id);
 					this.refreshData();
 					this.toast("你选择了：" + this.categories[this.categoriesIndex - 1].name);

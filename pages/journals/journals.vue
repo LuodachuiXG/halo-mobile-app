@@ -324,6 +324,7 @@
 			 * @param {Object} e
 			 */
 			journalStatusChange: function(e) {
+				this.page = 0;
 				this.journal_statusIndex = e.detail.value;
 				this.refreshData();
 			},
