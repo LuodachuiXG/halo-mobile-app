@@ -10,7 +10,7 @@
 			<view class="view-input">
 				<view class="view-input-titleView">页面内容：</view>
 				<textarea class="input" v-model="originalContent"
-					placeholder="请输入内容" :maxlength="-1" style="height: 800rpx;"></textarea>
+					:placeholder="placeholder" :maxlength="-1" style="height: 800rpx;"></textarea>
 			</view>
 			<view class="view-input" style="position: relative;margin-top: 20px;">
 				<button class="btn left-btn" type="warn" @click="saveDraft">保存草稿</button>
@@ -53,6 +53,8 @@
 
 				// 用于存储选择附件的 URL
 				imgUrl: "",
+				
+				placeholder: "如需插入图片，请点击右下角添加附件，复制附件链接后需要按照 markdown 语法插入图片"
 			}
 		},
 		onLoad(e) {
