@@ -26,7 +26,7 @@ Gitee：[halo-mobile-app: 📱Halo博客 移动端后台管理 (gitee.com)](http
 - [x] 分类管理
 - [x] 标签管理
 - [x] 仪表盘
-- [x] 附件设置（待完善附件管理）
+- [x] 附件设置
 - [x] 评论管理
 - [x] 日志管理
 - [x] 链接管理
@@ -66,17 +66,17 @@ Gitee：[halo-mobile-app: 📱Halo博客 移动端后台管理 (gitee.com)](http
 
 > 目前正处于开发测试阶段，截图仅供参考，部分页面及功能可能随时间变动，欢迎下载最新发行版体验
 
-<img src="https://ldc-1251523367.cos.ap-beijing.myqcloud.com/luodachui/1647363902018_1647364074506.png" width = "300"  />
+<img src="https://ldc-1251523367.cos.ap-beijing.myqcloud.com/luodachui/1659981450921.png" width = "300"  />
 
 
 
-<img src="https://ldc-1251523367.cos.ap-beijing.myqcloud.com/luodachui/23335_1647364074615.png" width = "300" />
+<img src="https://ldc-1251523367.cos.ap-beijing.myqcloud.com/luodachui/1659981461781.png" width = "300" />
 
-<img src="https://ldc-1251523367.cos.ap-beijing.myqcloud.com/luodachui/1647363908507_1647364074469.png" width = "300"  />
+<img src="https://ldc-1251523367.cos.ap-beijing.myqcloud.com/luodachui/1659981467324.png" width = "300"  />
 
-<img src="https://ldc-1251523367.cos.ap-beijing.myqcloud.com/luodachui/1647363913189_1647364076530.png" width = "300"   />
+<img src="https://ldc-1251523367.cos.ap-beijing.myqcloud.com/luodachui/1659981473645.png" width = "300"   />
 
-<img src="https://ldc-1251523367.cos.ap-beijing.myqcloud.com/luodachui/1647363918037_1647364076506.png" width = "300" />
+<img src="https://ldc-1251523367.cos.ap-beijing.myqcloud.com/luodachui/1659981478605.png" width = "300" />
 
-<img src="https://ldc-1251523367.cos.ap-beijing.myqcloud.com/luodachui/1647363922895_1647364076987.png" width = "300" />
+<img src="https://ldc-1251523367.cos.ap-beijing.myqcloud.com/luodachui/1659981484360.png" width = "300" />
 
