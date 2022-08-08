@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view class="container">
 		<uni-popup ref="popup" type="message">
 			<uni-popup-message :type="popupType" :message="popupMessage"></uni-popup-message>
 		</uni-popup>
@@ -13,6 +13,9 @@
 				</view>
 			</uni-col>
 		</uni-row>
+		
+		<uni-fab horizontal="right" vertical="bottom" @fabClick="onFabClick">
+		</uni-fab>
 		
 		<view class="view-sizeSelect block">
 			<picker @change="sizesChange" :value="sizesIndex" :range="sizes">
@@ -86,8 +89,9 @@
 					this.size = 96
 					break;	
 			}
-
-			
+		},
+		
+		onShow() {
 			this.refreshData()
 		},
 
@@ -199,6 +203,16 @@
 				this.currentPage = current - 1
 				this.refreshData()
 			},
+			
+			/**
+			 * 悬浮按钮点击事件
+			 */
+			onFabClick: function(e) {
+				// 添加附件
+				uni.navigateTo({
+					url: "../addAttachment/addAttachment"
+				})
+			},
 
 			/**
 			 * popup弹出层
@@ -213,6 +227,9 @@
 </script>
 
 <style>
+	.container {
+		padding-bottom: 50px;
+	}
 	.view-images {
 		margin: 10rpx;
 		/* background-color: red; */

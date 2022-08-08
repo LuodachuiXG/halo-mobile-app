@@ -9,7 +9,8 @@
 			</view>
 			<view class="view-input">
 				<view class="view-input-titleView">页面内容：</view>
-				<u--textarea v-model="originalContent" placeholder="请输入内容" autoHeight :maxlength="-1"></u--textarea>
+				<textarea class="input" v-model="originalContent"
+					placeholder="请输入内容" :maxlength="-1" style="height: 800rpx;"></textarea>
 			</view>
 			<view class="view-input" style="position: relative;margin-top: 20px;">
 				<button class="btn left-btn" type="warn" @click="saveDraft">保存草稿</button>

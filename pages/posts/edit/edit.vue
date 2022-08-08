@@ -9,8 +9,8 @@
 			</view>
 			<view class="view-input">
 				<view class="view-input-titleView">文章内容：</view>
-				<u--textarea v-model="originalContent"
-					placeholder="请输入内容" autoHeight :maxlength="-1" ></u--textarea>
+				<textarea class="input" v-model="originalContent"
+					:placeholder="placeholder" :maxlength="-1" style="height: 800rpx;"></textarea>
 			</view>
 			<view class="view-input" style="position: relative;margin-top: 20px;">
 				<button class="btn left-btn" type="warn" @click="saveDraft">保存草稿</button>
@@ -46,7 +46,9 @@
 					{"text": "预览", "iconPath": "/static/images/preview.png"}],
 					
 				// 用于存储选择附件的 URL
-				imgUrl:"",
+				imgUrl: "",
+				
+				placeholder: "如需插入图片，请点击右下角添加附件，复制附件链接后需要按照 markdown 语法插入图片"
 			}
 		},
 		onLoad(e) {
@@ -261,7 +263,7 @@
 
 <style>
 	.content {
-		padding-bottom: 50px;
+		padding-bottom: 50rpx;
 	}
 	.block {
 		padding-top: 20rpx;

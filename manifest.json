@@ -94,5 +94,11 @@
         },
         "usingComponents" : true
     },
-    "vueVersion" : "2"
+    "vueVersion" : "2",
+    "uniStatistics" : {
+        "version" : "1"
+    },
+    "h5" : {
+        
+    }
 }

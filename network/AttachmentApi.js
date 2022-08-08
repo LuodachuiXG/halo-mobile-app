@@ -1,5 +1,4 @@
 import request from "./Request.js";
-import Vue from "../main.js"
 
 /**
  * 根据条件获取附件

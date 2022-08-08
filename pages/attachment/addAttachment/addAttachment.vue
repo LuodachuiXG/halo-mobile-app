@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<u-notice-bar :text="notice" direction="column" :duration="3500"></u-notice-bar>
+		<u-notice-bar :text="notice" direction="column" :duration="2800"></u-notice-bar>
 		<view class="block">
 			<u-upload 
 				:fileList="fileList"
