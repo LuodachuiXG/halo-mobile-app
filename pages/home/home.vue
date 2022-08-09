@@ -55,11 +55,11 @@
 				<text class="item-title">主题</text>
 				<view class="item-sign"></view>
 			</view>
-			<view class="view-me-exit item" @click="click(7)">
+<!-- 			<view class="view-me-exit item" @click="click(7)">
 				<text class="iconfont item-icon">&#xe6f6;</text>
 				<text class="item-title">主题编辑</text>
 				<view class="item-sign"></view>
-			</view>
+			</view> -->
 			<view class="view-me-exit item" @click="click(8)">
 				<text class="iconfont item-icon">&#xe7fc;</text>
 				<text class="item-title">菜单设置</text>
