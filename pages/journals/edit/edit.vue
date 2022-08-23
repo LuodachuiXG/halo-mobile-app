@@ -9,7 +9,8 @@
 			</view>
 			<view class="view-input">
 				<view class="view-input-titleView"><text style="color: red;">*</text>日志内容：</view>
-				<u--textarea v-model="journalContent" placeholder="请输入日志(支持 markdown)" autoHeight :maxlength="-1"></u--textarea>
+				<textarea class="input" v-model="journalContent"
+					:placeholder="placeholder" :maxlength="-1" style="height: 800rpx;"></textarea>
 			</view>
 			
 			<view class="view-input" style="position: relative;margin-top: 20px;">
@@ -46,6 +47,7 @@
 
 				// 用于存储选择附件的 URL
 				imgUrl: "",
+				placeholder: "如需插入图片，请点击右下角添加附件，复制附件链接后需要按照 markdown 语法插入图片"
 			}
 		},
 		onLoad(res) {
