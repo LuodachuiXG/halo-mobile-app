@@ -1,11 +1,8 @@
 <template>
 	<view>
 		<u-notify ref="popup" duration="1500"></u-notify>
-		
-		<u-empty 
-			v-if="mPages.length === 0"
-			mode="list"
-			icon="http://cdn.uviewui.com/uview/empty/list.png">
+
+		<u-empty v-if="mPages.length === 0" mode="list" icon="http://cdn.uviewui.com/uview/empty/list.png">
 		</u-empty>
 
 		<view class="block" v-for="(mPage, i) in mPages">
@@ -13,8 +10,7 @@
 				<!-- 页面标题 -->
 				<view class="block-name-view">
 					<view class="block-name">
-						<view class="tips-info topped-tag"
-							style="margin-right: 15rpx;display: ;" v-if="mPage.topped">
+						<view class="tips-info topped-tag" style="margin-right: 15rpx;display: ;" v-if="mPage.topped">
 							置顶
 						</view>
 						{{ mPage.title }}
@@ -33,7 +29,7 @@
 					<text>{{ mPage.summary }}</text>
 				</view>
 			</view>
-			
+
 			<!-- 评论量标签 -->
 			<view class="block-tag">
 				<view class="block-tag-item">
@@ -42,15 +38,16 @@
 			</view>
 			<!-- 访问量标签 -->
 			<view class="block-tag">
-				<view class="block-tag-item" >
+				<view class="block-tag-item">
 					<u-tag :text="'访问量：' + mPage.visits" type="primary"></u-tag>
 				</view>
 			</view>
-			
+
 			<!-- 显示页面状态 -->
 			<view class="block-status">
 				<!-- 根据回收站、草稿、公开、私密四个状态，设置不同的颜色和文字提示 -->
-				<view class="block-status-point" v-if="mPage.status == 'PUBLISHED' || mPage.status == 'INTIMATE'"></view>
+				<view class="block-status-point" v-if="mPage.status == 'PUBLISHED' || mPage.status == 'INTIMATE'">
+				</view>
 				<view class="block-status-point background-error" v-if="mPage.status == 'RECYCLE'"></view>
 				<view class="block-status-point background-warning" v-if="mPage.status == 'DRAFT'"></view>
 				<text>
@@ -65,23 +62,25 @@
 			<view class="block-action">
 				<uni-row>
 					<uni-col :span="8">
-						<view class="block-action-item" @click="onEditClick(i)">
+						<view class="block-action-item" @click="onEditClick(i)"
+							:class="mPage.status === 'RECYCLE' ? 'color-warning' : ''">
 							<!-- 如果当前页面在回收站，就将编辑改为 还原 ，且垃圾桶颜色改为黄色 -->
-						<text class="iconfont item-icon" :class="mPage.status == 'RECYCLE' ? 'color-warning' : ''">
-							{{ mPage.status == "RECYCLE" ? "&#xe74e;" : "&#xe892;"}}
-						</text>
-							<text :class="mPage.status == 'RECYCLE' ? 'color-warning' : ''">
-								{{ mPage.status == "RECYCLE" ? '还原' : '编辑'}}
+							<text class="iconfont item-icon">
+								{{ mPage.status === "RECYCLE" ? "&#xe74e;" : "&#xe892;"}}
+							</text>
+							<text>
+								{{ mPage.status === "RECYCLE" ? '还原' : '编辑'}}
 							</text>
 						</view>
 					</uni-col>
 					<uni-col :span="8">
-						<view class="block-action-item border" @click="onDeleteClick(i)">
+						<view class="block-action-item border" @click="onDeleteClick(i)"
+							:class="mPage.status == 'RECYCLE' ? 'color-error' : ''">
 							<!-- 如果当前页面在回收站，就将删除改为 永久删除 ，且垃圾桶颜色改为红色 -->
-					 		<text class="iconfont item-icon" :class="mPage.status == 'RECYCLE' ? 'color-error' : ''">
+							<text class="iconfont item-icon">
 								&#xe74e;
 							</text>
-							<text :class="mPage.status == 'RECYCLE' ? 'color-error' : ''">
+							<text>
 								{{ mPage.status == "RECYCLE" ? '永久删除' : '删除'}}
 							</text>
 						</view>
@@ -101,14 +100,9 @@
 				<view>{{sizes[sizesIndex]}}</view>
 			</picker>
 		</view>
-		<uni-pagination 
-			style="padding-bottom: 200rpx;margin-left: 20rpx;margin-right: 20rpx;" 
-			title="页面"
-			:pageSize="size" 
-			:total="total" 
-			:current="page + 1"
-			@change="pageChange"
-			v-if="mPages.length > 0"></uni-pagination>
+		<uni-pagination style="padding-bottom: 200rpx;margin-left: 20rpx;margin-right: 20rpx;" title="页面"
+			:pageSize="size" :total="total" :current="page + 1" @change="pageChange" v-if="mPages.length > 0">
+		</uni-pagination>
 
 		<!-- 回收站模式不显示悬浮按钮 -->
 		<uni-fab horizontal="right" vertical="bottom" @fabClick="onFabClick"></uni-fab>
@@ -196,7 +190,7 @@
 				let size = this.size;
 				getPages(page, size).then(data => {
 					this.mPages = data.content;
-					
+
 					uni.stopPullDownRefresh();
 					uni.hideLoading();
 				}).catch(err => {
@@ -345,7 +339,7 @@
 					url: './setting/setting?id=' + pageId
 				})
 			},
-			
+
 			/**
 			 * 查看页面点击事件
 			 * @param {Object} i
@@ -384,7 +378,7 @@
 		margin-bottom: 50rpx;
 	}
 
-	.block-name-view{
+	.block-name-view {
 		padding: 20rpx;
 		padding-bottom: 10rpx;
 		padding-left: 30rpx;
@@ -429,7 +423,7 @@
 		border-top: 1px solid #ececec;
 		color: #898989;
 	}
-	
+
 	.block-action text {
 		color: #898989;
 	}
@@ -490,11 +484,11 @@
 		background-color: var(--warningColor);
 	}
 
-	.color-error {
+	.color-error text{
 		color: var(--errorColor);
 	}
 
-	.color-warning {
+	.color-warning text{
 		color: var(--warningColor);
 	}
 
@@ -524,7 +518,7 @@
 		padding: 20rpx;
 		color: #616255;
 	}
-	
+
 	.topped-tag {
 		background-color: var(--errorColor);
 	}

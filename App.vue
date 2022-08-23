@@ -258,5 +258,39 @@
 	.background-warning {
 		background-color: var(--warningColor);
 	}
+
+	// 点击时不改变背景颜色
+	.noActive:hover {
+		background-color: white;
+	}
+	
+	// 设置选项单元格
+	.item-option {
+		position: relative;
+		padding: 30rpx;
+		border-bottom: 1px solid #eeeeee;
+		line-height: 40rpx;
+	}
+	
+	.item-option-title {
+		margin-left: 0rpx;
+		font-size: 28rpx;
+		color: var(--textPrimaryColor);
+	}
+	
+	.item-option:first-child {
+		border-radius: 4px 4px 0px 0px;
+	}
+	
+	.item-option:last-child {
+		border-radius: 0px 0px 4px 4px;
+		border-bottom: none;
+	}
+	
+	.item-option-switch {
+		position: absolute;
+		top: 25rpx;
+		right: 30rpx;
+	}
 	
 </style>

@@ -73,9 +73,23 @@
 			// 选择附件后，imgUrl 变量会被赋值
 			// 通过 imgUrl 变量内容来判断是否选择附件
 			if (this.imgUrl.length > 0) {
-				// 将附件地址复制到系统剪贴板
+				// 判断是否设置自动粘贴到编辑框
+				let autoPaste = this.getData("setting_edit_autoPaste");
+				console.log(autoPaste);
+				autoPaste = (autoPaste === undefined || "") ? true : JSON.parse(autoPaste);
+				// 判断是否设置复制 markdown 代码
+				let copyMarkdown = this.getData("setting_edit_copyMarkdown");
+				copyMarkdown = (copyMarkdown === undefined || copyMarkdown === "") ? true : JSON.parse(copyMarkdown);
+				
+				let str = copyMarkdown ? ("![](" + this.imgUrl + ")") : this.imgUrl;
+				
+				if (autoPaste) {
+					this.originalContent += str;
+				}
+				
+				// 复制到剪贴板
 				uni.setClipboardData({
-					data: this.imgUrl,
+					data: str,
 					success: function () {
 						that.toast("附件地址已复制");
 					},
