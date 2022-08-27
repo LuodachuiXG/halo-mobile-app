@@ -80,3 +80,16 @@ Gitee：[halo-mobile-app: 📱Halo博客 移动端后台管理 (gitee.com)](http
 
 <img src="https://ldc-1251523367.cos.ap-beijing.myqcloud.com/luodachui/1659981484360.png" width = "300" />
 
+
+
+### 🌏关于微信小程序版
+
+由于微信小程序有 IP 白名单限制，所以我无法发布小程序版。
+
+如有需求，可以下载本项目代码，并且将项目导入 [HBuilder]([HBuilderX-高效极客技巧 (dcloud.io)](https://dcloud.io/hbuilderx.html)) 中，点击 HBuilder 标题栏 “发行” - “小程序-微信“ 根据工具提示和文档，发布你自己的小程序。
+
+
+
+### 🍎关于 IOS 版
+
+由于我没有 Apple 设备，没法进行调试和发布，所以暂时没有 IOS 版，如有需求可以尝试上一条发布你自己的小程序版。
