@@ -75,8 +75,7 @@
 			if (this.imgUrl.length > 0) {
 				// 判断是否设置自动粘贴到编辑框
 				let autoPaste = this.getData("setting_edit_autoPaste");
-				console.log(autoPaste);
-				autoPaste = (autoPaste === undefined || "") ? true : JSON.parse(autoPaste);
+				autoPaste = (autoPaste === undefined || autoPaste === "") ? true : JSON.parse(autoPaste);
 				// 判断是否设置复制 markdown 代码
 				let copyMarkdown = this.getData("setting_edit_copyMarkdown");
 				copyMarkdown = (copyMarkdown === undefined || copyMarkdown === "") ? true : JSON.parse(copyMarkdown);
