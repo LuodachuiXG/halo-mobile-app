@@ -247,7 +247,7 @@
             
         }
         ,{
-            "path" : "pages/page/page",
+            "path" : "pages/pages/pages",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "所有页面",
@@ -256,7 +256,7 @@
             
         }
         ,{
-            "path" : "pages/page/edit/edit",
+            "path" : "pages/pages/edit/edit",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "",
@@ -265,7 +265,7 @@
             
         }
         ,{
-            "path" : "pages/page/setting/setting",
+            "path" : "pages/pages/setting/setting",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "页面设置",

@@ -134,7 +134,7 @@
 					// 所有页面
 					case 4:
 						uni.navigateTo({
-							url: "../page/page"
+							url: "../pages/pages"
 						});
 						break;
 					// 新建页面
