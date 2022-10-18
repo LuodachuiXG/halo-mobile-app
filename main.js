@@ -63,7 +63,7 @@ Vue.prototype.toast = function(mTitle, mIcon = "none", mPosition = "bottom") {
 		title: mTitle,
 		icon: mIcon,
 		position: mPosition
-	})
+	});
 }
 
 /**
@@ -72,7 +72,7 @@ Vue.prototype.toast = function(mTitle, mIcon = "none", mPosition = "bottom") {
  * @param {Object} data
  */
 Vue.prototype.setData = function(key, data) {
-	uni.setStorageSync(key, this.encrypt(data))
+	uni.setStorageSync(key, this.encrypt(data));
 }
 
 /**
@@ -80,7 +80,7 @@ Vue.prototype.setData = function(key, data) {
  * @param {Object} key
  */
 Vue.prototype.getData = function(key) {
-	return this.decrypt(uni.getStorageSync(key))
+	return this.decrypt(uni.getStorageSync(key));
 }
 
 /**
@@ -89,23 +89,23 @@ Vue.prototype.getData = function(key) {
  */
 Vue.prototype.isExpired = function() {
 	// 判断是否登录
-	let isLogin = this.getData("isLogin") === null ? "" : this.getData("isLogin")
+	let isLogin = this.getData("isLogin") === null ? "" : this.getData("isLogin");
 	if (isLogin === "" || isLogin === "false") {
 		// 用户未登录
-		return true
+		return true;
 	}
 
-	let expired_date = this.getData("expired_date")
-	let now = Number(Date.parse(new Date()))
-	let expiredDate = Number(expired_date)
+	let expired_date = this.getData("expired_date");
+	let now = Number(Date.parse(new Date()));
+	let expiredDate = Number(expired_date);
 	if (now < expiredDate) {
 		// token没有过期
-		return false
+		return false;
 	} else {
 		// token已经过期，将本地登录状态更改
-		this.setData("isLogin", "false")
+		this.setData("isLogin", "false");
 		uni.hideTabBar();
-		return true
+		return true;
 	}
 }
 
@@ -139,7 +139,7 @@ Vue.prototype.openURL = function(url) {
 	plus.runtime.openWeb(url);
 	// #endif
 	// #ifdef H5
-	window.open(url)
+	window.open(url);
 	// #endif
 	// #ifdef MP
 	uni.setClipboardData({
@@ -157,7 +157,7 @@ Vue.prototype.isExpiredByRequest = function(res) {
 		res.data.message === "Token 已过期或不存在" ||
 		res.data.message === undefined) {
 		// token已经过期，将本地登录状态更改
-		this.setData("isLogin", "false")
+		this.setData("isLogin", "false");
 		return true;
 	}
 	return false;
@@ -186,7 +186,7 @@ Vue.prototype.hexToRgb = function(hex) {
 		g: parseInt("0x" + hex.slice(3, 5)),
 		b: parseInt("0x" + hex.slice(5, 7)),
 		a: 1
-	}
+	};
 };
 
 /**

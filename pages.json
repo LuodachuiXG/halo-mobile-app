@@ -339,7 +339,9 @@
 			"bounce": "none",
 			"pullToRefresh": {
 				"color": "#007AFF"
-			}
+			},
+			// 设置键盘弹出模式，防止键盘遮挡输入框
+			"softinputmode": "adjustResize"
 		}
 	},
 

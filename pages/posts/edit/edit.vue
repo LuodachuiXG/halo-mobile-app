@@ -1,30 +1,28 @@
 <template>
 	<view class="content">
 		<u-notify ref="popup"></u-notify>
-		
 		<view class="block">
-			<view class="view-input">
-				<view class="view-input-titleView"><text style="color: red;">*</text>文章标题：</view>
-				<input class="input" type="text" v-model="title" placeholder="请输入标题"/>
-			</view>
-			<view class="view-input">
-				<view class="view-input-titleView">文章内容：</view>
-				<textarea class="input" v-model="originalContent"
-					:placeholder="placeholder" :maxlength="-1" style="height: 800rpx;"></textarea>
-			</view>
-			<view class="view-input" style="position: relative;margin-top: 20px;">
-				<button class="btn left-btn" type="warn" @click="saveDraft">保存草稿</button>
-				<button class="btn right-btn" type="primary" @click="releasePost">发布</button>
-			</view>
+			<scroll-view class="scroll-view" :scroll-y="true"
+				:style="'height:' + (windowHeight / 2) + 'px;width:' + (windowWidth - 10) + 'px;'">
+				<mp-html class="mp-html" :content="originalContent" :markdown="true" :selectable="true"
+					containerStyle="padding: 10px;padding-top:0px;overflow: hidden;"></mp-html>
+			</scroll-view>
+
+			<!-- 分割线 -->
+			<view class="spacer"></view>
+
+			<scroll-view :scroll-y="true" :style="'width:' + windowWidth + 'px;height:' + (windowHeight / 2) + 'px;'">
+				<input class="input" v-model="title" placeholder="输入文章标题"/>
+				<textarea class="input" v-model="originalContent" :style="'width:' + (windowWidth - 10) + 'px;'"
+					:placeholder="placeholder" :maxlength="-1" auto-height="true"></textarea>
+			</scroll-view>
 		</view>
-		
-		
-		<uni-fab horizontal="right" vertical="bottom" :content="content"
-			@trigger="onFabClick"></uni-fab>
+		<uni-fab horizontal="right" vertical="bottom" :content="content" @trigger="onFabClick"></uni-fab>
 	</view>
 </template>
 
 <script>
+	import mpHtml from '@/components/mp-html/mp-html'
 	import {
 		getPost,
 		addPost,
@@ -32,23 +30,44 @@
 		updatePost
 	} from "@/network/PostApi.js";
 	export default {
+		components: {
+			mpHtml
+		},
 		data() {
 			return {
 				// 当前是编辑还是新增文章，add/update
 				type: "",
-				
+
 				postId: 0,
 				post: [],
 				title: "",
 				originalContent: "",
 				// 悬浮按钮弹出菜单
-				content: [{"text": "附件库", "iconPath": "/static/images/attachment.png"},
-					{"text": "预览", "iconPath": "/static/images/preview.png"}],
-					
+				content: [{
+						"text": "附件库",
+						"iconPath": "/static/images/attachment.png"
+					},
+					{
+						"text": "预览",
+						"iconPath": "/static/images/preview.png"
+					},
+					{
+						"text": "保存草稿",
+						"iconPath": "/static/images/save.png"
+					},
+					{
+						"text": "发布",
+						"iconPath": "/static/images/upload.png"
+					}
+				],
+
 				// 用于存储选择附件的 URL
 				imgUrl: "",
-				
-				placeholder: "如需插入图片，请点击右下角添加附件，复制附件链接后需要按照 markdown 语法插入图片"
+
+				placeholder: "请输入内容",
+
+				windowHeight: 0,
+				windowWidth: 0,
 			}
 		},
 		onLoad(e) {
@@ -64,11 +83,17 @@
 				this.postId = e.id;
 				this.refreshData();
 			}
-			
+
+			// 获取可使用窗口宽高
+			let windowInfo = uni.getWindowInfo();
+			this.windowHeight = windowInfo.windowHeight;
+			// padding:10px，所以这里要减 20px
+			this.windowWidth = windowInfo.windowWidth;
 		},
+
 		onShow() {
 			let that = this;
-			
+
 			// 判断当前是否是从附件选择页面返回
 			// 选择附件后，imgUrl 变量会被赋值
 			// 通过 imgUrl 变量内容来判断是否选择附件
@@ -79,28 +104,29 @@
 				// 判断是否设置复制 markdown 代码
 				let copyMarkdown = this.getData("setting_edit_copyMarkdown");
 				copyMarkdown = (copyMarkdown === undefined || copyMarkdown === "") ? true : JSON.parse(copyMarkdown);
-				
+
 				let str = copyMarkdown ? ("![](" + this.imgUrl + ")") : this.imgUrl;
-				
+
 				if (autoPaste) {
 					this.originalContent += str;
 				}
-				
+
 				// 复制到剪贴板
 				uni.setClipboardData({
 					data: str,
-					success: function () {
+					success: function() {
 						that.toast("附件地址已复制");
 					},
-					fail:function(){
+					fail: function() {
 						that.toast("附件地址复制失败");
 					}
 				});
-				
+
 				// 复制到剪贴板后清空变量
 				this.imgUrl = "";
 			}
 		},
+
 		methods: {
 			/**
 			 * 获取文章数据
@@ -123,13 +149,13 @@
 					});
 				});
 			},
-			
+
 			/**
 			 * 悬浮按钮菜单点击事件
 			 * @param {Object} e
 			 */
 			onFabClick: function(e) {
-				switch(e.index) {
+				switch (e.index) {
 					case 0:
 						// 选择附件
 						uni.navigateTo({
@@ -141,37 +167,37 @@
 						let that = this;
 						if (this.title.length <= 0) {
 							this.popup("标题不能为空");
-							return ;
+							return;
 						}
 						if (this.type === "add") {
 							// 新增文章状态下预览
-								this.post.title = this.title;
-								this.post.originalContent = this.originalContent;
-								this.post.status = "DRAFT";
-								
-								// 先创建文章
-								addPost(this.post).then(data => {
-									// 创建文章成功，保存 id
-									that.post.id = data.id;
-									// 提交数据成功后获取预览 URL
-									getPostPreviewLink(that.post.id).then(data => {
-										that.openURL(data.data);
-									}).catch(err => {
-										uni.showModal({
-											title: "获取预览地址失败",
-											content: err
-										});
-									});
-									// 因为当前已经创建了文章，所以切换为编辑模式
-									that.type = "update";
-									that.postId = data.id;
-									that.refreshData();
+							this.post.title = this.title;
+							this.post.originalContent = this.originalContent;
+							this.post.status = "DRAFT";
+
+							// 先创建文章
+							addPost(this.post).then(data => {
+								// 创建文章成功，保存 id
+								that.post.id = data.id;
+								// 提交数据成功后获取预览 URL
+								getPostPreviewLink(that.post.id).then(data => {
+									that.openURL(data.data);
 								}).catch(err => {
 									uni.showModal({
 										title: "获取预览地址失败",
 										content: err
 									});
 								});
+								// 因为当前已经创建了文章，所以切换为编辑模式
+								that.type = "update";
+								that.postId = data.id;
+								that.refreshData();
+							}).catch(err => {
+								uni.showModal({
+									title: "获取预览地址失败",
+									content: err
+								});
+							});
 						} else {
 							// 编辑文章状态下预览
 							this.post.title = this.title;
@@ -194,29 +220,39 @@
 							});
 						}
 						break;
+					case 2:
+						// 保存草稿
+						this.saveDraft();
+						break;
+					case 3:
+						// 发布
+						this.releasePost();
+						break;
 				}
 			},
-			
-			
+
+
 			/**
 			 * 保存草稿按钮点击事件
 			 */
-			saveDraft: function () {
+			saveDraft: function() {
 				if (this.title.length <= 0) {
 					this.popup("文章标题不能为空");
-					return ;
+					return;
 				}
-				
+
 				if (this.type === "add") {
 					// 新增文章的保存草稿也是先新建一个文章
 					let that = this;
-					let json = {"title" : this.title,
-						"originalContent": this.originalContent};
+					let json = {
+						"title": this.title,
+						"originalContent": this.originalContent
+					};
 					addPost(json).then(data => {
 						// 创建文章成功，保存 id
 						that.post.id = data.id;
 						that.popup("保存草稿成功", "success");
-						
+
 						// 因为当前已经创建了文章，所以切换为编辑模式
 						that.type = "update";
 						that.postId = data.id;
@@ -243,23 +279,23 @@
 					});
 				}
 			},
-			
+
 			/**
 			 * 发布按钮点击事件
 			 */
 			releasePost: function() {
 				if (this.title.length <= 0) {
 					this.popup("文章标题不能为空");
-					return ;
+					return;
 				}
 				this.post.title = this.title;
 				this.post.originalContent = this.originalContent;
 				uni.navigateTo({
-					url:'../setting/setting'
+					url: '../setting/setting'
 				})
 			},
-			
-			
+
+
 			/**
 			 * popup弹出层
 			 */
@@ -276,13 +312,14 @@
 
 <style>
 	.content {
-		padding-bottom: 50rpx;
+		/* padding-bottom: 50rpx; */
 	}
+
 	.block {
-		padding-top: 20rpx;
-		padding-bottom: 20rpx;
+		margin: 0px;
+		border-radius: 0px;
 	}
-	
+
 	.btn {
 		color: #FFFFFF;
 		height: 60rpx;
@@ -290,7 +327,8 @@
 		margin-right: 20rpx;
 		font-size: .9em;
 	}
-	
+
+	/* 	
 	.left-btn {
 		display: inline-block;
 		width: 47%;
@@ -304,5 +342,16 @@
 		position: absolute;
 		margin-right: 0px;
 		right: 0px;
+	} */
+	.input {
+		border: none;
+		padding: 10px;
+		border-radius: 0px;
+	}
+
+	.spacer {
+		width: 100%;
+		height: 4rpx;
+		background-color: var(--textContentColor);
 	}
 </style>
