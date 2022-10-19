@@ -16,6 +16,7 @@ Gitee：[halo-mobile-app: 📱Halo博客 移动端后台管理 (gitee.com)](http
 - [uView 2.0 - 全面兼容nvue的uni-app生态框架 - uni-app UI框架](https://uviewui.com)
 - [t-color-picker 颜色选择器](https://ext.dcloud.net.cn/plugin?id=412)
 - [阿里巴巴国际站官方图标库](https://www.iconfont.cn/collections/detail?spm=a313x.7781069.1998910419.d9df05512&cid=19238)
+- [mp-html 富文本组件【全端支持，支持编辑、latex等扩展】 - DCloud 插件市场](https://ext.dcloud.net.cn/plugin?id=805)
 
 ### 🍔功能
 
@@ -33,6 +34,16 @@ Gitee：[halo-mobile-app: 📱Halo博客 移动端后台管理 (gitee.com)](http
 - [x] 菜单设置
 - [x] 页面管理
 - [ ] 等待更新...
+
+
+
+### ❤️感谢
+
+感谢你们的支持！
+
+|   捐赠者   | 金额 |
+| :--------: | :--: |
+| **ipride** | 20元 |
 
 
 
@@ -79,6 +90,18 @@ Gitee：[halo-mobile-app: 📱Halo博客 移动端后台管理 (gitee.com)](http
 <img src="https://ldc-1251523367.cos.ap-beijing.myqcloud.com/luodachui/1659981478605.png" width = "300" />
 
 <img src="https://ldc-1251523367.cos.ap-beijing.myqcloud.com/luodachui/1659981484360.png" width = "300" />
+
+### 🎈未来开发计划
+
+2022/10/19
+
+最近学业繁忙，更新可能比较慢。
+
+不过如果 Halo 有大更新或者程序有影响使用的 Bug 的话我也会尽快修复的。
+
+
+
+未来有可能，我是说有可能，我会用 Jetpack Compose 重写一个安卓原生版（学了 Compose 来练练手，看日后有没有空闲时间吧！
 
 
 
