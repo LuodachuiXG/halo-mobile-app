@@ -3,7 +3,8 @@
 		<u-notify ref="popup"></u-notify>
 		<view class="block">
 			<scroll-view class="scroll-view" :scroll-y="true"
-				:style="'height:' + (windowHeight / 2) + 'px;width:' + (windowWidth - 10) + 'px;'">
+				:style="'height:' + (windowHeight / 2) + 'px;width:' 
+				+ (windowWidth - 10) + 'px;'">
 				<mp-html class="mp-html" :content="originalContent" :markdown="true" :selectable="true"
 					containerStyle="padding: 10px;padding-top:0px;overflow: hidden;"></mp-html>
 			</scroll-view>
@@ -11,10 +12,18 @@
 			<!-- 分割线 -->
 			<view class="spacer"></view>
 
-			<scroll-view :scroll-y="true" :style="'width:' + windowWidth + 'px;height:' + (windowHeight / 2) + 'px;'">
-				<input class="input" v-model="title" placeholder="输入文章标题"/>
-				<textarea class="input" v-model="originalContent" :style="'width:' + (windowWidth - 10) + 'px;'"
-					:placeholder="placeholder" :maxlength="-1" auto-height="true"></textarea>
+			<scroll-view :scroll-y="true" 
+				:style="'width:' + windowWidth + 'px;height:' 
+					+ (windowHeight / 2) + 'px;'">
+				<input class="input title" v-model="title" placeholder="输入文章标题" />
+				<textarea 
+					class="input" 
+					v-model="originalContent" 
+					:style="'width:' + (windowWidth - 10) + 'px;'"
+					:placeholder="placeholder" 
+					:maxlength="-1" 
+					:cursor-spacing="200"
+					auto-height="true"></textarea>
 			</scroll-view>
 		</view>
 		<uni-fab horizontal="right" vertical="bottom" :content="content" @trigger="onFabClick"></uni-fab>
@@ -62,10 +71,11 @@
 				],
 
 				// 用于存储选择附件的 URL
-				imgUrl: "",
+				imgUrl: [],
 
 				placeholder: "请输入内容",
 
+				// 可用窗口宽高
 				windowHeight: 0,
 				windowWidth: 0,
 			}
@@ -105,15 +115,19 @@
 				let copyMarkdown = this.getData("setting_edit_copyMarkdown");
 				copyMarkdown = (copyMarkdown === undefined || copyMarkdown === "") ? true : JSON.parse(copyMarkdown);
 
-				let str = copyMarkdown ? ("![](" + this.imgUrl + ")") : this.imgUrl;
-
-				if (autoPaste) {
-					this.originalContent += str;
-				}
-
+				// 拼接附件地址变量，稍后复制到剪贴板
+				let clipboadrStr = "";
+				this.imgUrl.forEach(function(path) {
+					let str = (copyMarkdown ? ("![](" + path + ")") : path) + "\n";
+					clipboadrStr += str;
+					if (autoPaste) {
+						that.originalContent += str;
+					}
+				});
+				
 				// 复制到剪贴板
 				uni.setClipboardData({
-					data: str,
+					data: clipboadrStr,
 					success: function() {
 						that.toast("附件地址已复制");
 					},
@@ -122,8 +136,8 @@
 					}
 				});
 
-				// 复制到剪贴板后清空变量
-				this.imgUrl = "";
+				// 清空变量
+				this.imgUrl = [];
 			}
 		},
 
@@ -159,7 +173,7 @@
 					case 0:
 						// 选择附件
 						uni.navigateTo({
-							url: "../../attachment/selectAttachment/selectAttachment?attrName=imgUrl"
+							url: "../../attachment/selectAttachment/selectAttachment?attrName=imgUrl&mul=true"
 						})
 						break;
 					case 1:
@@ -328,30 +342,21 @@
 		font-size: .9em;
 	}
 
-	/* 	
-	.left-btn {
-		display: inline-block;
-		width: 47%;
-		position: relative;
-		
-	}
-	
-	.right-btn {
-		display: inline-block;
-		width: 47%;
-		position: absolute;
-		margin-right: 0px;
-		right: 0px;
-	} */
 	.input {
 		border: none;
 		padding: 10px;
 		border-radius: 0px;
+		font-size: 32rpx;
 	}
 
 	.spacer {
 		width: 100%;
 		height: 4rpx;
 		background-color: var(--textContentColor);
+	}
+
+	.title {
+		font-size: 38rpx;
+		font-weight: bold;
 	}
 </style>

@@ -119,9 +119,7 @@
 				updateTime: "",
 				description: "",
 				
-				notice: "请将Halo升级到 1.5.0 以上版本，否则可能出现未知错误。" + 
-					"软件目前处于测试阶段，遇到问题请到 Gitee 或 Github 提交 Issue " + 
-					"并附上截图或问题复现步骤。",
+				notice: "软件目前处于测试阶段，遇到问题请到 Gitee 或 Github 提交 Issue并附上截图或问题复现步骤。",
 					
 				// 用于标记当前是否有新版本
 				newVersion: false,

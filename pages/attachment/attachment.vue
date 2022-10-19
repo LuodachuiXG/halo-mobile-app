@@ -951,11 +951,7 @@
 		background-color: var(--warningColor);
 		color: #FFFFFF;
 	}
-
-	.selected {
-		filter: brightness(60%) blur(1px);
-	}
-
+	
 	.info-popup {
 		padding: 20rpx;
 		padding-left: 30rpx;

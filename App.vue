@@ -293,4 +293,9 @@
 		right: 30rpx;
 	}
 	
+	// 选中模糊效果
+	.selected {
+		filter: brightness(60%) blur(1px);
+	}
+	
 </style>

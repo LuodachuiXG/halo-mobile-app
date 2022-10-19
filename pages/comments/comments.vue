@@ -917,10 +917,6 @@
 		color: #FFFFFF;
 	}
 
-	.selected {
-		filter: brightness(60%) blur(1px);
-	}
-
 	.admin-tag {
 		background-color: var(--primaryColor);
 	}

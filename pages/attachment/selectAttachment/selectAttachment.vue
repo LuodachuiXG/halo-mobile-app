@@ -4,11 +4,13 @@
 			<uni-popup-message :type="popupType" :message="popupMessage"></uni-popup-message>
 		</uni-popup>
 
+		<button class="button" v-if="mul" @click="onConfirmClick">确定选择（{{selectedContent.length}}）</button>
 		<uni-row class="view-images">
 			<uni-col :span="6" v-for="(item, i) in content">
-				<view class="view-image">
+				<view class="view-image" :class="(selectedContent.indexOf(content[i].path) >= 0) ? 'selected' : ''">
 					<!-- 当前附件不是图片就展示格式错误的图片 -->
-					<image :src="item.url" v-if="!item.isNotImage" @click="selectAttachment(i)"></image>
+					<image :src="item.url" v-if="!item.isNotImage"
+					 @click="selectAttachment(i)" mode="aspectFit"></image>
 					<image src="/static/images/format_error.jpg" v-else></image>
 				</view>
 			</uni-col>
@@ -51,53 +53,63 @@
 				sizes: ["4条/页", "8条/页", "16条/页", "24条/页", "48条/页", "96条/页"],
 				sizesIndex: 3,
 				
+				// 上个页面用于接收选的附件的变量
 				attrName: "",
+				// 是否允许多选
+				mul: false,
+				
+				// 多选模式下选中的附件地址
+				selectedContent: [],
 			}
 		},
 		
 		onLoad: function(option) {
 			// 接收上个页面传递的变量名，用于选择附件后设置变量数据
-			this.attrName = option.attrName
+			this.attrName = option.attrName;
+			
+			// 是否允许多选
+			// this.mul = Boolean(option.mul);
+			this.mul = true;
 		},
 
 		mounted() {
 			// 获取之前设置的每页几条数据
-			this.sizesIndex = this.getData("selectAttachment_sizesIndex")
+			this.sizesIndex = this.getData("selectAttachment_sizesIndex");
 			if (this.sizesIndex.length <= 0) {
 				// 默认24条/页
-				this.sizesIndex = 3
+				this.sizesIndex = 3;
 			}
 			// 将本地取出的文本数据转成int
-			this.sizesIndex = Number(this.sizesIndex)
+			this.sizesIndex = Number(this.sizesIndex);
 			switch(this.sizesIndex) {
 				case 0:
-					this.size = 4
+					this.size = 4;
 					break;
 				case 1:
-					this.size = 8
+					this.size = 8;
 					break;
 				case 2:
-					this.size = 16
+					this.size = 16;
 					break;
 				case 3:
-					this.size = 24
+					this.size = 24;
 					break;
 				case 4:
-					this.size = 48
+					this.size = 48;
 					break;
 				case 5:
-					this.size = 96
+					this.size = 96;
 					break;	
 			}
 		},
 		
 		onShow() {
-			this.refreshData()
+			this.refreshData();
 		},
 
 		// 下拉刷新事件
 		onPullDownRefresh() {
-			this.refreshData()
+			this.refreshData();
 		},
 
 		methods: {
@@ -132,13 +144,13 @@
 						uni.stopPullDownRefresh();
 						uni.hideLoading();
 				}).catch(err => {
-					uni.stopPullDownRefresh()
-					uni.hideLoading()
+					uni.stopPullDownRefresh();
+					uni.hideLoading();
 					uni.showModal({
 						title: "获取数据失败",
 						content: err,
 						showCancel: false
-					})
+					});
 				});
 			},
 			
@@ -147,61 +159,84 @@
 			 * @param {Object} e
 			 */
 			sizesChange: function(e) {
-				let i = e.detail.value
-				this.sizesIndex = i
-				this.currentPage = 0
+				let i = e.detail.value;
+				this.sizesIndex = i;
+				this.currentPage = 0;
 				switch(i) {
 					case 0:
-						this.size = 4
+						this.size = 4;
 						break;
 					case 1:
-						this.size = 8
+						this.size = 8;
 						break;
 					case 2:
-						this.size = 16
+						this.size = 16;
 						break;
 					case 3:
-						this.size = 24
+						this.size = 24;
 						break;
 					case 4:
-						this.size = 48
+						this.size = 48;
 						break;
 					case 5:
-						this.size = 96
+						this.size = 96;
 						break;	
 				}
 				// 将每页几条数据设置保存到本地
-				this.setData("selectAttachment_sizesIndex", this.sizesIndex)
-				this.refreshData()
+				this.setData("selectAttachment_sizesIndex", this.sizesIndex);
+				this.refreshData();
 			},
 			
 			/**
-			 * 单击图片选中附件，修改上个页面需要修改附件的变量
+			 * 附件单击事件
 			 * @param {Object} i
 			 */
 			selectAttachment: function(i) {
+				if (this.mul) {
+					// 多选
+					let path = this.content[i].path;
+					let index = this.selectedContent.indexOf(path)
+					if (index < 0) {
+						this.selectedContent.push(path);
+					} else {
+						this.selectedContent.splice(index, 1);
+					}
+				} else {
+					// 单选
+					this.onConfirmClick(i);
+				}
+			},
+			
+			/**
+			 * 确定选择按钮点击事件
+			 * @param {Object} i 当前选择的附件索引（单选模式需提供）
+			 */
+			onConfirmClick: function(i = -1) {
 				// 获取所有页面栈实例列表
-				let pages = getCurrentPages()
-				// 当前页面实例
-				let nowPage = pages[pages.length - 1]
+				let pages = getCurrentPages();
 				// 上一页面实例
-				let prevPage = pages[pages.length - 2]
+				let prevPage = pages[pages.length - 2];
 				// 修改上一页面需要修改附件的变量
-				prevPage.$vm[this.attrName] = this.content[i].path
+				if (this.mul) {
+					// 多选
+					prevPage.$vm[this.attrName] = this.selectedContent;
+				} else {
+					// 单选
+					prevPage.$vm[this.attrName] = this.content[i].path
+				}
 				// 返回上一页面
 				uni.navigateBack({
 					delta:1
-				})
-				
+				});
 			},
 
 			/**
 			 * 改变页面事件
 			 */
 			pageChange: function(e) {
-				let current = e.current
-				this.currentPage = current - 1
-				this.refreshData()
+				let current = e.current;
+				this.currentPage = current - 1;
+				this.refreshData();
 			},
 			
 			/**
@@ -211,16 +246,16 @@
 				// 添加附件
 				uni.navigateTo({
 					url: "../addAttachment/addAttachment"
-				})
+				});
 			},
 
 			/**
 			 * popup弹出层
 			 */
 			popup: function(message, type = "error") {
-				this.popupMessage = message
-				this.popupType = type
-				this.$refs.popup.open()
+				this.popupMessage = message;
+				this.popupType = type;
+				this.$refs.popup.open();
 			},
 		}
 	}
@@ -250,5 +285,15 @@
 		margin-top: 20rpx;
 		padding: 20rpx;
 		color: #616255;
+	}
+	.button {
+		margin: 10rpx;
+		background-color: var(--primaryColor);
+		color: white;
+		border-radius: 0px;
+	}
+	
+	.selected {
+		box-shadow: 0px 0px 1px 1px var(--errorColor);
 	}
 </style>

@@ -1060,11 +1060,8 @@
 		color: #FFFFFF;
 	}
 
-	.selected {
-		filter: brightness(60%) blur(1px);
-	}
-
 	.topped-tag {
 		background-color: var(--errorColor);
 	}
+	
 </style>
