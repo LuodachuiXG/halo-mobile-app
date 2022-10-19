@@ -2,8 +2,8 @@
     "name" : "Halo Admin",
     "appid" : "__UNI__96B3944",
     "description" : "Halo移动端后台管理",
-    "versionName" : "0.0.4-beta.4",
-    "versionCode" : 900,
+    "versionName" : "0.0.5",
+    "versionCode" : 1000,
     "transformPx" : false,
     "app-plus" : {
         /* 5+App特有相关 */
@@ -84,6 +84,9 @@
                 "androidStyle" : "common",
                 "useOriginalMsgbox" : false
             }
+        },
+        "uniStatistics" : {
+            "enable" : false
         }
     },
     /* SDK配置 */
@@ -97,5 +100,8 @@
             "postcss" : true
         },
         "usingComponents" : true
+    },
+    "uniStatistics" : {
+        "version" : "2"
     }
 }

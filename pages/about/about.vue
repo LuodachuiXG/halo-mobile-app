@@ -2,7 +2,7 @@
 	<view class="container">
 		<view>Halo 版本：{{environments.version}}</view>
 		<!-- #ifndef APP-NVUE -->
-		<view>HaloApp 版本：{{version}}</view>
+		<view>Halo Admin 版本：{{version}}</view>
 		<!-- #endif -->
 		
 		<view>数据库：{{environments.database}}</view>

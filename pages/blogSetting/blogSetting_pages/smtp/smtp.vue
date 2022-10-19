@@ -26,6 +26,11 @@
 						</view>
 						<input class="input" type="text" v-model="email_protocol" />
 					</view>
+					
+					<view class="view-input">
+						<view class="view-input-titleView">启用 STARTTLS：</view>
+						<switch :checked="email_starttls" @change="emailStarttlsChange" />
+					</view>
 
 					<view class="view-input">
 						<view class="view-input-titleView">
@@ -108,6 +113,7 @@
 				email_enabled: true,
 				email_host: "",
 				email_protocol: "",
+				email_starttls: false,
 				email_ssl_port: "",
 				email_username: "",
 				email_password: "",
@@ -144,17 +150,18 @@
 			 */
 			refreshData: function() {
 				let array = ["email_enabled", "email_host", "email_protocol", "email_ssl_port",
-					"email_username", "email_password", "email_from_name"];
+					"email_username", "email_password", "email_from_name", "email_starttls"];
 				let that = this;
 				
 				getOptionsByMapViewsKeys(array).then(data => {
-					that.email_enabled = data.email_enabled
-					that.email_host = data.email_host
-					that.email_protocol = data.email_protocol
-					that.email_ssl_port = data.email_ssl_port
-					that.email_username = data.email_username
-					that.email_password = data.email_password
-					that.email_from_name = data.email_from_name
+					that.email_enabled = data.email_enabled;
+					that.email_host = data.email_host;
+					that.email_protocol = data.email_protocol;
+					that.email_starttls = data.email_starttls;
+					that.email_ssl_port = data.email_ssl_port;
+					that.email_username = data.email_username;
+					that.email_password = data.email_password;
+					that.email_from_name = data.email_from_name;
 					uni.stopPullDownRefresh();
 				}).catch(err => {
 					uni.stopPullDownRefresh();
@@ -170,7 +177,11 @@
 			 * @param {Object} e
 			 */
 			emailEnabledChange: function(e) {
-				this.email_enabled = e.detail.value
+				this.email_enabled = e.detail.value;
+			},
+			
+			emailStarttlsChange: function(e) {
+				this.email_starttls = e.detail.value;
 			},
 
 
@@ -208,6 +219,7 @@
 					"email_enabled": this.email_enabled,
 					"email_host": this.email_host,
 					"email_protocol": this.email_protocol,
+					"email_starttls": this.email_starttls,
 					"email_ssl_port": this.email_ssl_port,
 					"email_username": this.email_username,
 					"email_password": this.email_password,

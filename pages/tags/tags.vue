@@ -16,6 +16,7 @@
 				</view>
 			</view>
 		</view>
+		<button class="button" @click="onDeleteUnusedTagsClick">删除未使用标签</button>
 		<uni-fab horizontal="right" vertical="bottom" @fabClick="onAddTagClick"></uni-fab>
 	</view>
 </template>
@@ -109,6 +110,42 @@
 						"&index=" + i
 				})
 			},
+			
+			/**
+			 * 删除未使用标签按钮点击事件
+			 */
+			onDeleteUnusedTagsClick: function() {
+				let that = this;
+				uni.showModal({
+					title: "提示",
+					content: "是否确认清理没有使用的标签？",
+					complete: function(res) {
+						if (res.confirm) {
+							that.deleteUnusedTags();
+						}
+					}
+				});
+			},
+			
+			/**
+			 * 删除未使用标签
+			 */
+			deleteUnusedTags: function() {
+				let that = this;
+				this.tags.forEach(function(tag) {
+					if (tag.postCount == 0) {
+						deleteTag(tag.id).then(data => {
+							that.popup("删除成功", "success");
+							that.refreshData();
+						}).catch(err => {
+							uni.showModal({
+								title: "删除失败",
+								content: err
+							});
+						});
+					}
+				});
+			},
 
 
 			/**
@@ -142,5 +179,9 @@
 		margin-right: 10rpx;
 		margin-top: 10rpx;
 		display: inline-block;
+	}
+	
+	.button {
+		margin: 30rpx;
 	}
 </style>

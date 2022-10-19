@@ -519,8 +519,8 @@
 
 	.view-login-image {
 		display: block;
-		width: 128rpx;
-		height: 128rpx;
+		width: 168rpx;
+		height: 168rpx;
 		margin: 0px auto;
 		margin-top: 40rpx;
 		margin-bottom: 40rpx;

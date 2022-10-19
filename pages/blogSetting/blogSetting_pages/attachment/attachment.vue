@@ -7,6 +7,11 @@
 				<switch :checked="attachment_upload_image_preview_enable"
 					@change="attachmentUploadImagePreviewEnableSwitchChange" />
 			</view>
+			<view class="view-input">
+				<view class="view-input-titleView">去除图片 EXIF 信息：</view>
+				<switch :checked="attachment_EXIF_remove_enable"
+					@change="attachmentEXIFRemoveEnableSwitchChange" />
+			</view>
 
 			<view class="view-input">
 				<view class="view-input-titleView">最大上传文件数：</view>
@@ -413,6 +418,7 @@
 		data() {
 			return {
 				attachment_upload_image_preview_enable: "",
+				attachment_EXIF_remove_enable: false,
 				attachment_upload_max_files: "",
 				attachment_upload_max_parallel_uploads: "",
 
@@ -541,7 +547,7 @@
 			 * 刷新数据
 			 */
 			refreshData: function() {
-				let array = ["attachment_upload_image_preview_enable", "attachment_upload_max_files",
+				let array = ["attachment_upload_image_preview_enable", "attachment_EXIF_remove_enable", "attachment_upload_max_files",
 					"attachment_upload_max_parallel_uploads", "attachment_type", "smms_api_secret_token",
 					"oss_upyun_domain_protocol", "oss_upyun_domain", "oss_upyun_bucket",
 					"oss_upyun_operator", "oss_upyun_password", "oss_upyun_source",
@@ -570,7 +576,8 @@
 				let that = this;
 				getOptionsByMapViewsKeys(array).then(data => {
 					that.attachment_upload_image_preview_enable = data
-						.attachment_upload_image_preview_enable
+						.attachment_upload_image_preview_enable;
+					that.attachment_EXIF_remove_enable = data.attachment_EXIF_remove_enable;
 					that.attachment_upload_max_files = data.attachment_upload_max_files
 					that.attachment_upload_max_parallel_uploads = data
 						.attachment_upload_max_parallel_uploads
@@ -689,6 +696,14 @@
 			 */
 			attachmentUploadImagePreviewEnableSwitchChange: function(e) {
 				this.attachment_upload_image_preview_enable = e.detail.value
+			},
+			
+			/**
+			 * 去除图片 EXIF 信息switch改变事件
+			 * @param {Object} e
+			 */
+			attachmentEXIFRemoveEnableSwitchChange: function(e) {
+				this.attachment_EXIF_remove_enable = e.detail.value
 			},
 
 			/**
@@ -907,6 +922,7 @@
 
 				let json = {
 					"attachment_upload_image_preview_enable": this.attachment_upload_image_preview_enable,
+					"attachment_EXIF_remove_enable": this.attachment_EXIF_remove_enable,
 					"attachment_upload_max_files": this.attachment_upload_max_files,
 					"attachment_upload_max_parallel_uploads": this.attachment_upload_max_parallel_uploads,
 
