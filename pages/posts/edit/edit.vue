@@ -31,7 +31,7 @@
 </template>
 
 <script>
-	import mpHtml from '@/components/mp-html/mp-html'
+	import mpHtml from '@/components/mp-html/mp-html';
 	import {
 		getPost,
 		addPost,
@@ -73,7 +73,7 @@
 				// 用于存储选择附件的 URL
 				imgUrl: [],
 
-				placeholder: "请输入内容",
+				placeholder: "请输入文章内容",
 
 				// 可用窗口宽高
 				windowHeight: 0,
@@ -97,7 +97,6 @@
 			// 获取可使用窗口宽高
 			let windowInfo = uni.getWindowInfo();
 			this.windowHeight = windowInfo.windowHeight;
-			// padding:10px，所以这里要减 20px
 			this.windowWidth = windowInfo.windowWidth;
 		},
 
@@ -326,7 +325,6 @@
 
 <style>
 	.content {
-		/* padding-bottom: 50rpx; */
 	}
 
 	.block {

@@ -68,8 +68,7 @@
 			this.attrName = option.attrName;
 			
 			// 是否允许多选
-			// this.mul = Boolean(option.mul);
-			this.mul = true;
+			this.mul = Boolean(option.mul);
 		},
 
 		mounted() {

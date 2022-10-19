@@ -1,29 +1,39 @@
 <template>
 	<view class="content">
 		<u-notify ref="popup"></u-notify>
-
+		
 		<view class="block">
-			<view class="view-input">
-				<view class="view-input-titleView"><text style="color: red;">*</text>页面标题：</view>
-				<input class="input" type="text" v-model="title" placeholder="请输入标题" />
-			</view>
-			<view class="view-input">
-				<view class="view-input-titleView">页面内容：</view>
-				<textarea class="input" v-model="originalContent"
-					:placeholder="placeholder" :maxlength="-1" style="height: 800rpx;"></textarea>
-			</view>
-			<view class="view-input" style="position: relative;margin-top: 20px;">
-				<button class="btn left-btn" type="warn" @click="saveDraft">保存草稿</button>
-				<button class="btn right-btn" type="primary" @click="releasePage">发布</button>
-			</view>
+			<scroll-view class="scroll-view" :scroll-y="true"
+				:style="'height:' + (windowHeight / 2) + 'px;width:' 
+				+ (windowWidth - 10) + 'px;'">
+				<mp-html class="mp-html" :content="originalContent" :markdown="true" :selectable="true"
+					containerStyle="padding: 10px;padding-top:0px;overflow: hidden;"></mp-html>
+			</scroll-view>
+		
+			<!-- 分割线 -->
+			<view class="spacer"></view>
+		
+			<scroll-view :scroll-y="true" 
+				:style="'width:' + windowWidth + 'px;height:' 
+					+ (windowHeight / 2) + 'px;'">
+				<input class="input title" v-model="title" placeholder="输入页面标题" />
+				<textarea 
+					class="input" 
+					v-model="originalContent" 
+					:style="'width:' + (windowWidth - 10) + 'px;'"
+					:placeholder="placeholder" 
+					:maxlength="-1" 
+					:cursor-spacing="200"
+					auto-height="true"></textarea>
+			</scroll-view>
 		</view>
-
 
 		<uni-fab horizontal="right" vertical="bottom" :content="content" @trigger="onFabClick"></uni-fab>
 	</view>
 </template>
 
 <script>
+	import mpHtml from '@/components/mp-html/mp-html';
 	import {
 		getPage,
 		getPagePreviewLink,
@@ -31,6 +41,9 @@
 		addPage
 	} from "@/network/PageApi.js";
 	export default {
+		components: {
+			mpHtml
+		},
 		data() {
 			return {
 				// 当前是编辑还是新增页面，add/update
@@ -48,13 +61,25 @@
 					{
 						"text": "预览",
 						"iconPath": "/static/images/preview.png"
+					},
+					{
+						"text": "保存草稿",
+						"iconPath": "/static/images/save.png"
+					},
+					{
+						"text": "发布",
+						"iconPath": "/static/images/upload.png"
 					}
 				],
 
 				// 用于存储选择附件的 URL
 				imgUrl: "",
 				
-				placeholder: "如需插入图片，请点击右下角添加附件，复制附件链接后需要按照 markdown 语法插入图片"
+				placeholder: "请输入页面内容",
+				
+				// 可用窗口宽高
+				windowHeight: 0,
+				windowWidth: 0,
 			}
 		},
 		onLoad(e) {
@@ -70,6 +95,11 @@
 				this.pageId = e.id;
 				this.refreshData();
 			}
+			
+			// 获取可使用窗口宽高
+			let windowInfo = uni.getWindowInfo();
+			this.windowHeight = windowInfo.windowHeight;
+			this.windowWidth = windowInfo.windowWidth;
 		},
 		onShow() {
 			let that = this;
@@ -84,26 +114,30 @@
 				// 判断是否设置复制 markdown 代码
 				let copyMarkdown = this.getData("setting_edit_copyMarkdown");
 				copyMarkdown = (copyMarkdown === undefined || copyMarkdown === "") ? true : JSON.parse(copyMarkdown);
-				
-				let str = copyMarkdown ? ("![](" + this.imgUrl + ")") : this.imgUrl;
-				
-				if (autoPaste) {
-					this.originalContent += str;
-				}
-				
-				// 复制到剪贴板
-				uni.setClipboardData({
-					data: str,
-					success: function () {
-						that.toast("附件地址已复制");
-					},
-					fail:function(){
-						that.toast("附件地址复制失败");
+			
+				// 拼接附件地址变量，稍后复制到剪贴板
+				let clipboadrStr = "";
+				this.imgUrl.forEach(function(path) {
+					let str = (copyMarkdown ? ("![](" + path + ")") : path) + "\n";
+					clipboadrStr += str;
+					if (autoPaste) {
+						that.originalContent += str;
 					}
 				});
 				
-				// 复制到剪贴板后清空变量
-				this.imgUrl = "";
+				// 复制到剪贴板
+				uni.setClipboardData({
+					data: clipboadrStr,
+					success: function() {
+						that.toast("附件地址已复制");
+					},
+					fail: function() {
+						that.toast("附件地址复制失败");
+					}
+				});
+			
+				// 清空变量
+				this.imgUrl = [];
 			}
 		},
 		methods: {
@@ -138,7 +172,7 @@
 					case 0:
 						// 选择附件
 						uni.navigateTo({
-							url: "../../attachment/selectAttachment/selectAttachment?attrName=imgUrl"
+							url: "../../attachment/selectAttachment/selectAttachment?attrName=imgUrl&mul=true"
 						})
 						break;
 					case 1:
@@ -198,6 +232,14 @@
 								});
 							});
 						}
+						break;
+					case 2:
+						// 保存草稿
+						this.saveDraft();
+						break;
+					case 3:
+						// 发布
+						this.releasePage();
 						break;
 				}
 			},
@@ -283,14 +325,13 @@
 
 <style>
 	.content {
-		padding-bottom: 50px;
 	}
-
+	
 	.block {
-		padding-top: 20rpx;
-		padding-bottom: 20rpx;
+		margin: 0px;
+		border-radius: 0px;
 	}
-
+	
 	.btn {
 		color: #FFFFFF;
 		height: 60rpx;
@@ -298,19 +339,22 @@
 		margin-right: 20rpx;
 		font-size: .9em;
 	}
-
-	.left-btn {
-		display: inline-block;
-		width: 47%;
-		position: relative;
-
+	
+	.input {
+		border: none;
+		padding: 10px;
+		border-radius: 0px;
+		font-size: 32rpx;
 	}
-
-	.right-btn {
-		display: inline-block;
-		width: 47%;
-		position: absolute;
-		margin-right: 0px;
-		right: 0px;
+	
+	.spacer {
+		width: 100%;
+		height: 4rpx;
+		background-color: var(--textContentColor);
+	}
+	
+	.title {
+		font-size: 38rpx;
+		font-weight: bold;
 	}
 </style>
