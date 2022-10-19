@@ -473,20 +473,25 @@
 					}
 				} else {
 					let attachment = this.attachments[i];
-					// 预览图片
-					if (attachment.mediaType.indexOf("image") < 0) {
-						this.popup("当前文件不支持预览");
-						return;
-					}
-
 					let url = this.attachments[i].path;
 					if (url.indexOf("http") < 0) {
 						url = this.getUrl() + url;
 					}
-					uni.previewImage({
-						current: "0",
-						urls: [url]
-					})
+					console.log(attachment.mediaType.indexOf("video"));
+					
+					if (attachment.mediaType.indexOf("image") >= 0) {
+						// 预览图片
+						uni.previewImage({
+							current: "0",
+							urls: [url]
+						});
+					} else if (attachment.mediaType.indexOf("video") >= 0) {
+						// 预览视频
+						this.openURL(url);
+					} else {
+						this.popup("当前文件不支持预览");
+						return;
+					}
 				}
 
 			},
