@@ -166,7 +166,7 @@
 								return true;
 							}
 						}
-					})
+					});
 					return true;
 				} else {
 					this.teamMode();

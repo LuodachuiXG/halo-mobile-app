@@ -2,8 +2,7 @@
 	<view class="content">
 		<u-notify ref="popup"></u-notify>
 		<view class="block">
-			<scroll-view class="scroll-view" :scroll-y="true"
-				:style="'height:' + (windowHeight / 2) + 'px;width:' 
+			<scroll-view class="scroll-view" :scroll-y="true" :style="'height:' + (windowHeight / 2) + 'px;width:' 
 				+ (windowWidth - 10) + 'px;'">
 				<mp-html class="mp-html" :content="originalContent" :markdown="true" :selectable="true"
 					containerStyle="padding: 10px;padding-top:0px;overflow: hidden;"></mp-html>
@@ -12,18 +11,11 @@
 			<!-- 分割线 -->
 			<view class="spacer"></view>
 
-			<scroll-view :scroll-y="true" 
-				:style="'width:' + windowWidth + 'px;height:' 
+			<scroll-view :scroll-y="true" :style="'width:' + windowWidth + 'px;height:' 
 					+ (windowHeight / 2) + 'px;'">
 				<input class="input title" v-model="title" placeholder="输入文章标题" />
-				<textarea 
-					class="input" 
-					v-model="originalContent" 
-					:style="'width:' + (windowWidth - 10) + 'px;'"
-					:placeholder="placeholder" 
-					:maxlength="-1" 
-					:cursor-spacing="200"
-					auto-height="true"></textarea>
+				<textarea class="input" v-model="originalContent" :style="'width:' + (windowWidth - 10) + 'px;'"
+					:placeholder="placeholder" :maxlength="-1" :cursor-spacing="200" auto-height="true"></textarea>
 			</scroll-view>
 		</view>
 		<uni-fab horizontal="right" vertical="bottom" :content="content" @trigger="onFabClick"></uni-fab>
@@ -116,14 +108,27 @@
 
 				// 拼接附件地址变量，稍后复制到剪贴板
 				let clipboadrStr = "";
-				this.imgUrl.forEach(function(path) {
-					let str = (copyMarkdown ? ("![](" + path + ")") : path) + "\n";
+				this.imgUrl.forEach(function(res) {
+					// imgUrl 的 子数组中有两个元素，一个是 path 一个是 mediaType
+					let str;
+					if (res.mediaType.indexOf("image") >= 0) {
+						// 当前附件是图片
+						str = (copyMarkdown ? ("![](" + res.path + ")") : res.path) + "\n";
+					} else if (res.mediaType.indexOf("video") >= 0) {
+						// 当前附件是视频
+						str = (copyMarkdown ?
+							("<iframe src='" + res.path + "'></iframe>") : res.path) + "\n";
+					} else {
+						// 不支持附件类型，直接赋附件地址
+						str = res.path + "\n";
+					}
+
 					clipboadrStr += str;
 					if (autoPaste) {
 						that.originalContent += str;
 					}
 				});
-				
+
 				// 复制到剪贴板
 				uni.setClipboardData({
 					data: clipboadrStr,
@@ -138,6 +143,45 @@
 				// 清空变量
 				this.imgUrl = [];
 			}
+		},
+
+		/**
+		 * 返回事件
+		 * @param {Object} event
+		 */
+		onBackPress(event) {
+			let that = this;
+			
+			// 判断内容是否已经变更
+			let contentEdited = false;
+			if (this.type === "add") {
+				// 新增模式
+				if (this.originalContent !== "") {
+					contentEdited = true;
+				}
+			} else {
+				// 编辑模式
+				if (this.originalContent !== this.post.originalContent)
+					contentEdited = true;
+			}
+			
+			if (event.from === "backbutton" && contentEdited) {
+				uni.showModal({
+					title: "内容已改变",
+					content: "内容已经改变，还没有保存，确定要返回吗？",
+					complete: function(res) {
+						if (res.confirm) {
+							// 返回上一页面
+							uni.navigateBack({
+								delta: 1
+							});
+						}
+					}
+				})
+				return true;
+			} else {
+				return false;
+			} 
 		},
 
 		methods: {
@@ -268,6 +312,7 @@
 
 						// 因为当前已经创建了文章，所以切换为编辑模式
 						that.type = "update";
+						that.post.originalContent = that.originalContent;
 						that.postId = data.id;
 						that.refreshData();
 					}).catch(err => {
@@ -324,8 +369,7 @@
 </script>
 
 <style>
-	.content {
-	}
+	.content {}
 
 	.block {
 		margin: 0px;

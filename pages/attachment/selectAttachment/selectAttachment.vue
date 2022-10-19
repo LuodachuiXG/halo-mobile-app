@@ -6,27 +6,30 @@
 
 		<button class="button" v-if="mul" @click="onConfirmClick">确定选择（{{selectedContent.length}}）</button>
 		<uni-row class="view-images">
-			<uni-col :span="6" v-for="(item, i) in content">
-				<view class="view-image" :class="(selectedContent.indexOf(content[i].path) >= 0) ? 'selected' : ''">
+			<uni-col :span="12" v-for="(item, i) in content">
+				<view class="view-image" @click="selectAttachment(i)"
+					:class="(selectedIndex.indexOf(i) >= 0) ? 'selected' : ''">
 					<!-- 当前附件不是图片就展示格式错误的图片 -->
-					<image :src="item.url" v-if="!item.isNotImage"
-					 @click="selectAttachment(i)" mode="aspectFit"></image>
+					<image :src="item.url" v-if="!item.isNotImage" mode="aspectFit"></image>
 					<image src="/static/images/format_error.jpg" v-else></image>
+					<view class="view-image-title">
+						<u--text :lines="1" :text="item.name"></u--text>
+					</view>
 				</view>
 			</uni-col>
 		</uni-row>
-		
+
 		<uni-fab horizontal="right" vertical="bottom" @fabClick="onFabClick">
 		</uni-fab>
-		
+
 		<view class="view-sizeSelect block">
 			<picker @change="sizesChange" :value="sizesIndex" :range="sizes">
 				<view>{{sizes[sizesIndex]}}</view>
 			</picker>
 		</view>
-		<uni-pagination style="padding-bottom: 80rpx;margin-left: 10rpx;margin-right: 10rpx;" title="附件" :pageSize="size" :total="total"
-			:current="currentPage + 1" @change="pageChange"></uni-pagination>
-			
+		<uni-pagination style="padding-bottom: 80rpx;margin-left: 10rpx;margin-right: 10rpx;" title="附件"
+			:pageSize="size" :total="total" :current="currentPage + 1" @change="pageChange"></uni-pagination>
+
 	</view>
 </template>
 
@@ -52,21 +55,22 @@
 				popupMessage: "",
 				sizes: ["4条/页", "8条/页", "16条/页", "24条/页", "48条/页", "96条/页"],
 				sizesIndex: 3,
-				
+
 				// 上个页面用于接收选的附件的变量
 				attrName: "",
 				// 是否允许多选
 				mul: false,
-				
+
 				// 多选模式下选中的附件地址
 				selectedContent: [],
+				selectedIndex: [],
 			}
 		},
-		
+
 		onLoad: function(option) {
 			// 接收上个页面传递的变量名，用于选择附件后设置变量数据
 			this.attrName = option.attrName;
-			
+
 			// 是否允许多选
 			this.mul = Boolean(option.mul);
 		},
@@ -80,7 +84,7 @@
 			}
 			// 将本地取出的文本数据转成int
 			this.sizesIndex = Number(this.sizesIndex);
-			switch(this.sizesIndex) {
+			switch (this.sizesIndex) {
 				case 0:
 					this.size = 4;
 					break;
@@ -98,10 +102,10 @@
 					break;
 				case 5:
 					this.size = 96;
-					break;	
+					break;
 			}
 		},
-		
+
 		onShow() {
 			this.refreshData();
 		},
@@ -124,7 +128,7 @@
 					that.pages = data.pages;
 					that.total = data.total;
 					that.content = data.content;
-					
+
 					for (let i = 0; i < that.content.length; i++) {
 						let item = that.content[i];
 						let thumbPath = that.content[i].thumbPath;
@@ -134,14 +138,15 @@
 						} else {
 							that.content[i].url = thumbPath;
 						}
-					
+
 						// 如果当前附件不是图片就标记它
 						if (item.mediaType.indexOf("image") === -1) {
 							that.content[i].isNotImage = true;
 						}
 					}
-						uni.stopPullDownRefresh();
-						uni.hideLoading();
+
+					uni.stopPullDownRefresh();
+					uni.hideLoading();
 				}).catch(err => {
 					uni.stopPullDownRefresh();
 					uni.hideLoading();
@@ -152,7 +157,7 @@
 					});
 				});
 			},
-			
+
 			/**
 			 * 更改每页显示条数事件
 			 * @param {Object} e
@@ -161,7 +166,7 @@
 				let i = e.detail.value;
 				this.sizesIndex = i;
 				this.currentPage = 0;
-				switch(i) {
+				switch (i) {
 					case 0:
 						this.size = 4;
 						break;
@@ -179,13 +184,13 @@
 						break;
 					case 5:
 						this.size = 96;
-						break;	
+						break;
 				}
 				// 将每页几条数据设置保存到本地
 				this.setData("selectAttachment_sizesIndex", this.sizesIndex);
 				this.refreshData();
 			},
-			
+
 			/**
 			 * 附件单击事件
 			 * @param {Object} i
@@ -194,18 +199,24 @@
 				if (this.mul) {
 					// 多选
 					let path = this.content[i].path;
-					let index = this.selectedContent.indexOf(path)
+					let mediaType = this.content[i].mediaType;
+					// push 一个数字，里面包含附件地址和类型
+					let json = {"path": path, "mediaType": mediaType};
+					
+					let index = this.selectedIndex.indexOf(i);
 					if (index < 0) {
-						this.selectedContent.push(path);
+						this.selectedContent.push(json);
+						this.selectedIndex.push(i);
 					} else {
 						this.selectedContent.splice(index, 1);
+						this.selectedIndex.splice(index, 1);
 					}
 				} else {
 					// 单选
 					this.onConfirmClick(i);
 				}
 			},
-			
+
 			/**
 			 * 确定选择按钮点击事件
 			 * @param {Object} i 当前选择的附件索引（单选模式需提供）
@@ -225,7 +236,7 @@
 				}
 				// 返回上一页面
 				uni.navigateBack({
-					delta:1
+					delta: 1
 				});
 			},
 
@@ -237,7 +248,7 @@
 				this.currentPage = current - 1;
 				this.refreshData();
 			},
-			
+
 			/**
 			 * 悬浮按钮点击事件
 			 */
@@ -264,35 +275,49 @@
 	.container {
 		padding-bottom: 50px;
 	}
+
 	.view-images {
 		margin: 10rpx;
 		/* background-color: red; */
 	}
-
+	
 	.view-image {
 		margin: 10rpx;
-		height: 160rpx;
+		height: 340rpx;
+		background-color: white;
 		box-shadow: 0px 0px 1px 1px rgba(216, 216, 216, 1);
+		position: relative;
+		overflow: hidden;
+	}
+	
+	.view-image-title {
+		position: absolute;
+		z-index: 2;
+		bottom: 0rpx;
+		padding-left: 8rpx;
+		padding-right: 8rpx;
+		background-color: rgba(226, 226, 226, .8);
+		width: 100%;
+		height: 60rpx;
+		line-height: 60rpx;
 	}
 
 	.view-image image {
 		width: 100%;
 		height: 100%;
 	}
+
 	.view-sizeSelect {
 		margin: 10rpx;
 		margin-top: 20rpx;
 		padding: 20rpx;
 		color: #616255;
 	}
+
 	.button {
 		margin: 10rpx;
 		background-color: var(--primaryColor);
 		color: white;
 		border-radius: 0px;
-	}
-	
-	.selected {
-		box-shadow: 0px 0px 1px 1px var(--errorColor);
 	}
 </style>

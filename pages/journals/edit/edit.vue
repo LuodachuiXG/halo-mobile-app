@@ -116,13 +116,27 @@
 			
 				// 拼接附件地址变量，稍后复制到剪贴板
 				let clipboadrStr = "";
-				this.imgUrl.forEach(function(path) {
-					let str = (copyMarkdown ? ("![](" + path + ")") : path) + "\n";
+				this.imgUrl.forEach(function(res) {
+					// imgUrl 的 子数组中有两个元素，一个是 path 一个是 mediaType
+					let str;
+					if (res.mediaType.indexOf("image") >= 0) {
+						// 当前附件是图片
+						str = (copyMarkdown ? ("![](" + res.path + ")") : res.path) + "\n";
+					} else if (res.mediaType.indexOf("video") >= 0) {
+						// 当前附件是视频
+						str = (copyMarkdown ?
+							("<iframe src='" + res.path + "'></iframe>") : res.path) + "\n";
+					} else {
+						// 不支持附件类型，直接赋附件地址
+						str = res.path + "\n";
+					}
+				
 					clipboadrStr += str;
 					if (autoPaste) {
 						that.journalContent += str;
 					}
 				});
+				
 				
 				// 复制到剪贴板
 				uni.setClipboardData({
@@ -139,6 +153,46 @@
 				this.imgUrl = [];
 			}
 		},
+		
+		/**
+		 * 返回事件
+		 * @param {Object} event
+		 */
+		onBackPress(event) {
+			let that = this;
+			
+			// 判断内容是否已经变更
+			let contentEdited = false;
+			if (this.type === "add") {
+				// 新增模式
+				if (this.journalContent !== "") {
+					contentEdited = true;
+				}
+			} else {
+				// 编辑模式
+				if (this.journalContent !== this.journal.sourceContent)
+					contentEdited = true;
+			}
+			
+			if (event.from === "backbutton" && contentEdited) {
+				uni.showModal({
+					title: "内容已改变",
+					content: "内容已经改变，还没有保存，确定要返回吗？",
+					complete: function(res) {
+						if (res.confirm) {
+							// 返回上一页面
+							uni.navigateBack({
+								delta: 1
+							});
+						}
+					}
+				})
+				return true;
+			} else {
+				return false;
+			} 
+		},
+		
 		methods: {
 			/**
 			 * 悬浮按钮菜单点击事件
