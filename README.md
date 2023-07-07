@@ -1,3 +1,11 @@
+### 🎈未来开发计划
+
+2023 年 7 月 8 号
+
+软件停止维护！最近没什么时间维护了，不过未来会用 Quasar 框架重新开发手机端，等于说就是不用 Uni-app  了，用别的框架重写，后续进度等待更新～～不过现在 Halo 的 Web 端在手机上也挺好用的，嘿嘿
+
+
+
 # 🍻halo-mobile-app
 
 📱[Halo](https://halo.run/) admin app
@@ -90,20 +98,6 @@ Gitee：[halo-mobile-app: 📱Halo博客 移动端后台管理 (gitee.com)](http
 <img src="https://ldc-1251523367.cos.ap-beijing.myqcloud.com/luodachui/1659981478605.png" width = "300" />
 
 <img src="https://ldc-1251523367.cos.ap-beijing.myqcloud.com/luodachui/1659981484360.png" width = "300" />
-
-### 🎈未来开发计划
-
-2022/10/19
-
-最近学业繁忙，更新可能比较慢。
-
-不过如果 Halo 有大更新或者程序有影响使用的 Bug 的话我也会尽快修复的。
-
-
-
-未来有可能，我是说有可能，我会用 Jetpack Compose 重写一个安卓原生版（学了 Compose 来练练手，看日后有没有空闲时间吧！
-
-
 
 ### 🌏关于微信小程序版
 
