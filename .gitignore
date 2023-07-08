@@ -6,7 +6,8 @@ node_modules
 .quasar
 /dist
 /quasar.config.*.temporary.compiled*
-
+key.jks
+.vscode
 # Cordova related directories and files
 /src-cordova/node_modules
 /src-cordova/platforms
