@@ -1,8 +1,7 @@
 .DS_Store
 .thumbs.db
 node_modules
-src-capacitor
-key.jks
+
 # Quasar core related directories
 .quasar
 /dist
@@ -25,8 +24,6 @@ yarn-error.log*
 
 # Editor directories and files
 .idea
-.vscode
-.eslintignore
 *.suo
 *.ntvs*
 *.njsproj
