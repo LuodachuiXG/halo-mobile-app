@@ -6,8 +6,6 @@
 
 软件停止维护！最近没什么时间维护了，不过未来会用 Quasar 框架重新开发手机端，等于说就是不用 Uni-app  了，用别的框架重写，不过现在 Halo 的 Web 端在手机上也挺好用的，嘿嘿
 
-后续可以关注一下这个仓库 [Kalo](https://github.com/LuodachuiXG/Kalo)
-
 # 🍻halo-mobile-app
 
 📱[Halo](https://halo.run/) admin app
