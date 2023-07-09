@@ -94,8 +94,8 @@ module.exports = configure(function (/* ctx */) {
         dark: 'auto'
       },
 
-      // iconSet: 'material-icons', // Quasar icon set
-      // lang: 'en-US', // Quasar language pack
+      // iconSet: 'ionicons-v4', // Quasar icon set
+      lang: 'zh-CN', // Quasar language pack
 
       // For special cases outside where the auto-import strategy can have an impact
       // (like functional components as one of the examples),
@@ -209,6 +209,10 @@ module.exports = configure(function (/* ctx */) {
 
       // extendBexScriptsConf (esbuildConf) {}
       // extendBexManifestJson (json) {}
+    },
+
+    bin: {
+      linuxAndroidStudio: '/home/loac/Applications/JetBrains/apps/AndroidStudio/ch-0/222.4459.24.2221.10121639/bin/studio.sh'
     }
   }
 })

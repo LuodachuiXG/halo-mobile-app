@@ -3,9 +3,9 @@
   registry: 'https://registry.npmmirror.com',
   pkgs: [
     {
-      name: '@capacitor/action-app',
-      version: 'latest',
-      type: 'tag',
+      name: '',
+      version: '/home/loac/Project/Quasar/Kalo/@quasar/extras/ionicons-v7',
+      type: 'directory',
       alias: undefined,
       arg: [Result]
     }
@@ -15,7 +15,7 @@
   cacheDir: '/root/.npminstall_tarball',
   env: {
     npm_config_registry: 'https://registry.npmmirror.com',
-    npm_config_argv: '{"remain":[],"cooked":["--fix-bug-versions","--china","--userconfig=/root/.cnpmrc","--disturl=https://cdn.npmmirror.com/binaries/node","--registry=https://registry.npmmirror.com","@capacitor/action-app"],"original":["--fix-bug-versions","--china","--userconfig=/root/.cnpmrc","--disturl=https://cdn.npmmirror.com/binaries/node","--registry=https://registry.npmmirror.com","@capacitor/action-app"]}',
+    npm_config_argv: '{"remain":[],"cooked":["--fix-bug-versions","--china","--userconfig=/root/.cnpmrc","--disturl=https://cdn.npmmirror.com/binaries/node","--registry=https://registry.npmmirror.com","@quasar/extras/ionicons-v7"],"original":["--fix-bug-versions","--china","--userconfig=/root/.cnpmrc","--disturl=https://cdn.npmmirror.com/binaries/node","--registry=https://registry.npmmirror.com","@quasar/extras/ionicons-v7"]}',
     npm_config_user_agent: 'npminstall/7.9.0 npm/? node/v20.3.1 linux x64',
     npm_config_cache: '/root/.npminstall_tarball',
     NODE: '/usr/bin/node',
