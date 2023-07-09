@@ -168,11 +168,11 @@ module.exports = configure(function (/* ctx */) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli/developing-capacitor-apps/configuring-capacitor
     capacitor: {
-      hideSplashscreen: false,
+      hideSplashscreen: true,
       appName: 'Kalo',
       version: '0.1.0-alpha',
-      description: 'Halo 移动端后台管理',
-      versionNumber: '100'
+      androidVersionCode: '100',
+      description: 'Halo 移动端后台管理'
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli/developing-electron-apps/configuring-electron

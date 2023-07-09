@@ -1,17 +1,12 @@
 <template>
   <div class="container">
-    <transition
-      appear
-      enter-active-class="animated fadeInDown slow delay-1s"
-      leave-active-class="animated fadeOutUp slow">
-      <div class="title text-weight-bold text-italic">
-        <text>Kalo</text>
-      </div>
-    </transition>
+    <div class="title text-weight-bold text-italic">
+      <text>Kalo</text>
+    </div>
 
     <transition
       appear
-      enter-active-class="animated fadeInUp slow delay-1s"
+      enter-active-class="animated fadeInUp slow"
       leave-active-class="animated fadeOutDown slow">
       <div class="input-div q-pa-lg">
         <q-input class="q-mb-md" standout="bg-primary text-white" v-model="url" label="Halo 站点地址" hint="需要带上 http / https"/>
@@ -22,7 +17,7 @@
 
     <transition
       appear
-      enter-active-class="animated fadeInRight slow delay-2s"
+      enter-active-class="animated fadeInRight slow delay-1s"
       leave-active-class="animated fadeOutRight slow">
       <div class="q-px-lg q-pt-sm" style="text-align: right">
         <q-btn-group flat>
