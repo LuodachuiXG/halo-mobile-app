@@ -25,7 +25,7 @@ module.exports = configure(function (/* ctx */) {
     // preFetch: true,
 
     // app boot file (/src/boot)
-    // --> boot files are part of "main.js"
+    // --> boot files are part of "main.tools"
     // https://v2.quasar.dev/quasar-cli/boot-files
     boot: [
 
@@ -106,7 +106,8 @@ module.exports = configure(function (/* ctx */) {
 
       // Quasar plugins
       plugins: [
-        'Dialog'
+        'Dialog',
+        'LocalStorage'
       ]
     },
 
@@ -151,7 +152,7 @@ module.exports = configure(function (/* ctx */) {
     pwa: {
       workboxMode: 'generateSW', // or 'injectManifest'
       injectPwaMetaTags: true,
-      swFilename: 'sw.js',
+      swFilename: 'sw.tools',
       manifestFilename: 'manifest.json',
       useCredentialsForManifestTag: false
       // useFilenameHashes: true,
