@@ -53,16 +53,12 @@ const isLogging = ref(false)
  */
 const onLogin = () => {
   isLogging.value = true
-  $q.dialog({
-    title: '温馨提示',
+  $q.notify({
+    type: 'positive',
     message: '这是一个测试',
-    persistent: true,
-    ok: {
-      color: 'primary',
-      flat: true
-    }
-  }).onOk(() => {
-    isLogging.value = false
+    actions: [
+      { label: 'OK', color: 'white', handler: () => { isLogging.value = false } }
+    ]
   })
 }
 
