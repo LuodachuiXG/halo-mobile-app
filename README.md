@@ -1,6 +1,6 @@
 > 软件只支持到 Halo 1.6.0，未适配 Halo 2.0+
 
-Uni-app 旧版请查看 release-0.0.5-Halo1.6.0 分支。
+Halo1.6.0 旧版请查看 release-0.0.5-Halo1.6.0 分支。
 
 ### 🎈未来开发计划
 
