@@ -28,8 +28,7 @@ module.exports = configure(function (/* ctx */) {
     // --> boot files are part of "main.tools"
     // https://v2.quasar.dev/quasar-cli/boot-files
     boot: [
-
-      'axios'
+      'addressbar-color'
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
@@ -85,7 +84,8 @@ module.exports = configure(function (/* ctx */) {
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
     devServer: {
       // https: true
-      open: true // opens browser window automatically
+      open: true, // opens browser window automatically
+      changeOrigin: true
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
@@ -107,7 +107,8 @@ module.exports = configure(function (/* ctx */) {
       // Quasar plugins
       plugins: [
         'Notify',
-        'LocalStorage'
+        'LocalStorage',
+        'Dialog'
       ]
     },
 

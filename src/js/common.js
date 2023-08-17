@@ -33,3 +33,50 @@ export function getAccessToken () {
 export function setAccessToken (token) {
   setData('access_token', token)
 }
+
+/**
+ * 获取博客 Url
+ * @returns {string}
+ */
+export function getUrl () {
+  return getData('url')
+}
+
+/**
+ * 设置博客 Url
+ */
+export function setUrl (url) {
+  setData('url', url)
+}
+
+/**
+ * 获取指定长度随机字符
+ * @param {*} length 字符长度
+ * @returns 随机字符
+ */
+function getRandomChat (length) {
+  const str = 'abcdefghijklmnopqrstuvwxyz0123456789'
+  let result = ''
+  for (let i = 0; i < length; i++) {
+    result += str[Math.floor(Math.random() * 36)]
+  }
+  return result
+}
+
+/**
+ * 生成 Token
+ * @returns Token
+ */
+export function generateToken () {
+  return (
+    getRandomChat(8) +
+    '-' +
+    getRandomChat(4) +
+    '-' +
+    getRandomChat(4) +
+    '-' +
+    getRandomChat(4) +
+    '-' +
+    getRandomChat(12)
+  )
+}

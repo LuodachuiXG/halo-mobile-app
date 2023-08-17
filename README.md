@@ -1,12 +1,12 @@
 > 软件只支持到 Halo 1.6.0，未适配 Halo 2.0+
 
-main 分支已经开始用 Quasar 重写，Uni-app 旧版请查看 release-0.0.5-Halo1.6.0 分支。
+Uni-app 旧版请查看 release-0.0.5-Halo1.6.0 分支。
 
 ### 🎈未来开发计划
 
 2023 年 7 月 8 号
 
-比较忙，偶尔会抽空适配一下 Halo 2.0+ ，未来会用 Quasar 框架重新开发手机端，放弃使用 Uni-app，不过现在 Halo 的 Web 端在手机上也挺好用的，嘿嘿
+比较忙，偶尔会抽空适配一下 Halo 2.0+ ，不过现在 Halo 的 Web 端在手机上也挺好用的，嘿嘿
 
 # 🍻halo-mobile-app
 
