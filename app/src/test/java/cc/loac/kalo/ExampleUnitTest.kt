@@ -1,5 +1,7 @@
 package cc.loac.kalo
 
+import cc.loac.kalo.utils.generateToken
+import cc.loac.kalo.utils.getRandomChat
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -12,6 +14,6 @@ import org.junit.Assert.*
 class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+        println(generateToken())
     }
 }
