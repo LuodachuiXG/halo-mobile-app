@@ -6,21 +6,34 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 
 
+
 /**
  * 对话框
- * @param title 标题
- * @param text 内容
  * @param onConfirm 确定按钮点击事件
  */
 @Composable
-fun MAlert(
+fun String.Alert(
+    onConfirm: () -> Unit
+) {
+    this.Alert(
+        title = "温馨提示",
+        onConfirm = onConfirm
+    )
+}
+
+/**
+ * 对话框
+ * @param title 标题
+ * @param onConfirm 确定按钮点击事件
+ */
+@Composable
+fun String.Alert(
     title: String,
-    text: String,
     onConfirm: () -> Unit
 ) {
     MAlert(
         title = title,
-        text = text,
+        text = this,
         confirmText = "确定",
         dismissText = "",
         onConfirm = onConfirm,

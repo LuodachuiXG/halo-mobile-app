@@ -1,8 +1,5 @@
 package cc.loac.kalo.data.models
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import okhttp3.ResponseBody
 import retrofit2.Response
 
 /**
@@ -60,12 +57,20 @@ data class MyResponse<T> (
      * 请求状态是否是 None
      */
     fun isNotNone(): Boolean {
-        return status != Status.NONE
+        val result = status != Status.NONE
+        // 如果状态不是 None 的话就改成 None
+        // 这里一般用于判断是否请求成功
+        // 所以这里判断后就修改 Status
+        status = Status.NONE
+        return result
     }
 
 
     /**
      * 清空数据
+     * 有些地方是通过状态改变来触发事件
+     * 所有可能需要通过清除数据来使
+     * 状态改变时再次成功触发事件？
      */
     fun clear() {
         status = Status.NONE

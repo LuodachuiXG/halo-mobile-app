@@ -1,5 +1,6 @@
 package cc.loac.kalo.ui.screens.login
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,6 +10,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -27,18 +29,23 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cc.loac.kalo.data.models.MyResponse
 import cc.loac.kalo.data.models.PublicKey
-import cc.loac.kalo.data.repositories.LoginRepository
+import cc.loac.kalo.data.repositories.ConfigKey
+import cc.loac.kalo.data.repositories.ConfigRepo
+import cc.loac.kalo.data.repositories.LoginRepo
+import cc.loac.kalo.ui.components.Alert
 import cc.loac.kalo.ui.theme.aliFontFamily
-import cc.loac.kalo.ui.components.MAlert
+import cc.loac.kalo.utils.isUrl
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
-    var url by remember { mutableStateOf("https://loac.cc") }
-    var username by remember { mutableStateOf("admin") }
-    var password by remember { mutableStateOf("123456") }
+    var url by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -53,6 +60,7 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
             onPasswordChange = { password = it }
         )
         LoginBtn(url, username, password, loginViewModel)
+        BottomTips()
     }
 }
 
@@ -101,7 +109,7 @@ private fun Inputs(urlValue: String,
     ) {
         Input(
             label = "Halo 站点地址",
-            placeholder = "输入你的 Halo 站点地址",
+            placeholder = "Halo 站点地址（需要添加 https / http）",
             value = urlValue,
             onValueChange = onUrlChange
         )
@@ -164,10 +172,11 @@ private fun LoginBtn(
     password: String,
     loginViewModel: LoginViewModel
 ) {
-    // 是否显示有空白信息对话框
-    var showEmptyAlert by remember { mutableStateOf(false) }
-    // 是否显示获取 Public Key 成功的对话框
-    var showGetPublicKeyAlert by remember { mutableStateOf(false) }
+    val scope = CoroutineScope(Dispatchers.IO)
+    // 是否显示对话框
+    var showAlert by remember { mutableStateOf(false) }
+    var alertTitle by remember { mutableStateOf("") }
+    var alertText by remember { mutableStateOf("") }
 
     // 获取到的 Public Key
     val publicKeyRes by loginViewModel.publicKey.collectAsState()
@@ -178,12 +187,27 @@ private fun LoginBtn(
             onClick = {
                 // 有空白信息
                 if (url.isEmpty() || username.isEmpty() || password.isEmpty()) {
-                    showEmptyAlert = true
+                    alertTitle = "登录失败"
+                    alertText = "请将信息填写完整"
+                    showAlert = true
                     return@Button
                 }
 
-                // 尝试获取 Public-Key
-                loginViewModel.getPublicKey()
+                if (!url.isUrl()) {
+                    alertTitle = "登录失败"
+                    alertText = "Halo 站点地址有误，请重新输入"
+                    showAlert = true
+                    return@Button
+                }
+
+                // 启动协程处理耗时操作
+                scope.launch {
+                    // 先将站点地址存储
+                    ConfigRepo.set(ConfigKey.HALO_URL, url)
+
+                    // 尝试获取 Public-Key
+                    loginViewModel.getPublicKey()
+                }
             },
             modifier = Modifier.fillMaxWidth()
         ) {
@@ -191,43 +215,66 @@ private fun LoginBtn(
         }
     }
 
-    // 显示有空白信息对话框话框
-    if (showEmptyAlert) {
-        MAlert(title = "登录失败", text = "请将信息填写完整") {
-            showEmptyAlert = false
+    // 显示对话框话框
+    if (showAlert) {
+        alertText.Alert(alertTitle) {
+            showAlert = false
         }
     }
 
     // Public Key 获取成功
     if (publicKeyRes.isNotNone()) {
-        showGetPublicKeyAlert = true
+        if (publicKeyRes.isSuccessful()) {
+            alertTitle = "获取 Public-Key 成功"
+            alertText = publicKeyRes.data?.base64Format ?: "None"
+        } else {
+            alertTitle = "获取 Public-Key 失败"
+            alertText = publicKeyRes.errMsg
+        }
+        showAlert = true
     }
 
-    // 显示 Public Key 获取成功对话框
-    if (showGetPublicKeyAlert) {
-        var title: String
-        var text: String
-        if (publicKeyRes.isSuccessful()) {
-            title = "获取 Public-Key 成功"
-            text = publicKeyRes.data?.base64Format ?: "None"
-        } else {
-            title = "获取 Public-Key 失败"
-            text = publicKeyRes.errMsg
+}
+
+/**
+ * 页面底部提示按钮
+ */
+@Composable
+fun BottomTips() {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Bottom,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        var showAlert by remember { mutableStateOf(false) }
+        TextButton(
+            modifier = Modifier.padding(bottom = 5.dp),
+            onClick = {
+                showAlert = true
+            }
+        ) {
+            Text(
+                text = "支持 Halo 2.8.0 +",
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.secondary,
+            )
         }
 
-        MAlert(title = title, text = text) {
-            showGetPublicKeyAlert = false
-            publicKeyRes.clear()
+        if (showAlert) {
+            "支持最新版 Halo，还在开发中哦，比较忙，抽时间会搞一搞嘿嘿".Alert("haha") {
+                showAlert = false
+            }
         }
     }
 }
+
 
 /**
  * 登录界面的 ViewModel
  */
 class LoginViewModel : ViewModel() {
     // 初始化数据操作类
-    private val loginRepository = LoginRepository()
+    private val loginRepository = LoginRepo()
 
 
     // Public-Key
