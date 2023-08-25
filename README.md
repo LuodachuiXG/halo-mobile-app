@@ -1,7 +1,6 @@
-<center>
+<div align="center">
 <img src="./kalo.png" width="240" style="border-radius:20px;" />
-</center>
-
+</div>
 
 
 > 发行版目前只支持到 Halo 1.6.0，暂未适配 Halo 2.0+
