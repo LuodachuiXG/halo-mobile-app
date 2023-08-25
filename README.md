@@ -1,4 +1,10 @@
-> 软件只支持到 Halo 1.6.0，未适配 Halo 2.0+
+<center>
+<img src="./kalo.png" width="240" style="border-radius:20px;" />
+</center>
+
+
+
+> 发行版目前只支持到 Halo 1.6.0，暂未适配 Halo 2.0+
 
 Halo1.6.0 旧版请查看 release-0.0.5-Halo1.6.0 分支。
 
