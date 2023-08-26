@@ -1,7 +1,5 @@
 package cc.loac.kalo.ui.screens.login
 
-import android.annotation.SuppressLint
-import android.graphics.Bitmap.Config
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -44,8 +42,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+// 协程作用域
 val scope = CoroutineScope(Dispatchers.IO)
-
 
 @Composable
 fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {

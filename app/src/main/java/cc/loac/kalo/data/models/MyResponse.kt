@@ -51,12 +51,10 @@ data class MyResponse<T> (
      */
     fun isSuccessful(): Boolean {
         val result = (status == Status.SUCCESS)
-        // 如果状态 Success 的话就改成 None
+        // 状态改成 None
         // 这里一般用于判断是否请求成功
         // 所以这里判断后就修改 Status
-        if (result) {
-            status = Status.NONE
-        }
+        status = Status.NONE
         return result
     }
 
