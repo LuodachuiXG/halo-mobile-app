@@ -62,8 +62,10 @@ object ConfigRepo  {
      * @param key 键
      */
     suspend fun getByRoom(key: ConfigKey): String {
-        val keyValue = dao.get(key.key)
-        return keyValue?.v ?: ""
+        val keyValue = dao.get(key.key)?.v ?: ""
+        // 从数据库获取数据的同时也写入缓存
+        cache(key, keyValue)
+        return keyValue
     }
 
     /**

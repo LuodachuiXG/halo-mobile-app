@@ -50,19 +50,21 @@ data class MyResponse<T> (
      * 请求是否成功
      */
     fun isSuccessful(): Boolean {
-        return status == Status.SUCCESS
+        val result = (status == Status.SUCCESS)
+        // 如果状态 Success 的话就改成 None
+        // 这里一般用于判断是否请求成功
+        // 所以这里判断后就修改 Status
+        if (result) {
+            status = Status.NONE
+        }
+        return result
     }
 
     /**
      * 请求状态是否是 None
      */
     fun isNotNone(): Boolean {
-        val result = status != Status.NONE
-        // 如果状态不是 None 的话就改成 None
-        // 这里一般用于判断是否请求成功
-        // 所以这里判断后就修改 Status
-        status = Status.NONE
-        return result
+        return status != Status.NONE
     }
 
 

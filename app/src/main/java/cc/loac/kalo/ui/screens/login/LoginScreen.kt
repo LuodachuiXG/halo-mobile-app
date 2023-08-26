@@ -1,5 +1,7 @@
 package cc.loac.kalo.ui.screens.login
 
+import android.annotation.SuppressLint
+import android.graphics.Bitmap.Config
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,6 +14,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,11 +44,20 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+val scope = CoroutineScope(Dispatchers.IO)
+
+
 @Composable
 fun LoginScreen(loginViewModel: LoginViewModel = viewModel()) {
     var url by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    // 只执行一次，不参与 Composable 重组
+    LaunchedEffect(Unit) {
+        // 从数据库中获取保存的 Halo 站点数据
+        url = ConfigRepo.getByRoom(ConfigKey.HALO_URL)
+    }
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -172,7 +184,6 @@ private fun LoginBtn(
     password: String,
     loginViewModel: LoginViewModel
 ) {
-    val scope = CoroutineScope(Dispatchers.IO)
     // 是否显示对话框
     var showAlert by remember { mutableStateOf(false) }
     var alertTitle by remember { mutableStateOf("") }
