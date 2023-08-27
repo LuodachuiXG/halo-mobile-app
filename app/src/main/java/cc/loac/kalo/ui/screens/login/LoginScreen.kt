@@ -9,8 +9,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Brightness2
+import androidx.compose.material.icons.filled.Brightness3
+import androidx.compose.material.icons.filled.BrightnessHigh
+import androidx.compose.material.icons.filled.RemoveRedEye
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -28,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
@@ -124,7 +133,6 @@ private fun Title(title: String) {
  * @param passwordValue 密码数据
  * @param onPasswordChange 密码改变事件
  */
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun Inputs(
     urlValue: String,
@@ -141,7 +149,7 @@ private fun Inputs(
     ) {
         Input(
             label = "Halo 站点地址",
-            placeholder = "Halo 站点地址（需要添加 https / http）",
+            placeholder = "需要添加 https / http",
             value = urlValue,
             onValueChange = onUrlChange
         )
@@ -180,15 +188,34 @@ private fun Input(
     onValueChange: (String) -> Unit,
     isPassword: Boolean = false
 ) {
+    // 是否显示密码
+    var showPassword by remember { mutableStateOf(false) }
+
     OutlinedTextField(
         label = { Text(label) },
         placeholder = { Text(placeholder) },
         value = value,
         onValueChange = onValueChange,
-        visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
+        visualTransformation = if (isPassword && !showPassword) {
+            PasswordVisualTransformation()
+        } else {
+            VisualTransformation.None
+        },
         modifier = Modifier
             .fillMaxWidth()
-            .padding(10.dp)
+            .padding(10.dp),
+        trailingIcon = {
+            if (isPassword) {
+                IconButton(onClick = { showPassword = !showPassword }) {
+                    Icon(
+                        imageVector = if (showPassword) Icons.Default.BrightnessHigh else Icons.Default.Brightness3,
+                        contentDescription = "显示密码",
+                        tint = if (showPassword) MaterialTheme.colorScheme.primary else LocalContentColor.current
+                    )
+                }
+
+            }
+        }
     )
 }
 
@@ -280,6 +307,7 @@ private fun LoginBtn(
         if (loginStatus.isSuccessful()) {
             // 登录成功
             alertTitle = "登录成功"
+            alertText = ""
         } else {
             // 登录失败，弹出对话框
             alertTitle = "登录失败"
@@ -326,6 +354,12 @@ fun BottomTips() {
             }
         }
     }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun H() {
+    LoginScreen()
 }
 
 
