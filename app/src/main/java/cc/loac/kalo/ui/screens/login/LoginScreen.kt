@@ -1,6 +1,5 @@
 package cc.loac.kalo.ui.screens.login
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.MutableTransitionState
@@ -39,7 +38,7 @@ import cc.loac.kalo.data.repositories.ConfigKey
 import cc.loac.kalo.data.repositories.ConfigRepo
 import cc.loac.kalo.data.repositories.LoginRepo
 import cc.loac.kalo.ui.components.Alert
-import cc.loac.kalo.ui.components.progressAlert
+import cc.loac.kalo.ui.components.ProgressAlert
 import cc.loac.kalo.ui.theme.aliFontFamily
 import cc.loac.kalo.utils.isUrl
 import kotlinx.coroutines.launch
@@ -291,7 +290,9 @@ private fun LoginBtn(
 
     // 显示正在登录对话框
     if (showLoadingAlert) {
-        "正在登录，请稍等".progressAlert()
+        "正在登录，请稍等".ProgressAlert(5000) {
+            showLoadingAlert = false
+        }
     }
 }
 

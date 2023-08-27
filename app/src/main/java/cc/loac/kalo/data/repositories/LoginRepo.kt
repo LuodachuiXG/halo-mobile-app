@@ -81,7 +81,6 @@ class LoginRepo(url: String) {
 
         // 生成 CSRF Token
         val token = generateToken()
-        Log.e(javaClass.name, encryptedPassword)
         try {
             // 尝试登录
             loginApi.login(token, username, encryptedPassword).handle(

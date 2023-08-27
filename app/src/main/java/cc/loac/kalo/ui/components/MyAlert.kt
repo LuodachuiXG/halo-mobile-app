@@ -1,29 +1,49 @@
 package cc.loac.kalo.ui.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
 
 
 /**
  * 进度条对话框
+ * @param showBtnTime 显示取消按钮的时间，0 默认不显示
+ * @param onConfirm 取消按钮点击事件
  */
 @Composable
-fun String.progressAlert() {
+fun String.ProgressAlert(
+    showBtnTime: Long = 0,
+    onConfirm: () -> Unit
+) {
+    // 是否显示取消按钮
+    var showBtn by remember { mutableStateOf(false) }
+
+    // 只执行一次，不参与重组
+    LaunchedEffect(Unit) {
+        if (showBtnTime > 0L) {
+            delay(showBtnTime)
+            showBtn = true
+        }
+    }
+
     AlertDialog(
         onDismissRequest = {},
         title = {
@@ -31,7 +51,7 @@ fun String.progressAlert() {
         },
         text = {
             Column(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().padding(10.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -40,7 +60,13 @@ fun String.progressAlert() {
                 )
             }
         },
-        confirmButton = {}
+        confirmButton = {
+            if (showBtn) {
+                TextButton(onClick = onConfirm) {
+                    Text("取消")
+                }
+            }
+        }
     )
 }
 
