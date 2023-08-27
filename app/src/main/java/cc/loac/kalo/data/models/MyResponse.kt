@@ -3,7 +3,7 @@ package cc.loac.kalo.data.models
 import retrofit2.Response
 
 /**
- * 网络请求类
+ * 请求类
  * @param status 请求状态
  * @param data 请求的数据
  * @param errMsg 错误信息
@@ -13,7 +13,8 @@ data class MyResponse<T> (
     var status: Status = Status.NONE,
     var data: T? = null,
     var errMsg: String = "",
-    var code: Int = 0) {
+    var code: Int = 0
+) {
 
     /**
      * 设置请求成功
@@ -23,6 +24,20 @@ data class MyResponse<T> (
         status = Status.SUCCESS
         data = response.body()
         code = response.code()
+        return this
+    }
+
+    /**
+     * 设置请求成功
+     */
+    fun success(data: T): MyResponse<T> {
+        status = Status.SUCCESS
+        this.data = data
+        return this
+    }
+
+    fun success(): MyResponse<T> {
+        status = Status.SUCCESS
         return this
     }
 

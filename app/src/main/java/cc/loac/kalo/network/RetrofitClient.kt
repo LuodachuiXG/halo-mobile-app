@@ -2,12 +2,19 @@ package cc.loac.kalo.network
 
 
 import android.annotation.SuppressLint
+import cc.loac.kalo.data.models.ErrorResponse
 import cc.loac.kalo.data.repositories.ConfigKey
 import cc.loac.kalo.data.repositories.ConfigRepo
 import cc.loac.kalo.network.api.LoginApiService
+import com.google.gson.Gson
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.Response
+import okhttp3.ResponseBody
+import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.lang.reflect.Type
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
 import javax.net.ssl.HostnameVerifier
@@ -21,46 +28,35 @@ import javax.net.ssl.X509TrustManager
  */
 class RetrofitClient private constructor(retrofit: Retrofit) {
     companion object {
-        // Halo 站点地址
-        private var haloUrl: String = ""
-        private var retrofitClient: RetrofitClient? = null
-
         /**
          * 获取 RetrofitClient 实例
          * @param url Halo 站点地址
          */
-        fun getInstance(url: String = ConfigRepo.get(ConfigKey.HALO_URL)): RetrofitClient {
-            return if (haloUrl != url) {
-                // 原地址和传过来的地址不一样就创建新的实例
-                haloUrl = url
-                val retrofit = Retrofit.Builder()
-                    .baseUrl(haloUrl)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    // 忽略对 https 证书的验证
-                    .client(OkHttpClient.Builder()
-                        .sslSocketFactory(SSLSocketClient.sSLSocketFactory, SSLSocketClient.trustManager)
-                        .hostnameVerifier(SSLSocketClient.hostnameVerifier)
-                        .build())
-                    .build()
-                retrofitClient = RetrofitClient(retrofit)
-                retrofitClient as RetrofitClient
-            } else {
-                retrofitClient!!
-            }
+        fun create(url: String = ConfigRepo.get(ConfigKey.HALO_URL)): RetrofitClient {
+            val retrofit = Retrofit.Builder()
+                .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create())
+                // 忽略对 https 证书的验证
+                .client(OkHttpClient.Builder()
+                    .sslSocketFactory(SSLSocketClient.sSLSocketFactory, SSLSocketClient.trustManager)
+                    .hostnameVerifier(SSLSocketClient.hostnameVerifier)
+                    .build())
+                .build()
+            return RetrofitClient(retrofit)
         }
     }
 
     /**
      * 登录 Api
      */
+
     val loginApiService: LoginApiService = retrofit.create(LoginApiService::class.java)
 }
-
 
 /**
  * 忽略证书验证
  */
-object SSLSocketClient {
+private object SSLSocketClient {
     val sSLSocketFactory: SSLSocketFactory
         // 获取 SSLSocketFactory
         get() = try {

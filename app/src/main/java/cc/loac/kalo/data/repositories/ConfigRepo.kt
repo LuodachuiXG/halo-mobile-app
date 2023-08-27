@@ -70,12 +70,23 @@ object ConfigRepo  {
 
     /**
      * 修改配置
+     * 同时保存到缓存和数据库
      * @param key 键
      * @param value 值
      */
-    suspend fun set(key: ConfigKey, value: String) {
+    suspend fun setToRoom(key: ConfigKey, value: String) {
         dao.set(KeyValue(key.key, value))
         // 同时将配置保存到缓存中
+        cache(key, value)
+    }
+
+    /**
+     * 修改配置
+     * 只保存到缓存中
+     * @param key 键
+     * @param value 值
+     */
+    fun set(key: ConfigKey, value: String) {
         cache(key, value)
     }
 }
@@ -85,5 +96,11 @@ object ConfigRepo  {
  */
 enum class ConfigKey(val key: String) {
     // Halo 站点地址
-    HALO_URL("halo_url")
+    HALO_URL("halo_url"),
+    // 用户名
+    USERNAME("username"),
+    // 密码
+    PASSWORD("password"),
+    // CSRF TOKEN
+    CSRF_TOKEN("csrf_token")
 }
