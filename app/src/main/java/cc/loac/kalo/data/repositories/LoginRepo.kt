@@ -39,7 +39,12 @@ class LoginRepo(url: String) {
             if (response.isSuccessful) {
                 result.success(response)
             } else {
-                result.failure(response)
+                // 获取公钥失败
+                result.failure(
+                    "获取登录加密公钥失败，请检查网络以及站点地址是否正确。\n" +
+                            "并检查 Halo 版本是否兼容，当前 App 不支持 Halo 2.0 以下版本，" +
+                            "如果你使用的是 Halo 1.* 版本，请下载 v0.0.5 版本。"
+                )
             }
         } catch (e: Exception) {
             e.printStackTrace()

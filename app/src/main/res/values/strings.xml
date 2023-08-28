@@ -1,3 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Kalo</string>
+    <string name="app_name" translatable="false">Kalo</string>
+    <string name="halo_website_address">Halo 站点地址</string>
+    <string name="need_https_or_http">需要添加 https://或 http://</string>
+    <string name="halo_username">Halo 用户名</string>
+    <string name="halo_password">Halo 密码</string>
+    <string name="username">用户名</string>
+    <string name="password">密码</string>
+    <string name="login">登录</string>
+    <string name="show_password">显示密码</string>
+    <string name="login_failure">登录失败</string>
+    <string name="have_blank_information">请将信息填写完整</string>
+    <string name="halo_site_address_is_incorrect">Halo 站点地址有误，请重新输入</string>
+    <string name="login_successful">登录成功</string>
+    <string name="is_logging">正在登陆，请稍等</string>
+    <string name="login_bottom_title">支持 Halo 2.8.0 +</string>
+    <string name="login_bottom_text">支持最新版 Halo，还在开发中哦，比较忙，抽时间会搞一搞嘿嘿</string>
 </resources>

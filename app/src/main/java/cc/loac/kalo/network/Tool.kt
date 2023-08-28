@@ -19,9 +19,14 @@ fun <T> Response<T>.handle(
     if (this.isSuccessful) {
         success(this.body()!!)
     } else {
-        val gson = Gson()
-        val errorResponse =
-            gson.fromJson(this.errorBody()?.string(), ErrorResponse::class.java)
-        failure(errorResponse)
+        try {
+            val gson = Gson()
+            val errorResponse =
+                gson.fromJson(this.errorBody()?.string(), ErrorResponse::class.java)
+            failure(errorResponse)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            failure(ErrorResponse(detail = "未知错误"))
+        }
     }
 }
