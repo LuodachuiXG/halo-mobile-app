@@ -45,6 +45,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import cc.loac.kalo.R
 import cc.loac.kalo.data.models.MyResponse
 import cc.loac.kalo.data.repositories.ConfigKey
@@ -52,6 +54,7 @@ import cc.loac.kalo.data.repositories.ConfigRepo
 import cc.loac.kalo.data.repositories.LoginRepo
 import cc.loac.kalo.ui.components.Alert
 import cc.loac.kalo.ui.components.ProgressAlert
+import cc.loac.kalo.ui.screens.AppScreen
 import cc.loac.kalo.ui.theme.aliFontFamily
 import cc.loac.kalo.utils.isUrl
 import kotlinx.coroutines.launch
@@ -61,7 +64,9 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun LoginScreen(
-    loginViewModel: LoginViewModel = viewModel()) {
+    navController: NavController,
+    loginViewModel: LoginViewModel = viewModel()
+) {
     var url by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -92,7 +97,8 @@ fun LoginScreen(
             url = url,
             username = username,
             password = password,
-            loginViewModel = loginViewModel
+            loginViewModel = loginViewModel,
+            navController = navController
         )
         BottomTips()
     }
@@ -159,22 +165,22 @@ private fun Inputs(
             .padding(start = 20.dp, end = 20.dp, bottom = 20.dp)
     ) {
         Input(
-            label = stringResource(id = R.string.halo_website_address),
-            placeholder = stringResource(R.string.need_https_or_http),
+            label = "Halo 站点地址",
+            placeholder = "需要 加:// 或 http://",
             value = urlValue,
             onValueChange = onUrlChange
         )
 
         Input(
-            label = stringResource(R.string.username),
-            placeholder = stringResource(R.string.halo_username),
+            label = "用户名",
+            placeholder = "Halo 用户名",
             value = usernameValue,
             onValueChange = onUsernameChange
         )
 
         Input(
-            label = stringResource(R.string.password),
-            placeholder = stringResource(R.string.halo_password),
+            label = "密码",
+            placeholder = "Halo 登录密码",
             value = passwordValue,
             onValueChange = onPasswordChange,
             isPassword = true
@@ -220,7 +226,7 @@ private fun Input(
                 IconButton(onClick = { showPassword = !showPassword }) {
                     Icon(
                         imageVector = if (showPassword) Icons.Default.BrightnessHigh else Icons.Default.Brightness3,
-                        contentDescription = stringResource(R.string.show_password),
+                        contentDescription = "显示密码",
                         tint = if (showPassword) MaterialTheme.colorScheme.primary else LocalContentColor.current
                     )
                 }
@@ -239,11 +245,11 @@ private fun Input(
  */
 @Composable
 private fun LoginBtn(
-    context: Context = LocalContext.current,
     url: String,
     username: String,
     password: String,
-    loginViewModel: LoginViewModel
+    loginViewModel: LoginViewModel,
+    navController: NavController
 ) {
     // 协程作用域
     val scope = rememberCoroutineScope()
@@ -279,15 +285,15 @@ private fun LoginBtn(
                 onClick = {
                     // 有空白信息
                     if (url.isEmpty() || username.isEmpty() || password.isEmpty()) {
-                        alertTitle = context.getString(R.string.login_failure)
-                        alertText = context.getString(R.string.have_blank_information)
+                        alertTitle = "登录失败"
+                        alertText = "请将信息输入完整"
                         showAlert = true
                         return@Button
                     }
 
                     if (!url.isUrl()) {
-                        alertTitle = context.getString(R.string.login_failure)
-                        alertText = context.getString(R.string.halo_site_address_is_incorrect)
+                        alertTitle = "登录失败"
+                        alertText = "站点地址有误，请重新输入"
                         showAlert = true
                         return@Button
                     }
@@ -300,7 +306,7 @@ private fun LoginBtn(
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(stringResource(R.string.login))
+                Text("登录")
             }
         }
     }
@@ -319,19 +325,25 @@ private fun LoginBtn(
     if (loginStatus.isNotNone()) {
         if (loginStatus.isSuccessful()) {
             // 登录成功
-            alertTitle = stringResource(R.string.login_successful)
-            alertText = ""
+            // 进入底部导航页面
+            showLoadingAlert = false
+            navController.navigate(AppScreen.ME.route) {
+                popUpTo(AppScreen.LOGIN.route) {
+                    inclusive = true
+                }
+            }
         } else {
             // 登录失败，弹出对话框
-            alertTitle = stringResource(R.string.login_failure)
+            alertTitle = "登录失败"
             alertText = loginStatus.errMsg
+            showAlert = true
         }
-        showAlert = true
+
     }
 
     // 显示正在登录对话框
     if (showLoadingAlert) {
-        stringResource(R.string.is_logging).ProgressAlert(5000) {
+        "正在登录...".ProgressAlert(5000) {
             showLoadingAlert = false
         }
     }
@@ -355,24 +367,18 @@ fun BottomTips() {
             }
         ) {
             Text(
-                text = stringResource(R.string.login_bottom_title),
+                text = "支持 Halo 2.8.0 +",
                 fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.secondary,
             )
         }
 
         if (showAlert) {
-            stringResource(R.string.login_bottom_text).Alert("Haha") {
+            "支持 Halo 2.8.0 +".Alert("哈哈") {
                 showAlert = false
             }
         }
     }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun H() {
-    LoginScreen()
 }
 
 
