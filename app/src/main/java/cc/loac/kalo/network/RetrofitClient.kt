@@ -6,6 +6,7 @@ import cc.loac.kalo.data.models.ErrorResponse
 import cc.loac.kalo.data.repositories.ConfigKey
 import cc.loac.kalo.data.repositories.ConfigRepo
 import cc.loac.kalo.network.api.LoginApiService
+import cc.loac.kalo.network.api.UserApiService
 import com.google.gson.Gson
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -49,8 +50,12 @@ class RetrofitClient private constructor(retrofit: Retrofit) {
     /**
      * 登录 Api
      */
-
     val loginApiService: LoginApiService = retrofit.create(LoginApiService::class.java)
+
+    /**
+     * 用户 Api
+     */
+    val userApiService: UserApiService = retrofit.create(UserApiService::class.java)
 }
 
 /**

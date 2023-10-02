@@ -386,7 +386,7 @@ fun BottomTips() {
  * 登录界面的 ViewModel
  */
 class LoginViewModel : ViewModel() {
-    // 初始化数据操作类
+    // 登录数据操作类
     private lateinit var loginRepo: LoginRepo
 
     private val _loginStatus = mutableStateOf(MyResponse<String>())

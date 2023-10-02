@@ -1,9 +1,9 @@
 package cc.loac.kalo.network
 
+import androidx.compose.runtime.State
 import cc.loac.kalo.data.models.ErrorResponse
+import cc.loac.kalo.data.models.MyResponse
 import com.google.gson.Gson
-import okhttp3.ResponseBody
-import retrofit2.HttpException
 import retrofit2.Response
 
 /**
@@ -27,6 +27,24 @@ fun <T> Response<T>.handle(
         } catch (e: Exception) {
             e.printStackTrace()
             failure(ErrorResponse(detail = "未知错误"))
+        }
+    }
+}
+
+fun <T> State<MyResponse<T>>.handle(
+    success: (T) -> Unit,
+    failure: (errMsg: String) -> Unit
+) {
+    if (this.value.isNotNone()) {
+        if (this.value.isSuccessful()) {
+            val data = this.value.data
+            if (data == null) {
+                failure("响应数据为空")
+                return
+            }
+            success(data)
+        } else {
+            failure(this.value.errMsg)
         }
     }
 }
