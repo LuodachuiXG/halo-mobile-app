@@ -1,5 +1,6 @@
 package cc.loac.kalo
 
+import cc.loac.kalo.utils.sub
 import org.junit.Test
 
 /**
@@ -9,7 +10,7 @@ import org.junit.Test
  */
 class ExampleUnitTest {
     @Test
-    fun addition_isCorrect() {
+    fun test() {
 
     }
 }

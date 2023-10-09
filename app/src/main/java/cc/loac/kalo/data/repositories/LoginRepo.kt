@@ -1,7 +1,6 @@
 package cc.loac.kalo.data.repositories
 
 import android.util.Log
-import androidx.compose.runtime.rememberCoroutineScope
 import cc.loac.kalo.data.models.MyResponse
 import cc.loac.kalo.data.models.PublicKey
 import cc.loac.kalo.network.RetrofitClient
@@ -9,6 +8,7 @@ import cc.loac.kalo.network.api.LoginApiService
 import cc.loac.kalo.network.handle
 import cc.loac.kalo.utils.encryptData
 import cc.loac.kalo.utils.generateToken
+import cc.loac.kalo.utils.sub
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -61,6 +61,7 @@ class LoginRepo(url: String) {
         username: String,
         password: String
     ): MyResponse<String> {
+        val scope = CoroutineScope(Dispatchers.IO)
         // 返回的请求结果
         val result = MyResponse<String>()
 
@@ -89,9 +90,22 @@ class LoginRepo(url: String) {
         try {
             // 尝试登录
             loginApi.login(token, username, encryptedPassword).handle(
-                success = {
+                success = { _, response ->
                     // 登录成功
-                    val scope = CoroutineScope(Dispatchers.IO)
+                    // 获取登录成功的 Session Cookie
+                    val sessionCookie = response.headers().get("set-cookie")
+                    // sessionCookie 为空，登录失败
+                    if (sessionCookie == null) {
+                        result.failure("登录 Session 获取失败，登陆失败")
+                        return@handle
+                    }
+
+                    // 从 Cookie 中截取出 Session
+                    val session = sessionCookie.sub("SESSION=", ";")
+                    if (session.isEmpty()) {
+                        result.failure("登录 Session 获取失败，登陆失败")
+                        return@handle
+                    }
                     scope.launch {
                         ConfigRepo.apply {
                             // 登录信息保存到数据库
@@ -99,17 +113,16 @@ class LoginRepo(url: String) {
                             setToRoom(ConfigKey.USERNAME, username)
                             setToRoom(ConfigKey.PASSWORD, password)
 
-                            // 本次登录的 Token 保存到缓存中
-                            set(ConfigKey.CSRF_TOKEN, token)
+                            // 本次登录的 Session Token 保存到缓存中
+                            set(ConfigKey.SESSION_TOKEN, session)
                         }
                     }
                     result.success()
-                },
-                failure = {
-                    // 登录失败，回调网络请求异常信息（账号密码错误等）
-                    result.failure(it.detail)
                 }
-            )
+            ) {
+                // 登录失败，回调网络请求异常信息（账号密码错误等）
+                result.failure(it.detail)
+            }
         } catch (e: Exception) {
             e.printStackTrace()
             result.failure(e.message.toString())

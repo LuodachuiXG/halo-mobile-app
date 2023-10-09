@@ -13,11 +13,11 @@ import retrofit2.Response
  * @see ErrorResponse Halo 站点网络请求异常类
  */
 fun <T> Response<T>.handle(
-    success: (T) -> Unit,
+    success: (T, Response<T>) -> Unit,
     failure: (ErrorResponse) -> Unit
 ) {
     if (this.isSuccessful) {
-        success(this.body()!!)
+        success(this.body()!!, this)
     } else {
         try {
             val gson = Gson()

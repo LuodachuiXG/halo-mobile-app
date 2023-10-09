@@ -18,6 +18,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import cc.loac.kalo.data.models.MyResponse
+import cc.loac.kalo.data.models.UserInfo
 import cc.loac.kalo.data.repositories.ConfigKey
 import cc.loac.kalo.data.repositories.ConfigRepo
 import cc.loac.kalo.data.repositories.UserRepo
@@ -48,7 +49,7 @@ fun MeScreen(
 
     userProfile.handle(
         success = {
-            Log.e("Test", it)
+            Log.e("Test", it.user.toString())
         },
         failure = {
             Log.e("failed", it)
@@ -63,8 +64,8 @@ class MeViewModel: ViewModel() {
     // 初始化用户数据操作类
     private val userRepo = UserRepo(ConfigRepo.get(ConfigKey.HALO_URL))
 
-    private val _userProfile = mutableStateOf(MyResponse<String>())
-    val userProfile: State<MyResponse<String>> = _userProfile
+    private val _userProfile = mutableStateOf(MyResponse<UserInfo>())
+    val userProfile: State<MyResponse<UserInfo>> = _userProfile
 
     /**
      * 获取用户资料

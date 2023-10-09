@@ -2,6 +2,7 @@ package cc.loac.kalo.network
 
 
 import android.annotation.SuppressLint
+import android.util.Log
 import cc.loac.kalo.data.models.ErrorResponse
 import cc.loac.kalo.data.repositories.ConfigKey
 import cc.loac.kalo.data.repositories.ConfigRepo
@@ -34,14 +35,27 @@ class RetrofitClient private constructor(retrofit: Retrofit) {
          * @param url Halo 站点地址
          */
         fun create(url: String = ConfigRepo.get(ConfigKey.HALO_URL)): RetrofitClient {
+            val httpClient = OkHttpClient.Builder()
+            httpClient.apply {
+                // 添加拦截器，用于给每个请求头加上登录验证的 Session
+                addInterceptor {
+                    val originalRequest = it.request()
+                    val request = originalRequest.newBuilder()
+                        .header("Cookie", "SESSION=${ConfigRepo.get(ConfigKey.SESSION_TOKEN)}")
+                        .method(originalRequest.method(), originalRequest.body())
+                        .build()
+                    it.proceed(request)
+                }
+                // 忽略对 https 证书的验证
+                sslSocketFactory(SSLSocketClient.sSLSocketFactory, SSLSocketClient.trustManager)
+                hostnameVerifier(SSLSocketClient.hostnameVerifier)
+                build()
+            }
+
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
                 .addConverterFactory(GsonConverterFactory.create())
-                // 忽略对 https 证书的验证
-                .client(OkHttpClient.Builder()
-                    .sslSocketFactory(SSLSocketClient.sSLSocketFactory, SSLSocketClient.trustManager)
-                    .hostnameVerifier(SSLSocketClient.hostnameVerifier)
-                    .build())
+                .client(httpClient.build())
                 .build()
             return RetrofitClient(retrofit)
         }

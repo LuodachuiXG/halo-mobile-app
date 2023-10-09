@@ -101,6 +101,6 @@ enum class ConfigKey(val key: String) {
     USERNAME("username"),
     // 密码
     PASSWORD("password"),
-    // CSRF TOKEN
-    CSRF_TOKEN("csrf_token")
+    // 登录 SESSION TOKEN
+    SESSION_TOKEN("session_token")
 }
