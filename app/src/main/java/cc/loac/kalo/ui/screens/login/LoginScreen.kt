@@ -55,6 +55,9 @@ import cc.loac.kalo.data.repositories.LoginRepo
 import cc.loac.kalo.ui.components.Alert
 import cc.loac.kalo.ui.components.ProgressAlert
 import cc.loac.kalo.ui.screens.AppScreen
+import cc.loac.kalo.ui.theme.LARGE
+import cc.loac.kalo.ui.theme.MIDDLE
+import cc.loac.kalo.ui.theme.SMALL
 import cc.loac.kalo.ui.theme.aliFontFamily
 import cc.loac.kalo.utils.isUrl
 import kotlinx.coroutines.launch
@@ -162,7 +165,7 @@ private fun Inputs(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 20.dp, end = 20.dp, bottom = 20.dp)
+            .padding(start = MIDDLE, end = MIDDLE, bottom = MIDDLE)
     ) {
         Input(
             label = "Halo 站点地址",
@@ -220,7 +223,7 @@ private fun Input(
         },
         modifier = Modifier
             .fillMaxWidth()
-            .padding(10.dp),
+            .padding(SMALL),
         trailingIcon = {
             if (isPassword) {
                 IconButton(onClick = { showPassword = !showPassword }) {
@@ -279,7 +282,7 @@ private fun LoginBtn(
         )
     ) {
         Column(
-            modifier = Modifier.padding(start = 30.dp, end = 30.dp)
+            modifier = Modifier.padding(start = LARGE, end = LARGE)
         ) {
             Button(
                 onClick = {
@@ -353,7 +356,7 @@ private fun LoginBtn(
  * 页面底部提示按钮
  */
 @Composable
-fun BottomTips() {
+private fun BottomTips() {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Bottom,
@@ -367,14 +370,14 @@ fun BottomTips() {
             }
         ) {
             Text(
-                text = "支持 Halo 2.8.0 +",
+                text = "支持 Halo 2.9.0 +",
                 fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.secondary,
             )
         }
 
         if (showAlert) {
-            "支持 Halo 2.8.0 +".Alert("哈哈") {
+            "支持 Halo 2.9.0 +".Alert("温馨提示") {
                 showAlert = false
             }
         }

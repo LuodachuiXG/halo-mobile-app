@@ -1,18 +1,16 @@
 package cc.loac.kalo.ui.screens.me
 
-import android.util.Log
+
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -23,6 +21,9 @@ import cc.loac.kalo.data.repositories.ConfigKey
 import cc.loac.kalo.data.repositories.ConfigRepo
 import cc.loac.kalo.data.repositories.UserRepo
 import cc.loac.kalo.network.handle
+import cc.loac.kalo.ui.components.Alert
+import cc.loac.kalo.ui.components.UserProfileCard
+import cc.loac.kalo.ui.theme.SMALL
 import kotlinx.coroutines.launch
 
 /**
@@ -33,28 +34,45 @@ fun MeScreen(
     navController: NavController,
     meViewModel: MeViewModel = viewModel()
 ) {
-    val userProfile = meViewModel.userProfile
+    Column(
+        modifier = Modifier.padding(SMALL)
+    ) {
+        MeScreenUserInfoCard(meViewModel)
+    }
+}
 
-    val scope = rememberCoroutineScope()
-
-    Column {
-        Button(onClick = {
-            scope.launch {
-                meViewModel.getUserProfile()
-            }
-        }) {
-            Text("Click Me")
-        }
+/**
+ * 用户信息卡片
+ */
+@Composable
+private fun MeScreenUserInfoCard(meViewModel: MeViewModel) {
+    // 只执行一次不参与重组
+    LaunchedEffect(Unit) {
+        // 获取用户资料
+        meViewModel.getUserProfile()
     }
 
-    userProfile.handle(
+    // 用户信息实体类
+    var userInfo by remember {
+        mutableStateOf(UserInfo())
+    }
+
+    // 用户信息状态，获取成功后此变量状态改变
+    val userInfoState = meViewModel.userProfile
+
+    // 用户信息状态改变
+    userInfoState.handle(
         success = {
-            Log.e("Test", it.user.toString())
+            // 用户信息获取成功
+            userInfo = it
         },
         failure = {
-            Log.e("failed", it)
+            "用户资料获取失败".Alert {}
         }
     )
+
+    // 用户信息卡片组件
+    UserProfileCard(userInfo = userInfo)
 }
 
 /**

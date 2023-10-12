@@ -1,6 +1,5 @@
 package cc.loac.kalo.data.repositories
 
-import android.graphics.Bitmap.Config
 import cc.loac.kalo.data.models.MyResponse
 import cc.loac.kalo.data.models.UserInfo
 import cc.loac.kalo.network.RetrofitClient
@@ -29,6 +28,12 @@ class UserRepo(url: String) {
         try {
             userApiService.getUserProfile().handle(
                 success = { userInfo, _ ->
+                    var avatar = userInfo.user.spec.avatar
+                    if (avatar.isNotEmpty() && !avatar.contains("http")) {
+                        // 头像地址是相对头像，这里要加上 Halo 站点地址
+                        avatar = ConfigRepo.get(ConfigKey.HALO_URL) + avatar
+                    }
+                    userInfo.user.spec.avatar = avatar
                     result.success(userInfo)
                 },
                 failure = {
@@ -41,5 +46,4 @@ class UserRepo(url: String) {
         }
         return result
     }
-
 }

@@ -65,6 +65,7 @@ fun AppNavigation() {
                 NavigationBar {
                     item.forEach {
                         NavigationBarItem(
+                            alwaysShowLabel = false,
                             selected = currentRout == it.route.route,
                             onClick = {
                                 navController.navigate(it.route.route) {
@@ -74,7 +75,6 @@ fun AppNavigation() {
                                         saveState = true
                                         inclusive = true
                                     }
-
                                     // 避免多次点击产生多个实例
                                     launchSingleTop = true
                                     // 再次点击之前的 Item 时恢复状态

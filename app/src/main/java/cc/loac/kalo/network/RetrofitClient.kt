@@ -42,7 +42,7 @@ class RetrofitClient private constructor(retrofit: Retrofit) {
                     val originalRequest = it.request()
                     val request = originalRequest.newBuilder()
                         .header("Cookie", "SESSION=${ConfigRepo.get(ConfigKey.SESSION_TOKEN)}")
-                        .method(originalRequest.method(), originalRequest.body())
+                        .method(originalRequest.method, originalRequest.body)
                         .build()
                     it.proceed(request)
                 }

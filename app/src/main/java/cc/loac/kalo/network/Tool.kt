@@ -1,5 +1,6 @@
 package cc.loac.kalo.network
 
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import cc.loac.kalo.data.models.ErrorResponse
 import cc.loac.kalo.data.models.MyResponse
@@ -31,9 +32,10 @@ fun <T> Response<T>.handle(
     }
 }
 
+@Composable
 fun <T> State<MyResponse<T>>.handle(
     success: (T) -> Unit,
-    failure: (errMsg: String) -> Unit
+    failure: @Composable (errMsg: String) -> Unit
 ) {
     if (this.value.isNotNone()) {
         if (this.value.isSuccessful()) {
