@@ -8,4 +8,6 @@ val MIDDLE = 20.dp
 val LARGE_MIDDLE = 25.dp
 val LARGE = 30.dp
 
+val NINETY_NINE = 99.dp
+
 val LARGE_IMAGE = 96.dp

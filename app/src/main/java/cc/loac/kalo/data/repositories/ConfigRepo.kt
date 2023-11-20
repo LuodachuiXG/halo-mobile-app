@@ -39,7 +39,7 @@ object ConfigRepo  {
     }
 
     /**
-     * 将数据缓存到集合中
+     * 将数据缓存到集合缓存中
      */
     private fun cache(key: ConfigKey, value: String) {
         if (caches.containsKey(key.key)) {

@@ -13,10 +13,10 @@ import cc.loac.kalo.network.handle
 class UserRepo(url: String) {
     private val url: String
 
-    private var userApiService: UserApiService
+    private var userApi: UserApiService
 
     init {
-        userApiService = RetrofitClient.create(url).userApiService
+        userApi = RetrofitClient.create(url).userApiService
         this.url = url
     }
 
@@ -26,7 +26,7 @@ class UserRepo(url: String) {
     suspend fun getUserProfile(): MyResponse<UserInfo> {
         val result = MyResponse<UserInfo>()
         try {
-            userApiService.getUserProfile().handle(
+            userApi.getUserProfile().handle(
                 success = { userInfo, _ ->
                     var avatar = userInfo.user.spec.avatar
                     if (avatar.isNotEmpty() && !avatar.contains("http")) {

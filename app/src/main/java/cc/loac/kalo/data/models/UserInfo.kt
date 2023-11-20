@@ -9,21 +9,23 @@ import androidx.compose.runtime.MutableState
 data class UserInfo(
     val user: User = User(),
     val roles: List<Role> = listOf()
-)
+) {
+    /**
+     * 判断用户信息实体类是否为空
+     */
+    fun isEmpty(): Boolean {
+        return this.user == User() && this.roles.isEmpty()
+    }
 
-/**
- * 判断用户信息实体类是否为空
- */
-fun UserInfo.isEmpty(): Boolean {
-    return this.user == User() && this.roles.isEmpty()
+    /**
+     * 判断用户信息实体类是否不为空
+     */
+    fun isNotEmpty(): Boolean {
+        return !this.isEmpty()
+    }
 }
 
-/**
- * 判断用户信息实体类是否不为空
- */
-fun UserInfo.isNotEmpty(): Boolean {
-    return !this.isEmpty()
-}
+
 
 data class User(
     val spec: UserSpec = UserSpec(),

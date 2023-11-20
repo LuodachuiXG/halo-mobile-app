@@ -10,4 +10,9 @@ data class MetaData(
     val annotations: Map<String, String> = mapOf(),
     val version: Int = 0,
     val creationTimestamp: String = ""
-)
+) {
+    companion object {
+        // annotations 的 key，显示的是等于用户的权限名
+        const val AUTHORIZATION_NAME = "rbac.authorization.halo.run/display-name"
+    }
+}
