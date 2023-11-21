@@ -3,7 +3,7 @@ package cc.loac.kalo.data.models
 import androidx.compose.runtime.MutableState
 
 /**
- * Halo 用户信息实体类
+ * 用户信息实体类
  * 场景：登录 Halo 后请求的用户数据
  */
 data class UserInfo(

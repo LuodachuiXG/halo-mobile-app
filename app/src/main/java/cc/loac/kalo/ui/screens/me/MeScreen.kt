@@ -77,9 +77,6 @@ private fun MeScreenUserInfoCard(meViewModel: MeViewModel) {
         mutableStateOf(UserInfo())
     }
 
-    // 用户信息状态，获取成功后此变量状态改变
-    val userInfoState = meViewModel.userProfile
-
     var showAlert by remember { mutableStateOf(false) }
     var showAlertMessage = ""
     if (showAlert) {
@@ -89,8 +86,8 @@ private fun MeScreenUserInfoCard(meViewModel: MeViewModel) {
     }
 
     // 用户信息状态改变
-    LaunchedEffect(userInfoState.value) {
-        userInfoState.handle(
+    LaunchedEffect(meViewModel.userProfile.value) {
+        meViewModel.userProfile.handle(
             success = {
                 // 用户信息获取成功
                 userInfo = it

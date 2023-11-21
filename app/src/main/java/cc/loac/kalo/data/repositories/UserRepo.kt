@@ -35,7 +35,7 @@ class UserRepo {
                 }
             )
         } catch (e: Exception) {
-            result.failure("错误")
+            result.failure(e.message.toString())
             e.printStackTrace()
         }
         return result
