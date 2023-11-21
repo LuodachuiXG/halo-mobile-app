@@ -41,9 +41,6 @@ fun generateToken(): String {
  */
 fun String.isUrl(): Boolean {
     val urlPattern = "^(https?://)?([\\da-z.-]+)\\.([a-z.]{2,6})([/\\w .-]*)*/?$"
-    if (!this.contains("https://") && !this.contains("http://")) {
-        return false
-    }
     return this.matches(Regex(urlPattern))
 }
 

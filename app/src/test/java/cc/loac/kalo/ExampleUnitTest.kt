@@ -1,11 +1,6 @@
 package cc.loac.kalo
 
-import android.util.Log
-import cc.loac.kalo.data.models.User
-import cc.loac.kalo.data.models.UserInfo
-import cc.loac.kalo.data.models.UserSpec
-import cc.loac.kalo.data.models.isEmpty
-import cc.loac.kalo.utils.sub
+import cc.loac.kalo.utils.isUrl
 import org.junit.Test
 
 /**

@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import cc.loac.kalo.data.models.MetaData
 import cc.loac.kalo.data.models.UserInfo
+import cc.loac.kalo.ui.mShimmer
 import cc.loac.kalo.ui.theme.LARGE_IMAGE
 import cc.loac.kalo.ui.theme.MyTypography
 import cc.loac.kalo.ui.theme.SMALL
@@ -45,7 +46,8 @@ fun UserProfileCard(userInfo: UserInfo) {
     Card(modifier = Modifier
         .fillMaxWidth()
         // 是否显示骨架动画
-        .shimmer(userInfo.isEmpty())) {
+        .mShimmer(userInfo.isEmpty())
+    ) {
         Column(Modifier.padding(SMALL)) {
             Row {
                 // 头像
@@ -60,12 +62,7 @@ fun UserProfileCard(userInfo: UserInfo) {
                     modifier = Modifier
                         .clip(RoundedCornerShape(SMALL))
                         .size(LARGE_IMAGE)
-                        .shimmer(avatarLoading,
-                            ShimmerConfig(
-                                contentColor = MaterialTheme.colorScheme.secondary,
-                                higLightColor = MaterialTheme.colorScheme.inverseOnSurface
-                            )
-                        )
+                        .mShimmer(avatarLoading)
                 )
 
                 Column(

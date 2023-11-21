@@ -162,7 +162,7 @@ private fun Inputs(
     ) {
         Input(
             label = "Halo 站点地址",
-            placeholder = "需要 加:// 或 http://",
+            placeholder = "需要 加 https:// 或 http://",
             value = urlValue,
             onValueChange = onUrlChange
         )
