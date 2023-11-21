@@ -11,6 +11,10 @@ import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -33,6 +37,7 @@ import cc.loac.kalo.network.handle
 import cc.loac.kalo.ui.components.Alert
 import cc.loac.kalo.ui.components.ImageButton
 import cc.loac.kalo.ui.components.UserProfileCard
+import cc.loac.kalo.ui.screens.AppScreen
 import cc.loac.kalo.ui.theme.MIDDLE_MIDDLE
 import cc.loac.kalo.ui.theme.SMALL
 import cc.loac.kalo.ui.theme.VERY_SMALL
@@ -119,7 +124,8 @@ private fun MeImageButtons(navController: NavController) {
                     .weight(1f)
                     .padding(end = VERY_SMALL)
             ) {
-                Toast.makeText(MainActivity.appContext, "Test", Toast.LENGTH_LONG).show()
+                // 跳转到插件页面
+                navController.navigate(AppScreen.PLUGIN.route)
             }
 
             ImageButton(
@@ -158,7 +164,7 @@ private fun MeImageButtons(navController: NavController) {
  */
 class MeViewModel: ViewModel() {
     // 初始化用户数据操作类
-    private val userRepo = UserRepo(ConfigRepo.get(ConfigKey.HALO_URL))
+    private val userRepo = UserRepo()
 
     private val _userProfile = mutableStateOf(MyResponse<UserInfo>())
     val userProfile: State<MyResponse<UserInfo>> = _userProfile

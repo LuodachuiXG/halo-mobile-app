@@ -30,6 +30,7 @@ import androidx.navigation.compose.rememberNavController
 import cc.loac.kalo.ui.screens.home.HomeScreen
 import cc.loac.kalo.ui.screens.login.LoginScreen
 import cc.loac.kalo.ui.screens.me.MeScreen
+import cc.loac.kalo.ui.screens.plugin.PluginScreen
 
 
 /**
@@ -78,8 +79,8 @@ fun AppNavigation() {
             SnackbarHost(hostState = snackBarHostState)
         },
         bottomBar = {
-            // 不是登录页面才显示底部导航栏
-            if (currentRout != AppScreen.LOGIN.route) {
+            // 只有在底部导航栏的页面才显示底部导航栏
+            if (currentRout in listOf(AppScreen.ME.route, AppScreen.HOME.route)) {
                 NavigationBar {
                     item.forEach {
                         NavigationBarItem(
@@ -133,6 +134,11 @@ fun AppNavigation() {
             composable(AppScreen.ME.route) {
                 MeScreen(navController)
             }
+
+            // 插件页面
+            composable(AppScreen.PLUGIN.route) {
+                PluginScreen(navController)
+            }
         }
     }
 }
@@ -143,5 +149,6 @@ fun AppNavigation() {
 enum class AppScreen(val route: String) {
     LOGIN("login"),
     ME("me"),
-    HOME("home")
+    HOME("home"),
+    PLUGIN("plugin")
 }

@@ -27,12 +27,11 @@ import cc.loac.kalo.ui.theme.SMALL
 fun Tag(
     text: String,
     modifier: Modifier = Modifier,
-    backgroundColor: Color = Color.Red,
+    backgroundColor: Color = MaterialTheme.colorScheme.onSurface,
     textColor: Color = MaterialTheme.colorScheme.secondary,
     onClick: () -> Unit = {}
 ) {
     Surface(
-        contentColor = backgroundColor,
         modifier = modifier
                 .clip(RoundedCornerShape(6.dp))
                 .clickable { onClick() }

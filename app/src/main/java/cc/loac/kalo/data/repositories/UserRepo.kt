@@ -10,15 +10,9 @@ import cc.loac.kalo.network.handle
  * 用户相关数据操作类
  * @param url Halo 站点地址
  */
-class UserRepo(url: String) {
-    private val url: String
-
-    private var userApi: UserApiService
-
-    init {
-        userApi = RetrofitClient.create(url).userApiService
-        this.url = url
-    }
+class UserRepo {
+    private val url: String = ConfigRepo.get(ConfigKey.HALO_URL)
+    private var userApi: UserApiService = RetrofitClient.create().userApiService
 
     /**
      * 获取用户个人资料
