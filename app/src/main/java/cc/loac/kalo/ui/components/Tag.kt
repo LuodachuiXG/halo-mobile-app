@@ -27,7 +27,7 @@ import cc.loac.kalo.ui.theme.SMALL
 fun Tag(
     text: String,
     modifier: Modifier = Modifier,
-    backgroundColor: Color = MaterialTheme.colorScheme.secondaryContainer,
+    backgroundColor: Color = Color.Red,
     textColor: Color = MaterialTheme.colorScheme.secondary,
     onClick: () -> Unit = {}
 ) {

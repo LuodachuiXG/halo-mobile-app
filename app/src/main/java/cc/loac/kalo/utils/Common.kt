@@ -2,12 +2,15 @@ package cc.loac.kalo.utils
 
 
 import android.util.Base64
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import java.lang.StringBuilder
 import java.security.KeyFactory
 import java.security.spec.X509EncodedKeySpec
 import javax.crypto.Cipher
 import kotlin.random.Random
-
 
 /**
  * 获取指定长度随机字符

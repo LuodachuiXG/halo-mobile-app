@@ -75,16 +75,27 @@ private fun MeScreenUserInfoCard(meViewModel: MeViewModel) {
     // 用户信息状态，获取成功后此变量状态改变
     val userInfoState = meViewModel.userProfile
 
-    // 用户信息状态改变
-    userInfoState.handle(
-        success = {
-            // 用户信息获取成功
-            userInfo = it
-        },
-        failure = {
-            "用户资料获取失败".Alert {}
+    var showAlert by remember { mutableStateOf(false) }
+    var showAlertMessage = ""
+    if (showAlert) {
+        "用户资料获取失败，$showAlertMessage".Alert {
+            showAlert = false
         }
-    )
+    }
+
+    // 用户信息状态改变
+    LaunchedEffect(userInfoState.value) {
+        userInfoState.handle(
+            success = {
+                // 用户信息获取成功
+                userInfo = it
+            },
+            failure = {
+                showAlertMessage = it
+                showAlert = true
+            }
+        )
+    }
 
     // 用户信息卡片组件
     UserProfileCard(userInfo = userInfo)

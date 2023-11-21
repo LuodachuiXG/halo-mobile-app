@@ -3,6 +3,7 @@ package cc.loac.kalo.ui
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import com.zj.shimmer.ShimmerConfig
 import com.zj.shimmer.shimmer
 
@@ -16,9 +17,6 @@ fun Modifier.mShimmer(
     visible: Boolean,
     config: ShimmerConfig = ShimmerConfig(
         contentColor = MaterialTheme.colorScheme.surfaceVariant,
-        higLightColor = MaterialTheme.colorScheme.onPrimary,
-        dropOff = .4f,
-        intensity = .1f,
-        duration = 2000f
+        higLightColor = Color.LightGray
     )
 ) = shimmer(visible, config)

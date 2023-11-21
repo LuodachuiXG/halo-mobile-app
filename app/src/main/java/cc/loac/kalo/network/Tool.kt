@@ -1,7 +1,9 @@
 package cc.loac.kalo.network
 
+import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import cc.loac.kalo.MainActivity
 import cc.loac.kalo.data.models.ErrorResponse
 import cc.loac.kalo.data.models.MyResponse
 import com.google.gson.Gson
@@ -32,13 +34,12 @@ fun <T> Response<T>.handle(
     }
 }
 
-@Composable
 fun <T> State<MyResponse<T>>.handle(
     success: (T) -> Unit,
-    failure: @Composable (errMsg: String) -> Unit
+    failure: (errMsg: String) -> Unit,
 ) {
     if (this.value.isNotNone()) {
-        if (this.value.isSuccessful()) {
+            if (this.value.isSuccessful()) {
             val data = this.value.data
             if (data == null) {
                 failure("响应数据为空")
