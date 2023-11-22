@@ -14,7 +14,16 @@ data class Plugin(
     val hasNext: Boolean = false,
     val hasPrevious: Boolean = false,
     val totalPages: Int = 0
-)
+) {
+    /**
+     * 判断实体类是否为空
+     */
+    fun isEmpty(): Boolean {
+        return page == 0 && size == 0 && total == 0 && items.isEmpty() &&
+                !first && !last && !hasNext &&
+                !hasPrevious && totalPages == 0
+    }
+}
 
 data class PluginItem(
     val spec: PluginItemSpec = PluginItemSpec(),

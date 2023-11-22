@@ -17,6 +17,7 @@ fun Modifier.mShimmer(
     visible: Boolean,
     config: ShimmerConfig = ShimmerConfig(
         contentColor = MaterialTheme.colorScheme.surfaceVariant,
-        higLightColor = Color.LightGray
+        higLightColor = Color.LightGray,
+        duration = 500f
     )
 ) = shimmer(visible, config)
