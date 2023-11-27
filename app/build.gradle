@@ -14,8 +14,8 @@ android {
         applicationId "cc.loac.kalo"
         minSdk 24
         targetSdk 33
-        versionCode 1500
-        versionName '0.1.0-alpha1'
+        versionCode 1600
+        versionName '0.1.0-alpha2'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
