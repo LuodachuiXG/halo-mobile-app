@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.platform.LocalContext
 import cc.loac.kalo.MainActivity
+import cc.loac.kalo.data.models.Plugin
 import cc.loac.kalo.data.models.PluginItem
 import cc.loac.kalo.ui.theme.LARGE_IMAGE
 import cc.loac.kalo.ui.theme.MIDDLE_IMAGE
@@ -52,16 +53,19 @@ import coil.size.Size
  */
 @Composable
 fun PluginItemCard(
-    pluginItem: PluginItem
+    modifier: Modifier = Modifier,
+    pluginItem: PluginItem,
+    onClick: (PluginItem) -> Unit
 ) {
     // 图片是否加载失败
     var imageFailed by remember { mutableStateOf(false) }
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .padding(SMALL)
             .clip(CardDefaults.shape)
-            .clickable { }
+            .clickable {
+                onClick(pluginItem)
+            }
     ) {
         Column(
             modifier = Modifier.padding(SMALL)
@@ -81,7 +85,7 @@ fun PluginItemCard(
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = pluginItem.spec.displayName.first().toString(),
+                                text = pluginItem.spec.displayName.first().toString().uppercase(),
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.primary
                             )
@@ -95,6 +99,7 @@ fun PluginItemCard(
                             contentDescription = pluginItem.spec.displayName,
                             modifier = Modifier.size(MIDDLE_IMAGE),
                             onError = {
+                                // 插件图片加载失败
                                 imageFailed = true
                             }
                         )

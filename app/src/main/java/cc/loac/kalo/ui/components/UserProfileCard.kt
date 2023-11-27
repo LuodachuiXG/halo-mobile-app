@@ -1,5 +1,6 @@
 package cc.loac.kalo.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,6 +34,7 @@ import cc.loac.kalo.ui.theme.LARGE_IMAGE
 import cc.loac.kalo.ui.theme.MyTypography
 import cc.loac.kalo.ui.theme.SMALL
 import coil.compose.AsyncImage
+import coil.compose.AsyncImagePainter
 import com.zj.shimmer.ShimmerConfig
 import com.zj.shimmer.shimmer
 
@@ -55,7 +57,7 @@ fun UserProfileCard(userInfo: UserInfo) {
             Row {
                 // 头像
                 AsyncImage(
-                    model = userInfo.user.spec.avatar,
+                    model = "https://loac.cc/logo",
                     contentDescription = "头像",
                     transform = {
                         // 头像加载完成后关闭骨架动画

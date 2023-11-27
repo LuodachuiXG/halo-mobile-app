@@ -2,8 +2,10 @@ package cc.loac.kalo.utils
 
 
 import android.util.Base64
+import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import cc.loac.kalo.MainActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import java.lang.StringBuilder
@@ -96,5 +98,12 @@ fun encryptData(str: String, key: String): String {
     val encryptedBytes = cipher.doFinal(str.toByteArray())
     // NO_WRAP 表示不在结果中加上换行和空格
     return Base64.encodeToString(encryptedBytes, Base64.NO_WRAP)
+}
+
+/**
+ * 字符串扩展，toast
+ */
+fun String.toast() {
+    Toast.makeText(MainActivity.appContext, this, Toast.LENGTH_SHORT).show()
 }
 

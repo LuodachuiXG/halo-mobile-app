@@ -51,7 +51,9 @@ fun String.ProgressAlert(
         },
         text = {
             Column(
-                modifier = Modifier.fillMaxWidth().padding(10.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -69,7 +71,6 @@ fun String.ProgressAlert(
         }
     )
 }
-
 
 /**
  * 对话框
@@ -93,7 +94,7 @@ fun String.Alert(
 @Composable
 fun String.Alert(
     title: String,
-    onConfirm: () -> Unit
+    onConfirm: () -> Unit = {}
 ) {
     MAlert(
         title = title,

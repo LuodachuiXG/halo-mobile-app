@@ -16,19 +16,21 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import cc.loac.kalo.ui.mShimmer
 import cc.loac.kalo.ui.theme.LARGE
+import cc.loac.kalo.ui.theme.LARGE_MIDDLE
 import cc.loac.kalo.ui.theme.MIDDLE
 import cc.loac.kalo.ui.theme.MIDDLE_MIDDLE
 import cc.loac.kalo.ui.theme.SMALL
 
 @Composable
-fun ShimmerCard() {
+fun ShimmerCard(
+    modifier: Modifier = Modifier
+) {
     Column {
         for (i in 1..5) {
             Card (
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
-                    .height(LARGE * 3)
-                    .padding(SMALL)
+                    .height(LARGE_MIDDLE * 3)
                     .clip(CardDefaults.shape)
                     .mShimmer(true)
             ) {

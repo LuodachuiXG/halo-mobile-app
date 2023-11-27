@@ -1,43 +1,56 @@
 package cc.loac.kalo.ui.screens.plugin
 
+
+import android.content.ClipData
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import cc.loac.kalo.data.models.MyResponse
 import cc.loac.kalo.data.models.Plugin
+import cc.loac.kalo.data.models.PluginItem
 import cc.loac.kalo.data.repositories.PluginRepo
 import cc.loac.kalo.network.handle
 import cc.loac.kalo.ui.components.Alert
 import cc.loac.kalo.ui.components.PluginItemCard
 import cc.loac.kalo.ui.components.ShimmerCard
+import cc.loac.kalo.ui.theme.SMALL
+import cc.loac.kalo.utils.toast
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
@@ -46,35 +59,116 @@ fun PluginScreen(
     navController: NavController,
     pluginViewModel: PluginViewModel = viewModel()
 ) {
+    val scope = rememberCoroutineScope()
+
     // 启动时获取所有插件
     LaunchedEffect(Unit) {
         pluginViewModel.getAllPlugins()
     }
 
-    Column {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Text(text = "插件")
+    // 底部弹出菜单，点击插件后弹出显示插件信息
+    val sheetState = rememberModalBottomSheetState()
+    var showBottomSheet by remember { mutableStateOf(false) }
+    // 弹出菜单显示的插件信息
+    var pluginItem = PluginItem()
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(text = "插件")
+                },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        navController.navigateUp()
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBackIosNew,
+                            contentDescription = "返回"
+                        )
+                    }
+                }
+            )
+        }
+    ) {
+        Column(
+            modifier = Modifier.padding(it)
+        ) {
+            if (showBottomSheet) {
+                ModalBottomSheet(
+                    onDismissRequest = {
+                        showBottomSheet = false
                     },
-                    navigationIcon = {
-                        IconButton(onClick = {
-                            navController.navigateUp()
-                        }) {
-                            Icon(
-                                imageVector = Icons.Default.ArrowBackIosNew,
-                                contentDescription = "返回"
+                    sheetState = sheetState,
+                ) {
+                    PluginBottomSheet(pluginItem)
+                }
+            }
+            PluginItems(pluginViewModel) {
+                scope.launch {
+                    pluginItem = it
+                    showBottomSheet = true
+                }
+            }
+        }
+    }
+}
+
+/**
+ * 底部弹出菜单，显示插件信息
+ */
+@Composable
+fun PluginBottomSheet(
+    pluginItem: PluginItem
+) {
+    val clipBoard = LocalClipboardManager.current
+    // 插件信息
+    val pluginInfo = mapOf (
+        "名称" to pluginItem.spec.displayName,
+        "描述" to pluginItem.spec.description,
+        "版本" to pluginItem.spec.version,
+        "Halo 版本要求" to pluginItem.spec.requires,
+        "提供方" to pluginItem.spec.author.name,
+        "协议" to pluginItem.spec.license.first().name
+    )
+    Column (
+        modifier = Modifier
+            .padding(horizontal = SMALL)
+    ) {
+        PluginItemCard(
+            pluginItem = pluginItem,
+            onClick = {}
+        )
+
+        Row (
+            modifier = Modifier
+                .padding(vertical = SMALL)
+        ) {
+            Column {
+                pluginInfo.forEach {
+                    OutlinedCard(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = SMALL)
+                            .clip(CardDefaults.shape)
+                            .clickable {
+                                clipBoard.setText(AnnotatedString(it.value))
+                                "${it.key}已复制".toast()
+                            }
+                    ) {
+                        Column (
+                            modifier = Modifier.padding(SMALL)
+                        ) {
+                            Text(
+                                text = it.key,
+                                style = MaterialTheme.typography.titleSmall
+                            )
+                            Text(
+                                text = it.value,
+                                style = MaterialTheme.typography.bodySmall
                             )
                         }
                     }
-                )
-            }
-        ) {
-            Column(
-                modifier = Modifier.padding(it)
-            ) {
-                PluginItems(pluginViewModel)
+                }
             }
         }
     }
@@ -85,7 +179,8 @@ fun PluginScreen(
  */
 @Composable
 fun PluginItems(
-    pluginViewModel: PluginViewModel
+    pluginViewModel: PluginViewModel,
+    onPluginClick: (PluginItem) -> Unit
 ) {
     // 插件实体类
     var plugins by remember {
@@ -115,17 +210,25 @@ fun PluginItems(
             }
         )
     }
-    Column(
-        modifier = Modifier.fillMaxSize()
+    Column (
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(SMALL)
     ) {
         if (plugins.isEmpty()) {
             // 加载中显示骨架屏
-            ShimmerCard()
+            ShimmerCard(Modifier.padding(bottom = SMALL))
         } else {
             // 展示所有插件
             LazyColumn {
                 items(plugins.items) {
-                    PluginItemCard(it)
+                    PluginItemCard(
+                        pluginItem = it,
+                        modifier = Modifier.padding(bottom = SMALL),
+                        onClick = { _ ->
+                            onPluginClick(it)
+                        }
+                    )
                 }
             }
         }

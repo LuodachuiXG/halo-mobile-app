@@ -28,7 +28,14 @@ data class Plugin(
 data class PluginItem(
     val spec: PluginItemSpec = PluginItemSpec(),
     val status: PluginItemStatus = PluginItemStatus()
-)
+) {
+    /**
+     * 判断实体类是否为空
+     */
+    fun isEmpty(): Boolean {
+        return spec == PluginItemSpec() && status == PluginItemStatus()
+    }
+}
 
 data class PluginItemSpec(
     val displayName: String = "",
