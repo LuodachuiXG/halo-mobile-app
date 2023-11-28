@@ -4,16 +4,14 @@ package cc.loac.kalo.utils
 import android.annotation.SuppressLint
 import android.util.Base64
 import android.widget.Toast
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import cc.loac.kalo.MainActivity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
+import com.google.gson.Gson
 import java.lang.StringBuilder
 import java.security.KeyFactory
 import java.security.spec.X509EncodedKeySpec
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.UUID
 import javax.crypto.Cipher
 import kotlin.random.Random
 
@@ -28,6 +26,7 @@ fun getRandomChat(length: Int): String {
     for (i in 0 until length) {
         result.append(str[Random.nextInt(0, 36)])
     }
+
     return result.toString()
 }
 
@@ -36,11 +35,7 @@ fun getRandomChat(length: Int): String {
  * @return String
  */
 fun generateToken(): String {
-    return getRandomChat(8) + "-" +
-            getRandomChat(4) + "-" +
-            getRandomChat(4) + "-" +
-            getRandomChat(4) + "-" +
-            getRandomChat(12)
+    return UUID.randomUUID().toString()
 }
 
 
@@ -117,5 +112,14 @@ fun String.toast() {
 fun Date.formatString(): String {
     val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm")
     return sdf.format(this)
+}
+
+
+/**
+ * 对对象进行序列化
+ */
+fun Any.toJson(): String {
+    val gson = Gson()
+    return gson.toJson(this)
 }
 

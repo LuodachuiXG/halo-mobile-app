@@ -34,7 +34,6 @@ import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
  * @param text 按钮文本
  * @param color 文本图标颜色
  * @param shape Shape
- * @param bigSize 是否显示大尺寸按钮
  * @param onClick 点击事件
  */
 @Composable

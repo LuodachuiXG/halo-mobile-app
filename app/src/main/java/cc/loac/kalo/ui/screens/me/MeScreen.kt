@@ -139,7 +139,7 @@ private fun MeImageButtons(navController: NavController) {
         ) {
             ImageButton(
                 imageVector = Icons.Default.Dashboard,
-                text = "设置",
+                text = "概述",
                 modifier = Modifier
                     .weight(1f)
                     .padding(end = VERY_SMALL)
@@ -147,7 +147,7 @@ private fun MeImageButtons(navController: NavController) {
 
             ImageButton(
                 imageVector = Icons.Default.Settings,
-                text = "概述",
+                text = "设置",
                 modifier = Modifier
                     .weight(1f)
                     .padding(start = VERY_SMALL)

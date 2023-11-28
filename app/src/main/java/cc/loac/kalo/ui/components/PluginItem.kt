@@ -75,7 +75,8 @@ fun PluginItemCard(
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
-                                    text = pluginItem.spec.displayName.first().toString().uppercase(),
+                                    text = (pluginItem.spec.displayName
+                                        .firstOrNull()?.toString() ?: "").uppercase(),
                                     style = MaterialTheme.typography.titleMedium,
                                     color = MaterialTheme.colorScheme.primary
                                 )

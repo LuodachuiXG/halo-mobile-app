@@ -1,9 +1,6 @@
 package cc.loac.kalo.network
 
-import android.widget.Toast
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import cc.loac.kalo.MainActivity
 import cc.loac.kalo.data.models.ErrorResponse
 import cc.loac.kalo.data.models.MyResponse
 import com.google.gson.Gson
@@ -34,20 +31,29 @@ fun <T> Response<T>.handle(
     }
 }
 
+/**
+ * 状态处理方法，一般用于对 ViewModel 中数据变化做出响应
+ * @param success 请求成功，回调 T
+ * @param failure 请求失败，回调错误信息
+ * @param compose 成功与失败都会触发回调
+ */
 fun <T> State<MyResponse<T>>.handle(
     success: (T) -> Unit,
     failure: (errMsg: String) -> Unit,
+    compose: () -> Unit = {}
 ) {
     if (this.value.isNotNone()) {
             if (this.value.isSuccessful()) {
             val data = this.value.data
             if (data == null) {
                 failure("响应数据为空")
+                compose()
                 return
             }
             success(data)
         } else {
             failure(this.value.errMsg)
         }
+        compose()
     }
 }

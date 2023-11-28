@@ -2,22 +2,15 @@ package cc.loac.kalo.network
 
 
 import android.annotation.SuppressLint
-import android.util.Log
-import cc.loac.kalo.data.models.ErrorResponse
 import cc.loac.kalo.data.repositories.ConfigKey
 import cc.loac.kalo.data.repositories.ConfigRepo
 import cc.loac.kalo.network.api.LoginApiService
 import cc.loac.kalo.network.api.PluginApiService
 import cc.loac.kalo.network.api.UserApiService
-import com.google.gson.Gson
-import okhttp3.Interceptor
+import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
-import okhttp3.Response
-import okhttp3.ResponseBody
-import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.lang.reflect.Type
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
 import javax.net.ssl.HostnameVerifier
@@ -43,6 +36,7 @@ class RetrofitClient private constructor(retrofit: Retrofit) {
                     val originalRequest = it.request()
                     val request = originalRequest.newBuilder()
                         .header("Cookie", "SESSION=${ConfigRepo.get(ConfigKey.SESSION_TOKEN)}")
+                        .header("Accept-Language", "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7")
                         .method(originalRequest.method, originalRequest.body)
                         .build()
                     it.proceed(request)
@@ -53,9 +47,11 @@ class RetrofitClient private constructor(retrofit: Retrofit) {
                 build()
             }
 
+            // 设置 Gson 序列化的时间格式
+            val gson = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS'Z'").create()
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(httpClient.build())
                 .build()
             return RetrofitClient(retrofit)
