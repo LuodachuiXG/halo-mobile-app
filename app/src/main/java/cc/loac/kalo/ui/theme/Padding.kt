@@ -1,6 +1,7 @@
 package cc.loac.kalo.ui.theme
 
 import androidx.compose.ui.unit.dp
+val ZERO = 0.dp
 val VERY_SMALL = 5.dp
 val SMALL = 10.dp
 val MIDDLE_MIDDLE = 15.dp

@@ -98,7 +98,7 @@ fun PluginItemCard(
 
                     // 插件图标左上角点，用于标记插件是否启用
                     Box (
-                        modifier
+                        modifier = Modifier
                             .clip(RoundedCornerShape(99.dp))
                             .background(
                                 if (pluginItem.spec.enabled) {
@@ -107,7 +107,7 @@ fun PluginItemCard(
                                     Color.Red
                                 }
                             )
-                            .size(SMALL)
+                            .size(SMALL),
                     ) {}
                 }
 

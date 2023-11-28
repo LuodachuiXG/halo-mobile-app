@@ -1,6 +1,7 @@
 package cc.loac.kalo.utils
 
 
+import android.annotation.SuppressLint
 import android.util.Base64
 import android.widget.Toast
 import androidx.compose.runtime.Composable
@@ -11,6 +12,8 @@ import kotlinx.coroutines.launch
 import java.lang.StringBuilder
 import java.security.KeyFactory
 import java.security.spec.X509EncodedKeySpec
+import java.text.SimpleDateFormat
+import java.util.Date
 import javax.crypto.Cipher
 import kotlin.random.Random
 
@@ -105,5 +108,14 @@ fun encryptData(str: String, key: String): String {
  */
 fun String.toast() {
     Toast.makeText(MainActivity.appContext, this, Toast.LENGTH_SHORT).show()
+}
+
+/**
+ * 对 Date 扩展函数，格式化日期输出
+ */
+@SuppressLint("SimpleDateFormat")
+fun Date.formatString(): String {
+    val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm")
+    return sdf.format(this)
 }
 

@@ -1,5 +1,7 @@
 package cc.loac.kalo.data.models
 
+import java.util.Date
+
 /**
  * 插件实体类
  * 场景：获取安装的插件
@@ -62,5 +64,6 @@ data class PluginLicense(
 )
 
 data class PluginItemStatus(
-    var logo: String = ""
+    var logo: String = "",
+    val lastStartTime: Date = Date(0)
 )

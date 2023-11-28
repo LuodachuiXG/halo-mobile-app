@@ -1,7 +1,6 @@
 package cc.loac.kalo.ui.screens.plugin
 
 
-import android.content.ClipData
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,11 +9,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -50,10 +47,11 @@ import cc.loac.kalo.ui.components.Alert
 import cc.loac.kalo.ui.components.PluginItemCard
 import cc.loac.kalo.ui.components.ShimmerCard
 import cc.loac.kalo.ui.theme.SMALL
+import cc.loac.kalo.utils.formatString
 import cc.loac.kalo.utils.toast
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PluginScreen(
     navController: NavController,
@@ -117,10 +115,12 @@ fun PluginScreen(
  * 底部弹出菜单，显示插件信息
  */
 @Composable
-fun PluginBottomSheet(
+private fun PluginBottomSheet(
     pluginItem: PluginItem
 ) {
+    // 剪贴板管理器
     val clipBoard = LocalClipboardManager.current
+
     // 插件信息
     val pluginInfo = mapOf (
         "名称" to pluginItem.spec.displayName,
@@ -128,22 +128,35 @@ fun PluginBottomSheet(
         "版本" to pluginItem.spec.version,
         "Halo 版本要求" to pluginItem.spec.requires,
         "提供方" to pluginItem.spec.author.name,
-        "协议" to pluginItem.spec.license.first().name
+        "协议" to pluginItem.spec.license.first().name,
+        "最后一次启动" to pluginItem.status.lastStartTime.formatString()
     )
+
     Column (
         modifier = Modifier
             .padding(horizontal = SMALL)
     ) {
+        // 插件卡片
         PluginItemCard(
             pluginItem = pluginItem,
             onClick = {}
         )
 
+        // 插件详细信息
         Row (
             modifier = Modifier
                 .padding(vertical = SMALL)
         ) {
             Column {
+                Row (
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = SMALL)
+                ) {
+
+                }
+
+
                 pluginInfo.forEach {
                     OutlinedCard(
                         modifier = Modifier
@@ -174,11 +187,23 @@ fun PluginBottomSheet(
     }
 }
 
+
+/**
+ * 底部弹出菜单中插件启动状态按钮
+ */
+@Composable
+private fun PluginBottomSheetSwitchButton(
+    pluginItem: PluginItem
+) {
+
+}
+
+
 /**
  * 展示所有插件
  */
 @Composable
-fun PluginItems(
+private fun PluginItems(
     pluginViewModel: PluginViewModel,
     onPluginClick: (PluginItem) -> Unit
 ) {
