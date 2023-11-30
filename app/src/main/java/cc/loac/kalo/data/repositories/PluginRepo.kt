@@ -1,14 +1,14 @@
 package cc.loac.kalo.data.repositories
 
-import android.util.Log
 import cc.loac.kalo.data.models.MyResponse
 import cc.loac.kalo.data.models.Plugin
 import cc.loac.kalo.data.models.PluginItem
+import cc.loac.kalo.data.models.PluginSetting
+import cc.loac.kalo.data.models.PluginSettingForms
 import cc.loac.kalo.network.RetrofitClient
 import cc.loac.kalo.network.api.PluginApiService
-import cc.loac.kalo.network.api.UserApiService
 import cc.loac.kalo.network.handle
-import cc.loac.kalo.utils.toJson
+import java.io.EOFException
 
 class PluginRepo {
 
@@ -48,6 +48,7 @@ class PluginRepo {
 
     /**
      * 更新插件信息
+     * @param pluginItem 插件信息实体类 [PluginItem]
      */
     suspend fun updatePluginInfo(
         pluginItem: PluginItem
@@ -62,6 +63,35 @@ class PluginRepo {
                     result.failure(it.detail)
                 }
             )
+        } catch (e: Exception) {
+            result.failure(e.message.toString())
+            e.printStackTrace()
+        }
+        return result
+    }
+
+    /**
+     * 获取插件设置信息
+     * @param pluginName 插件名
+     */
+    suspend fun getPluginSetting(
+        pluginName: String
+    ): MyResponse<PluginSetting> {
+        val result = MyResponse<PluginSetting>()
+        try {
+            pluginApi.getPluginSetting(pluginName).handle(
+                success = { pluginSetting, _ ->
+                    result.success(pluginSetting)
+                },
+                failure = {
+                    result.failure(it.detail)
+                }
+            )
+        } catch (e: EOFException) {
+            // 该异常是因为当前插件没有设置，获取了空白导致 Gson 反序列化失败
+            // 也认为获取插件设置信息成功，但是赋一个空的 PluginSettingForms 对象
+            // 表示当前插件没有设置选项
+            result.success(PluginSetting(PluginSettingForms()))
         } catch (e: Exception) {
             result.failure(e.message.toString())
             e.printStackTrace()

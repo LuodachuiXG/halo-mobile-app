@@ -2,6 +2,7 @@ package cc.loac.kalo.network.api
 
 import cc.loac.kalo.data.models.Plugin
 import cc.loac.kalo.data.models.PluginItem
+import cc.loac.kalo.data.models.PluginSetting
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -25,7 +26,7 @@ interface PluginApiService {
     @GET("/apis/api.console.halo.run/v1alpha1/plugins/{pluginName}/setting")
     suspend fun getPluginSetting(
         @Path("pluginName") pluginName: String
-    ): Response<Plugin>
+    ): Response<PluginSetting>
 
 
     /**

@@ -16,12 +16,13 @@ import cc.loac.kalo.ui.theme.MIDDLE
  */
 @Composable
 fun EmptyContent(
+    text: String = "这里什么都没有",
     modifier: Modifier = Modifier
 ) {
     Box (
         modifier = modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = "这里什么都没有")
+        Text(text = text)
     }
 }

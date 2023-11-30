@@ -32,6 +32,7 @@ fun ShimmerCard(
                     .fillMaxWidth()
                     .height(LARGE_MIDDLE * 3)
                     .clip(CardDefaults.shape)
+                    .padding(bottom = SMALL)
                     .mShimmer(true)
             ) {
 

@@ -336,7 +336,7 @@ private fun PluginItems(
     ) {
         if (pluginItems == null) {
             // 加载中显示骨架屏
-            ShimmerCard(Modifier.padding(bottom = SMALL))
+            ShimmerCard()
         } else if (pluginItems.isEmpty()) {
             // 插件为空
             EmptyContent()
