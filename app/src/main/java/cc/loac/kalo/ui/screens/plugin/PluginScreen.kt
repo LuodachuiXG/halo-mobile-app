@@ -7,12 +7,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -49,10 +46,11 @@ import cc.loac.kalo.data.repositories.PluginRepo
 import cc.loac.kalo.network.handle
 import cc.loac.kalo.ui.components.Alert
 import cc.loac.kalo.ui.components.EmptyContent
+import cc.loac.kalo.ui.components.NavigationBackTopBar
 import cc.loac.kalo.ui.components.PluginItemCard
-import cc.loac.kalo.ui.components.ProgressAlert
 import cc.loac.kalo.ui.components.ShimmerCard
 import cc.loac.kalo.ui.components.SwitchButton
+import cc.loac.kalo.ui.screens.AppScreen
 import cc.loac.kalo.ui.theme.SMALL
 import cc.loac.kalo.ui.theme.VERY_SMALL
 import cc.loac.kalo.utils.formatString
@@ -130,20 +128,9 @@ fun PluginScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = "插件")
-                },
-                navigationIcon = {
-                    IconButton(onClick = {
-                        navController.navigateUp()
-                    }) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBackIosNew,
-                            contentDescription = "返回"
-                        )
-                    }
-                }
+            NavigationBackTopBar(
+                navController = navController,
+                title = "插件"
             )
         }
     ) { padding ->
@@ -181,6 +168,13 @@ fun PluginScreen(
                         },
                         onPluginSettingClick = {
                             // 插件设置按钮点击事件
+                            // 先隐藏底部菜单再跳转页面
+                            showBottomSheet = false
+                            // 跳转插件设置页面，附带插件名和显示名作为参数
+                            navController.navigate(
+                                AppScreen.PLUGIN_SETTING.route +
+                                        "/${it.metadata.name}/${it.spec.displayName}"
+                            )
                         }
                     )
                 }

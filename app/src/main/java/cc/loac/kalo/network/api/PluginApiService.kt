@@ -5,8 +5,6 @@ import cc.loac.kalo.data.models.PluginItem
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.Headers
 import retrofit2.http.PUT
 import retrofit2.http.Path
 
@@ -19,6 +17,15 @@ interface PluginApiService {
      */
     @GET("/apis/api.console.halo.run/v1alpha1/plugins")
     suspend fun getAllPlugins(): Response<Plugin>
+
+    /**
+     * 获取插件设置
+     * @param pluginName 插件名
+     */
+    @GET("/apis/api.console.halo.run/v1alpha1/plugins/{pluginName}/setting")
+    suspend fun getPluginSetting(
+        @Path("pluginName") pluginName: String
+    ): Response<Plugin>
 
 
     /**
