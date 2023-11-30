@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.TopAppBar
@@ -51,6 +52,7 @@ import cc.loac.kalo.ui.components.EmptyContent
 import cc.loac.kalo.ui.components.PluginItemCard
 import cc.loac.kalo.ui.components.ProgressAlert
 import cc.loac.kalo.ui.components.ShimmerCard
+import cc.loac.kalo.ui.components.SwitchButton
 import cc.loac.kalo.ui.theme.SMALL
 import cc.loac.kalo.ui.theme.VERY_SMALL
 import cc.loac.kalo.utils.formatString
@@ -73,8 +75,8 @@ fun PluginScreen(
         mutableStateOf(Plugin())
     }
 
-    // 是否显示加载对话框
-    var showProgressDialog by remember { mutableStateOf(false) }
+    // 是否在加载中
+    var isLoading by remember { mutableStateOf(false) }
 
     // 启动时获取所有插件
     LaunchedEffect(Unit) {
@@ -101,13 +103,6 @@ fun PluginScreen(
         }
     }
 
-    // 显示加载对话框
-    if (showProgressDialog) {
-        "请稍等".ProgressAlert(5000) {
-            showProgressDialog = false
-        }
-    }
-
     // 底部弹出菜单，点击插件后弹出显示插件信息
     val sheetState = rememberModalBottomSheetState()
     // 弹出菜单显示的插件索引
@@ -127,8 +122,8 @@ fun PluginScreen(
                 dialogText = "操作失败，$it"
             },
             compose = {
-                // 关闭加载对话框
-                showProgressDialog = false
+                // 取消加载状态
+                isLoading = false
             }
         )
     }
@@ -166,6 +161,7 @@ fun PluginScreen(
                     sheetState = sheetState,
                 ) {
                     PluginBottomSheet(
+                        isLoading = isLoading,
                         pluginItem = plugins.items!![bottomSheetPluginIndex],
                         onPluginSwitchClick = {
                             // 插件启用状态改变按钮点击事件
@@ -177,8 +173,8 @@ fun PluginScreen(
                                         enabled = !it.spec.enabled
                                     )
                                 )
-                                //显示加载对话框
-                                showProgressDialog = true
+                                // 加载状态
+                                isLoading = true
                                 // 更新插件启用状态
                                 pluginViewModel.updatePluginInfo(pluginItem)
                             }
@@ -204,12 +200,14 @@ fun PluginScreen(
 /**
  * 底部弹出菜单，显示插件信息
  * @param pluginItem 插件信息实体类
+ * @param isLoading 当前是否在加载状态（防止在加载中重复操作）
  * @param onPluginSwitchClick 插件启用状态切换按钮点击事件
  * @param onPluginSettingClick 插件设置按钮点击事件
  */
 @Composable
 private fun PluginBottomSheet(
     pluginItem: PluginItem,
+    isLoading: Boolean,
     onPluginSwitchClick: (PluginItem) -> Unit = {},
     onPluginSettingClick: (PluginItem) -> Unit = {}
 ) {
@@ -249,14 +247,18 @@ private fun PluginBottomSheet(
                         .padding(vertical = SMALL)
                 ) {
                     // 插件启用状态切换按钮
-                    PluginBottomSheetSwitchButton(
-                        pluginItem = pluginItem,
+                    SwitchButton(
+                        enable = pluginItem.spec.enabled,
+                        enableText = "禁用",
+                        disableText = "启用",
+                        isLoading = isLoading,
                         modifier = Modifier
                             .weight(1f)
                             .padding(end = VERY_SMALL)
                     ) {
                         onPluginSwitchClick(pluginItem)
                     }
+
                     // 插件设置按钮
                     PluginBottomSheetSettingButton(
                         modifier = Modifier
@@ -298,47 +300,6 @@ private fun PluginBottomSheet(
     }
 }
 
-
-/**
- * 底部弹出菜单中插件启动状态按钮
- * @param pluginItem 插件信息实体类
- * @param modifier [Modifier]
- * @param onClick 插件启用状态改变按钮点击事件
- */
-@Composable
-private fun PluginBottomSheetSwitchButton(
-    pluginItem: PluginItem,
-    modifier: Modifier = Modifier,
-    onClick: (PluginItem) -> Unit
-) {
-    Card (
-        // 根据插件启用状态设置不同的按钮和文字颜色
-        colors = CardDefaults.cardColors(
-            containerColor = if (pluginItem.spec.enabled) {
-                MaterialTheme.colorScheme.error
-            } else {
-                MaterialTheme.colorScheme.primary
-            },
-            contentColor = if (pluginItem.spec.enabled) {
-                MaterialTheme.colorScheme.onError
-            } else {
-                MaterialTheme.colorScheme.onPrimary
-            },
-        ),
-        modifier = modifier
-            .clip(CardDefaults.shape)
-            .clickable { onClick(pluginItem) }
-    ) {
-        Text(
-            text = if (pluginItem.spec.enabled) "禁用" else "启用",
-            modifier = Modifier
-                .padding(SMALL)
-                .align(Alignment.CenterHorizontally)
-        )
-    }
-}
-
-
 /**
  * 底部弹出菜单中插件设置按钮
  * @param modifier [Modifier]
@@ -349,11 +310,7 @@ private fun PluginBottomSheetSettingButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
-    Card (
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.secondary,
-            contentColor = MaterialTheme.colorScheme.onSecondary
-        ),
+    OutlinedCard (
         modifier = modifier
             .clip(CardDefaults.shape)
             .clickable { onClick() }
