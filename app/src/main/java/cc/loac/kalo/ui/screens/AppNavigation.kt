@@ -2,8 +2,6 @@ package cc.loac.kalo.ui.screens
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -17,18 +15,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import cc.loac.kalo.R
 import cc.loac.kalo.ui.screens.home.HomeScreen
 import cc.loac.kalo.ui.screens.login.LoginScreen
 import cc.loac.kalo.ui.screens.me.MeScreen
 import cc.loac.kalo.ui.screens.plugin.PluginScreen
-import cc.loac.kalo.ui.screens.plugin.PluginSettingScreen
 import cc.loac.kalo.ui.theme.MIDDLE
 
 
@@ -131,26 +126,6 @@ fun AppNavigation() {
             composable(AppScreen.PLUGIN.route) {
                 PluginScreen(navController)
             }
-
-            // 插件设置页面
-            composable(
-                route = AppScreen.PLUGIN_SETTING.route + "/{pluginName}/{displayName}",
-                arguments = listOf(
-                    // 插件名
-                    navArgument("pluginName") {
-                        type = NavType.StringType
-                    },
-                    // 插件显示名
-                    navArgument("displayName") {
-                        type = NavType.StringType
-                    }
-                )
-            ) { navBackStackEntry ->
-                // 获取传过来的插件名
-                val pluginName = navBackStackEntry.arguments?.getString("pluginName") ?: ""
-                val displayName = navBackStackEntry.arguments?.getString("displayName") ?: ""
-                PluginSettingScreen(navController, pluginName, displayName)
-            }
         }
     }
 }
@@ -162,6 +137,5 @@ enum class AppScreen(val route: String) {
     LOGIN("login"),
     ME("me"),
     HOME("home"),
-    PLUGIN("plugin"),
-    PLUGIN_SETTING("plugin_setting")
+    PLUGIN("plugin")
 }

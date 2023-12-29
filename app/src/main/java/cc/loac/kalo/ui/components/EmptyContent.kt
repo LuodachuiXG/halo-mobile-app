@@ -20,7 +20,7 @@ fun EmptyContent(
     text: String = "这里什么都没有"
 ) {
     Box (
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier.fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
         Text(text = text)

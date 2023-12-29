@@ -1,7 +1,11 @@
 package cc.loac.kalo.ui.screens.plugin
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -11,6 +15,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
@@ -23,25 +30,17 @@ import cc.loac.kalo.ui.components.Alert
 import cc.loac.kalo.ui.components.EmptyContent
 import cc.loac.kalo.ui.components.NavigationBackTopBar
 import cc.loac.kalo.ui.components.ShimmerCard
+import cc.loac.kalo.ui.theme.LARGE
 import cc.loac.kalo.ui.theme.SMALL
 import cc.loac.kalo.utils.toast
 import kotlinx.coroutines.launch
 
 @Composable
-fun PluginSettingScreen(
-    navController: NavController,
+fun PluginSetting(
     pluginName: String,
-    displayName: String,
     vm: PluginSettingViewModel = viewModel()
 ) {
     LaunchedEffect(Unit) {
-        // 插件名为空，弹回上一页
-        if (pluginName.isEmpty()) {
-            "插件名为空".toast()
-            navController.navigateUp()
-            return@LaunchedEffect
-        }
-
         // 读取插件设置信息
         vm.getPluginSetting(pluginName)
     }
@@ -77,32 +76,20 @@ fun PluginSettingScreen(
         )
     }
 
-    Scaffold(
-        topBar = {
-            NavigationBackTopBar(
-                navController = navController,
-                title = displayName
+    Column {
+        if (pluginSetting.isEmpty()) {
+            // 插件设置信息实体类为空，正在加载中，显示骨架屏
+            ShimmerCard()
+        } else if (pluginSetting.spec!!.forms.isEmpty()) {
+            // 插件设置信息实体类不为空，但是设置列表为空
+            // 表明当前插件没有设置选项
+            EmptyContent(
+                text = "当前插件没有设置选项",
+                modifier = Modifier.height(150.dp)
             )
-        }
-    ) { padding ->
-        Column (
-            modifier = Modifier
-                .padding(padding)
-                .padding(SMALL)
-        ) {
-            if (pluginSetting.isEmpty()) {
-                // 插件设置信息实体类为空，正在加载中，显示骨架屏
-                ShimmerCard()
-            } else if (pluginSetting.spec!!.forms.isEmpty()) {
-                // 插件设置信息实体类不为空，但是设置列表为空
-                // 表明当前插件没有设置选项
-                EmptyContent(text = "当前插件没有设置选项")
-            }
         }
     }
 }
-
-
 /**
  * 插件设置页面 ViewModel
  */

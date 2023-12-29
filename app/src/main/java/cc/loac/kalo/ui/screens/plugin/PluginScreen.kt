@@ -1,6 +1,8 @@
 package cc.loac.kalo.ui.screens.plugin
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -45,7 +47,6 @@ import cc.loac.kalo.ui.components.NavigationBackTopBar
 import cc.loac.kalo.ui.components.PluginItemCard
 import cc.loac.kalo.ui.components.ShimmerCard
 import cc.loac.kalo.ui.components.SwitchButton
-import cc.loac.kalo.ui.screens.AppScreen
 import cc.loac.kalo.ui.theme.SMALL
 import cc.loac.kalo.ui.theme.VERY_SMALL
 import cc.loac.kalo.utils.formatString
@@ -103,6 +104,9 @@ fun PluginScreen(
     // 是否显示弹出菜单
     var showBottomSheet by remember { mutableStateOf(false) }
 
+    // 底部弹出菜单中是否显示插件的设置，true 为显示，false 为不显示（显示插件信息）
+    var showPluginSetting by remember { mutableStateOf(false) }
+
     // 检测插件启用状态修改事件
     LaunchedEffect(pluginViewModel.updatePluginInfo.value) {
         pluginViewModel.updatePluginInfo.handle(
@@ -121,6 +125,7 @@ fun PluginScreen(
         )
     }
 
+    // 脚手架
     Scaffold(
         topBar = {
             NavigationBackTopBar(
@@ -142,8 +147,10 @@ fun PluginScreen(
                     },
                     sheetState = sheetState,
                 ) {
+                    // 底部弹出菜单内容
                     PluginBottomSheet(
                         isLoading = isLoading,
+                        showPluginSetting = showPluginSetting,
                         pluginItem = plugins.items!![bottomSheetPluginIndex],
                         onPluginSwitchClick = {
                             // 插件启用状态改变按钮点击事件
@@ -163,13 +170,7 @@ fun PluginScreen(
                         },
                         onPluginSettingClick = {
                             // 插件设置按钮点击事件
-                            // 先隐藏底部菜单再跳转页面
-                            showBottomSheet = false
-                            // 跳转插件设置页面，附带插件名和显示名作为参数
-                            navController.navigate(
-                                AppScreen.PLUGIN_SETTING.route +
-                                        "/${it.metadata.name}/${it.spec.displayName}"
-                            )
+                            showPluginSetting = !showPluginSetting
                         }
                     )
                 }
@@ -190,6 +191,7 @@ fun PluginScreen(
  * 底部弹出菜单，显示插件信息
  * @param pluginItem 插件信息实体类
  * @param isLoading 当前是否在加载状态（防止在加载中重复操作）
+ * @param showPluginSetting 是否显示插件的设置选项
  * @param onPluginSwitchClick 插件启用状态切换按钮点击事件
  * @param onPluginSettingClick 插件设置按钮点击事件
  */
@@ -197,23 +199,10 @@ fun PluginScreen(
 private fun PluginBottomSheet(
     pluginItem: PluginItem,
     isLoading: Boolean,
+    showPluginSetting: Boolean,
     onPluginSwitchClick: (PluginItem) -> Unit = {},
     onPluginSettingClick: (PluginItem) -> Unit = {}
 ) {
-    // 剪贴板管理器
-    val clipBoard = LocalClipboardManager.current
-
-    // 插件信息
-    val pluginInfo = mapOf (
-        "名称" to pluginItem.spec.displayName,
-        "描述" to pluginItem.spec.description,
-        "版本" to pluginItem.spec.version,
-        "Halo 版本要求" to pluginItem.spec.requires,
-        "提供方" to pluginItem.spec.author.name,
-        "协议" to (pluginItem.spec.license.firstOrNull()?.name ?: "未知"),
-        "最后一次启动" to pluginItem.status.lastStartTime.formatString()
-    )
-
     Column (
         modifier = Modifier
             .padding(horizontal = SMALL)
@@ -224,12 +213,14 @@ private fun PluginBottomSheet(
             onClick = {}
         )
 
-        // 插件详细信息
-        Row (
+        // 插件详细信息 / 插件设置选项
+        Box (
             modifier = Modifier
                 .padding(bottom = SMALL)
         ) {
-            Column {
+            Column (
+                modifier = Modifier.animateContentSize()
+            ) {
                 Row (
                     modifier = Modifier
                         .fillMaxWidth()
@@ -249,40 +240,27 @@ private fun PluginBottomSheet(
                     }
 
                     // 插件设置按钮
-                    PluginBottomSheetSettingButton(
+                    OutlinedCard (
                         modifier = Modifier
                             .weight(1f)
-                            .padding(start = VERY_SMALL)
+                            .clip(CardDefaults.shape)
+                            .clickable { onPluginSettingClick(pluginItem) }
                     ) {
-                        onPluginSettingClick(pluginItem)
+                        Text(
+                            text = if (showPluginSetting) "返回" else "设置",
+                            modifier = Modifier
+                                .padding(SMALL)
+                                .align(Alignment.CenterHorizontally)
+                        )
                     }
                 }
 
-
-                pluginInfo.forEach {
-                    OutlinedCard(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = SMALL)
-                            .clip(CardDefaults.shape)
-                            .clickable {
-                                clipBoard.setText(AnnotatedString(it.value))
-                                "${it.key}已复制".toast()
-                            }
-                    ) {
-                        Column (
-                            modifier = Modifier.padding(SMALL)
-                        ) {
-                            Text(
-                                text = it.key,
-                                style = MaterialTheme.typography.titleSmall
-                            )
-                            Text(
-                                text = it.value,
-                                style = MaterialTheme.typography.bodySmall
-                            )
-                        }
-                    }
+                // 根据 showPluginSetting 来判断当前是显示插件信息还是设置选项
+                when (showPluginSetting) {
+                    true -> PluginSetting(
+                        pluginName = pluginItem.metadata.name
+                    )
+                    false -> PluginInfo(pluginItem = pluginItem)
                 }
             }
         }
@@ -290,29 +268,56 @@ private fun PluginBottomSheet(
 }
 
 /**
- * 底部弹出菜单中插件设置按钮
- * @param modifier [Modifier]
- * @param onClick 插件设置按钮点击事件
+ * 展示插件信息
+ * @param pluginItem 插件实体类
  */
 @Composable
-private fun PluginBottomSheetSettingButton(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
+fun PluginInfo(
+    pluginItem: PluginItem,
 ) {
-    OutlinedCard (
-        modifier = modifier
-            .clip(CardDefaults.shape)
-            .clickable { onClick() }
-    ) {
-        Text(
-            text = "设置",
-            modifier = Modifier
-                .padding(SMALL)
-                .align(Alignment.CenterHorizontally)
-        )
+    // 剪贴板管理器
+    val clipBoard = LocalClipboardManager.current
+
+    // 插件信息
+    val pluginInfo = mapOf (
+        "名称" to pluginItem.spec.displayName,
+        "描述" to pluginItem.spec.description,
+        "版本" to pluginItem.spec.version,
+        "Halo 版本要求" to pluginItem.spec.requires,
+        "提供方" to pluginItem.spec.author.name,
+        "协议" to (pluginItem.spec.license.firstOrNull()?.name ?: "未知"),
+        "最后一次启动" to pluginItem.status.lastStartTime.formatString()
+    )
+
+
+    Column {
+        pluginInfo.forEach {
+            OutlinedCard(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = SMALL)
+                    .clip(CardDefaults.shape)
+                    .clickable {
+                        clipBoard.setText(AnnotatedString(it.value))
+                        "${it.key}已复制".toast()
+                    }
+            ) {
+                Column (
+                    modifier = Modifier.padding(SMALL)
+                ) {
+                    Text(
+                        text = it.key,
+                        style = MaterialTheme.typography.titleSmall
+                    )
+                    Text(
+                        text = it.value,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+            }
+        }
     }
 }
-
 
 /**
  * 展示所有插件
@@ -334,7 +339,7 @@ private fun PluginItems(
             ShimmerCard()
         } else if (pluginItems.isEmpty()) {
             // 插件为空
-            EmptyContent()
+            EmptyContent(Modifier.fillMaxSize())
         } else {
             // 展示所有插件
             LazyColumn {
