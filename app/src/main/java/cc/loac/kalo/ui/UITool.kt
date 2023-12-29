@@ -1,8 +1,10 @@
 package cc.loac.kalo.ui
 
+import android.annotation.SuppressLint
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
 import com.zj.shimmer.ShimmerConfig
 import com.zj.shimmer.shimmer
@@ -12,12 +14,13 @@ import com.zj.shimmer.shimmer
  * @param visible 是否显示骨架屏
  * @param config 骨架屏配置[ShimmerConfig]，这里进行了自定义
  */
+@SuppressLint("ComposableModifierFactory")
 @Composable
 fun Modifier.mShimmer(
     visible: Boolean,
     config: ShimmerConfig = ShimmerConfig(
         contentColor = MaterialTheme.colorScheme.surfaceVariant,
-        higLightColor = Color.LightGray,
+        higLightColor = MaterialTheme.colorScheme.inverseOnSurface,
         duration = 500f
     )
 ) = shimmer(visible, config)

@@ -1,7 +1,5 @@
 package cc.loac.kalo.ui.screens.me
 
-
-import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,10 +9,6 @@ import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -27,15 +21,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import cc.loac.kalo.MainActivity
 import cc.loac.kalo.data.models.MyResponse
 import cc.loac.kalo.data.models.UserInfo
-import cc.loac.kalo.data.repositories.ConfigKey
-import cc.loac.kalo.data.repositories.ConfigRepo
 import cc.loac.kalo.data.repositories.UserRepo
 import cc.loac.kalo.network.handle
 import cc.loac.kalo.ui.components.Alert
-import cc.loac.kalo.ui.components.ImageButton
+import cc.loac.kalo.ui.components.MyIconButton
 import cc.loac.kalo.ui.components.UserProfileCard
 import cc.loac.kalo.ui.screens.AppScreen
 import cc.loac.kalo.ui.theme.MIDDLE_MIDDLE
@@ -114,7 +105,7 @@ private fun MeImageButtons(navController: NavController) {
         Row(
             modifier = Modifier.fillMaxWidth()
         ) {
-            ImageButton(
+            MyIconButton(
                 imageVector = Icons.Default.Category,
                 text = "插件",
                 modifier = Modifier
@@ -125,7 +116,7 @@ private fun MeImageButtons(navController: NavController) {
                 navController.navigate(AppScreen.PLUGIN.route)
             }
 
-            ImageButton(
+            MyIconButton(
                 imageVector = Icons.Default.Person,
                 text = "用户",
                 modifier = Modifier
@@ -137,7 +128,7 @@ private fun MeImageButtons(navController: NavController) {
         Row(
             modifier = Modifier.padding(top = MIDDLE_MIDDLE)
         ) {
-            ImageButton(
+            MyIconButton(
                 imageVector = Icons.Default.Dashboard,
                 text = "概述",
                 modifier = Modifier
@@ -145,7 +136,7 @@ private fun MeImageButtons(navController: NavController) {
                     .padding(end = VERY_SMALL)
             )
 
-            ImageButton(
+            MyIconButton(
                 imageVector = Icons.Default.Settings,
                 text = "设置",
                 modifier = Modifier

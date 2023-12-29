@@ -1,6 +1,5 @@
 package cc.loac.kalo.ui.screens.plugin
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -97,7 +96,7 @@ fun PluginSettingScreen(
             } else if (pluginSetting.spec!!.forms.isEmpty()) {
                 // 插件设置信息实体类不为空，但是设置列表为空
                 // 表明当前插件没有设置选项
-                EmptyContent("当前插件没有设置选项")
+                EmptyContent(text = "当前插件没有设置选项")
             }
         }
     }

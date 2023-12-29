@@ -363,14 +363,14 @@ private fun BottomTips() {
             }
         ) {
             Text(
-                text = "支持 Halo 2.9.0 +",
+                text = "支持 Halo 2.11 +",
                 fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.secondary,
             )
         }
 
         if (showAlert) {
-            "支持 Halo 2.9.0 +".Alert("温馨提示") {
+            "支持 Halo 2.10.0 +".Alert("温馨提示") {
                 showAlert = false
             }
         }

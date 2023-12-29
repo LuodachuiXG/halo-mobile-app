@@ -1,8 +1,12 @@
 package cc.loac.kalo.ui.components
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
@@ -19,6 +23,8 @@ import cc.loac.kalo.data.models.PluginItem
 import cc.loac.kalo.ui.theme.LARGE
 import cc.loac.kalo.ui.theme.LARGE_IMAGE
 import cc.loac.kalo.ui.theme.LARGE_MIDDLE
+import cc.loac.kalo.ui.theme.MIDDLE
+import cc.loac.kalo.ui.theme.MIDDLE_MIDDLE
 import cc.loac.kalo.ui.theme.SMALL
 import cc.loac.kalo.ui.theme.VERY_SMALL
 
@@ -61,14 +67,14 @@ fun SwitchButton(
                     onClick()
                 }
             }
+            .height(LARGE + SMALL)
     ) {
         if (isLoading) {
             // 加载中显示进度条
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .padding(top = SMALL - 1.1.dp, bottom = SMALL - 1.dp)
-                    .fillMaxWidth()
+            Column (
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxSize()
             ) {
                 CircularProgressIndicator(
                     color = if (enable) {
@@ -76,7 +82,8 @@ fun SwitchButton(
                     } else {
                         MaterialTheme.colorScheme.onPrimary
                     },
-                    modifier = Modifier.size(LARGE_MIDDLE)
+                    modifier = Modifier.size(MIDDLE),
+                    strokeWidth = VERY_SMALL - 2.dp
                 )
             }
         } else {

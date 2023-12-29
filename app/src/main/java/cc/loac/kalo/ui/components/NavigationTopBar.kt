@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 
 /**
- * 返回导航栏
+ * 带返回按钮的 TopAppBar
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

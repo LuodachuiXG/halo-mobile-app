@@ -16,8 +16,8 @@ import cc.loac.kalo.ui.theme.MIDDLE
  */
 @Composable
 fun EmptyContent(
-    text: String = "这里什么都没有",
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    text: String = "这里什么都没有"
 ) {
     Box (
         modifier = modifier.fillMaxSize(),

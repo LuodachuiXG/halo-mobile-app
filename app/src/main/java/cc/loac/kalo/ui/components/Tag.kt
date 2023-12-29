@@ -1,6 +1,5 @@
 package cc.loac.kalo.ui.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,7 +12,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import cc.loac.kalo.ui.theme.MyTypography
-import cc.loac.kalo.ui.theme.SMALL
 
 /**
  * 标签组件
@@ -27,7 +25,6 @@ import cc.loac.kalo.ui.theme.SMALL
 fun Tag(
     text: String,
     modifier: Modifier = Modifier,
-    backgroundColor: Color = MaterialTheme.colorScheme.onSurface,
     textColor: Color = MaterialTheme.colorScheme.secondary,
     onClick: () -> Unit = {}
 ) {

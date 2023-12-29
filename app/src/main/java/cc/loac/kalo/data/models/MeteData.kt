@@ -15,8 +15,14 @@ data class MetaData(
     val deletionTimestamp: Date? = null,
     val generateName: String = ""
 ) {
-    companion object {
-        // annotations 的 key，显示的是等于用户的权限名
-        const val AUTHORIZATION_NAME = "rbac.authorization.halo.run/display-name"
+    // annotations 的 key，用户的权限名
+    private val _authorizationName = "rbac.authorization.halo.run/display-name"
+
+    /**
+     * 获取用户的权限名，该权限名存储在用户信息的元数据中
+     * @see User
+     */
+    fun getUserRoles(): String {
+        return annotations[_authorizationName] ?: ""
     }
 }
