@@ -144,6 +144,9 @@ fun PluginScreen(
                     onDismissRequest = {
                         // 收回弹出菜单
                         showBottomSheet = false
+                        // 收回弹出菜单后也要将显示插件设置选项设为 false
+                        // 防止出现点击下一个插件时直接显示插件设置
+                        showPluginSetting = false
                     },
                     sheetState = sheetState,
                 ) {
@@ -333,6 +336,7 @@ private fun PluginItems(
         modifier = Modifier
             .fillMaxSize()
             .padding(SMALL)
+            .animateContentSize()
     ) {
         if (pluginItems == null) {
             // 加载中显示骨架屏

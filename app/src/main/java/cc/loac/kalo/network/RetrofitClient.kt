@@ -8,6 +8,8 @@ import cc.loac.kalo.network.api.LoginApiService
 import cc.loac.kalo.network.api.PluginApiService
 import cc.loac.kalo.network.api.UserApiService
 import com.google.gson.GsonBuilder
+import com.google.gson.TypeAdapterFactory
+import com.google.gson.internal.bind.TypeAdapters
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -48,7 +50,11 @@ class RetrofitClient private constructor(retrofit: Retrofit) {
             }
 
             // 设置 Gson 序列化的时间格式
-            val gson = GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS'Z'").create()
+            val gson = GsonBuilder()
+                // 添加 Gson 对枚举类的支持
+                .registerTypeAdapterFactory(TypeAdapters.ENUM_FACTORY)
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS'Z'")
+                .create()
             val retrofit = Retrofit.Builder()
                 .baseUrl(url)
                 .addConverterFactory(GsonConverterFactory.create(gson))

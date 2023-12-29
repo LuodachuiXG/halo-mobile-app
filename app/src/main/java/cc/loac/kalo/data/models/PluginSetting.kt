@@ -35,12 +35,12 @@ data class PluginSettingForm(
 
 data class PluginSettingFormSchema(
     @SerializedName("\$formkit")
-    val formkit: String,
+    val formkit: FormKit,
     val label: String,
     val name: String,
     val validation: String,
-    var value: String,
-    val help: String,
+    var value: String?,
+    val help: String?,
     val options: List<PluginSettingFormOption>
 )
 
@@ -48,3 +48,15 @@ data class PluginSettingFormOption(
     val label: String,
     val value: String
 )
+
+/**
+ * 表单组件类型枚举类
+ */
+enum class FormKit {
+    @SerializedName("textarea")
+    TEXTAREA,
+    @SerializedName("select")
+    SELECT,
+    @SerializedName("text")
+    TEXT
+}
