@@ -17,7 +17,6 @@ import cc.loac.kalo.ui.theme.MyTypography
  * 标签组件
  * @param text 标签显示文字
  * @param modifier [Modifier]
- * @param backgroundColor 标签背景颜色
  * @param textColor 标签文字颜色
  * @param onClick 标签点击事件
  */

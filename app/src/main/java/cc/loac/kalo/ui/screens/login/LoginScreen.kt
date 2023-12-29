@@ -8,9 +8,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Brightness3
-import androidx.compose.material.icons.filled.BrightnessHigh
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -30,6 +29,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -221,9 +221,13 @@ private fun Input(
             if (isPassword) {
                 IconButton(onClick = { showPassword = !showPassword }) {
                     Icon(
-                        imageVector = if (showPassword) Icons.Default.BrightnessHigh else Icons.Default.Brightness3,
+                        painter = if (showPassword) painterResource(id = R.drawable.eye)
+                            else painterResource(id = R.drawable.eye_slash),
                         contentDescription = "显示密码",
-                        tint = if (showPassword) MaterialTheme.colorScheme.primary else LocalContentColor.current
+                        tint = if (showPassword) MaterialTheme.colorScheme.primary
+                            else LocalContentColor.current,
+                        modifier = Modifier.size(MIDDLE)
+
                     )
                 }
 

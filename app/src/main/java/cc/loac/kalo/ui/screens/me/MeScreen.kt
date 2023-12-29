@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Category
-import androidx.compose.material.icons.filled.Dashboard
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
@@ -17,10 +15,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import cc.loac.kalo.R
 import cc.loac.kalo.data.models.MyResponse
 import cc.loac.kalo.data.models.UserInfo
 import cc.loac.kalo.data.repositories.UserRepo
@@ -106,7 +108,7 @@ private fun MeImageButtons(navController: NavController) {
             modifier = Modifier.fillMaxWidth()
         ) {
             MyIconButton(
-                imageVector = Icons.Default.Category,
+                painter = painterResource(id = R.drawable.plugin),
                 text = "插件",
                 modifier = Modifier
                     .weight(1f)
@@ -117,7 +119,7 @@ private fun MeImageButtons(navController: NavController) {
             }
 
             MyIconButton(
-                imageVector = Icons.Default.Person,
+                painter = painterResource(id = R.drawable.user),
                 text = "用户",
                 modifier = Modifier
                     .weight(1f)
@@ -129,7 +131,7 @@ private fun MeImageButtons(navController: NavController) {
             modifier = Modifier.padding(top = MIDDLE_MIDDLE)
         ) {
             MyIconButton(
-                imageVector = Icons.Default.Dashboard,
+                painter = painterResource(id = R.drawable.frame),
                 text = "概述",
                 modifier = Modifier
                     .weight(1f)
@@ -137,7 +139,7 @@ private fun MeImageButtons(navController: NavController) {
             )
 
             MyIconButton(
-                imageVector = Icons.Default.Settings,
+                painter = painterResource(id = R.drawable.setting),
                 text = "设置",
                 modifier = Modifier
                     .weight(1f)

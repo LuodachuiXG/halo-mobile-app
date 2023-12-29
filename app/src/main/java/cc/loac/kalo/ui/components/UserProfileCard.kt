@@ -11,9 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Link
 import androidx.compose.material3.Card
-import androidx.compose.material3.ElevatedAssistChip
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,14 +21,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import cc.loac.kalo.R
 import cc.loac.kalo.data.models.UserInfo
-import cc.loac.kalo.data.repositories.ConfigKey
-import cc.loac.kalo.data.repositories.ConfigRepo
 import cc.loac.kalo.ui.mShimmer
 import cc.loac.kalo.ui.theme.LARGE_IMAGE
-import cc.loac.kalo.ui.theme.LARGE_MIDDLE
-import cc.loac.kalo.ui.theme.MIDDLE_MIDDLE
 import cc.loac.kalo.ui.theme.MyTypography
 import cc.loac.kalo.ui.theme.SMALL
 import coil.compose.AsyncImage
@@ -79,7 +75,7 @@ fun UserProfileCard(userInfo: UserInfo) {
 
                     // 邮箱
                     IconText(
-                        imageVector = Icons.Default.Email,
+                        painter = painterResource(id = R.drawable.email),
                         text = userInfo.user.spec.email,
                         modifier = Modifier.padding(top = 2.dp)
                     )

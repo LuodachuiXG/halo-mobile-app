@@ -2,10 +2,8 @@ package cc.loac.kalo.ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -19,12 +17,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import cc.loac.kalo.data.models.PluginItem
 import cc.loac.kalo.ui.theme.LARGE
-import cc.loac.kalo.ui.theme.LARGE_IMAGE
-import cc.loac.kalo.ui.theme.LARGE_MIDDLE
 import cc.loac.kalo.ui.theme.MIDDLE
-import cc.loac.kalo.ui.theme.MIDDLE_MIDDLE
 import cc.loac.kalo.ui.theme.SMALL
 import cc.loac.kalo.ui.theme.VERY_SMALL
 
@@ -67,7 +61,7 @@ fun SwitchButton(
                     onClick()
                 }
             }
-            .height(LARGE + SMALL)
+            .height(LARGE + SMALL + 2.dp)
     ) {
         if (isLoading) {
             // 加载中显示进度条

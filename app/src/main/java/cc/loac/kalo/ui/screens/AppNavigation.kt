@@ -1,12 +1,9 @@
 package cc.loac.kalo.ui.screens
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -15,13 +12,10 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -29,11 +23,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import cc.loac.kalo.R
 import cc.loac.kalo.ui.screens.home.HomeScreen
 import cc.loac.kalo.ui.screens.login.LoginScreen
 import cc.loac.kalo.ui.screens.me.MeScreen
 import cc.loac.kalo.ui.screens.plugin.PluginScreen
 import cc.loac.kalo.ui.screens.plugin.PluginSettingScreen
+import cc.loac.kalo.ui.theme.MIDDLE
 
 
 /**
@@ -45,10 +41,10 @@ import cc.loac.kalo.ui.screens.plugin.PluginSettingScreen
 private sealed class Screen(
     val route: AppScreen,
     val name: String,
-    val icon: ImageVector
+    val icon: Int
 ) {
-    object Me: Screen(AppScreen.ME, "我", Icons.Default.Person)
-    object Home: Screen(AppScreen.HOME, "主页", Icons.Default.Home)
+    object Me: Screen(AppScreen.ME, "我", R.drawable.user)
+    object Home: Screen(AppScreen.HOME, "主页", R.drawable.home)
 }
 
 /**
@@ -97,8 +93,9 @@ fun AppNavigation() {
                             },
                             icon = {
                                 Icon(
-                                    imageVector = it.icon,
-                                    contentDescription = it.name
+                                    painter = painterResource(id = it.icon),
+                                    contentDescription = it.name,
+                                    modifier = Modifier.size(MIDDLE)
                                 )
                             },
                             label = {
