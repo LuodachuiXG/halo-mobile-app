@@ -1,7 +1,6 @@
 package cc.loac.kalo.ui.screens.plugin
 
 import android.annotation.SuppressLint
-import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -11,10 +10,14 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedCard
@@ -34,11 +37,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import cc.loac.kalo.R
 import cc.loac.kalo.data.models.MyResponse
 import cc.loac.kalo.data.models.Plugin
 import cc.loac.kalo.data.models.PluginItem
@@ -50,6 +55,8 @@ import cc.loac.kalo.ui.components.NavigationBackTopBar
 import cc.loac.kalo.ui.components.PluginItemCard
 import cc.loac.kalo.ui.components.ShimmerCard
 import cc.loac.kalo.ui.components.SwitchButton
+import cc.loac.kalo.ui.theme.LARGE_MIDDLE
+import cc.loac.kalo.ui.theme.MIDDLE
 import cc.loac.kalo.ui.theme.SMALL
 import cc.loac.kalo.ui.theme.VERY_SMALL
 import cc.loac.kalo.utils.formatString
@@ -131,9 +138,38 @@ fun PluginScreen(
     // 脚手架
     Scaffold(
         topBar = {
-            NavigationBackTopBar(
-                navController = navController,
-                title = "插件"
+            TopAppBar(
+                title = {
+                    Text(text = "插件")
+                },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        navController.navigateUp()
+                    }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.arrow_left),
+                            contentDescription = "返回",
+                            modifier = Modifier.size(LARGE_MIDDLE)
+                        )
+                    }
+                },
+                actions = {
+                    // 提示按钮
+                    IconButton(
+                        onClick = {
+                            // 显示提示信息框
+                            dialogText = "插件设置功能仍在测试阶段，并未完全支持所有表单的渲染。\n" +
+                                    "如果在进入插件设置的时候闪退，请附带插件名到 GitHub 或 Gitee 提交 Issue，" +
+                                    "将尽快修复该问题。"
+                        }
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.warning),
+                            contentDescription = "提示",
+                            modifier = Modifier.size(LARGE_MIDDLE)
+                        )
+                    }
+                }
             )
         }
     ) { padding ->

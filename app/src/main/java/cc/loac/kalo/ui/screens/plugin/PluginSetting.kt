@@ -6,19 +6,24 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -154,6 +159,22 @@ fun PluginSettingItem(
 }
 
 /**
+ * 将插件的设置数据设置到 ViewModel 中
+ * @param vm ViewModel [PluginSettingViewModel]
+ * @param formSchema 插件设置表单集合
+ */
+fun setPluginSettingValuesToVM(
+    vm: PluginSettingViewModel,
+    formSchema: List<PluginSettingFormSchema>
+) {
+    val list = mutableListOf<String>()
+    formSchema.forEach {
+        list.add(it.value ?: "")
+    }
+    vm.setPluginSettingValues(list)
+}
+
+/**
  * 渲染插件设置选项
  */
 @Composable
@@ -163,11 +184,7 @@ fun PluginSettingForm(
 ) {
     LaunchedEffect(Unit) {
         // 首先设置插件的设置项数据到 ViewModel 中
-        val list = mutableListOf<String>()
-        formSchema.forEach {
-            list.add(it.value ?: "")
-        }
-        vm.setPluginSettingValues(list)
+        setPluginSettingValuesToVM(vm, formSchema)
     }
 
     Column(
@@ -196,7 +213,8 @@ fun PluginSettingForm(
                             label = {
                                 Text(text = formSchema.label)
                             },
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = CardDefaults.shape
                         )
                     }
 
@@ -226,7 +244,8 @@ fun PluginSettingForm(
                                     )
                                 }
                             },
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = CardDefaults.shape
                         )
 
                         // 选项下拉菜单
@@ -257,13 +276,15 @@ fun PluginSettingForm(
                             value = vm.getPluginSettingValue(index),
                             onValueChange = {
                                 vm.setPluginSettingValue(index, it)
-                                isCorrectUrl = it.isUrl()
+                                // 判断输入的是否是正确的 URL
+                                isCorrectUrl = it.isUrl() || it.isEmpty()
                             },
                             isError = !isCorrectUrl,
                             modifier = Modifier.fillMaxWidth(),
                             label = {
                                 Text(text = formSchema.label)
-                            }
+                            },
+                            shape = CardDefaults.shape
                         )
                         if (!isCorrectUrl) {
                             Text(
@@ -283,6 +304,32 @@ fun PluginSettingForm(
                         modifier = Modifier.padding(top = VERY_SMALL)
                     )
                 }
+            }
+        }
+
+        // 操作按钮
+        Row (
+            horizontalArrangement = Arrangement.End,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            OutlinedButton(
+                onClick = {
+                    // 重新将插件原来的设置数据设置到 ViewModel 中
+                    setPluginSettingValuesToVM(vm, formSchema)
+                },
+                shape = CardDefaults.shape,
+                modifier = Modifier.padding(end = SMALL)
+            ) {
+                Text(text = "重置")
+            }
+
+            OutlinedButton(
+                onClick = {
+
+                },
+                shape = CardDefaults.shape
+            ) {
+                Text(text = "保存设置")
             }
         }
     }

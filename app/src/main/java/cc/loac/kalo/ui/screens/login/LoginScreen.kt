@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Button
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -192,7 +193,6 @@ private fun Inputs(
  * @param onValueChange 输入框内容改变事件
  * @param isPassword 是否是密码框
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun Input(
     label: String,
@@ -232,7 +232,8 @@ private fun Input(
                 }
 
             }
-        }
+        },
+        shape = CardDefaults.shape
     )
 }
 
@@ -304,7 +305,8 @@ private fun LoginBtn(
                         loginViewModel.login(url, username, password)
                     }
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                shape = CardDefaults.shape
             ) {
                 Text("登录")
             }
