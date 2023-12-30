@@ -1,10 +1,13 @@
 package cc.loac.kalo.ui.screens.plugin
 
+import android.annotation.SuppressLint
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -198,6 +201,7 @@ fun PluginScreen(
  * @param onPluginSwitchClick 插件启用状态切换按钮点击事件
  * @param onPluginSettingClick 插件设置按钮点击事件
  */
+@SuppressLint("UnusedCrossfadeTargetStateParameter")
 @Composable
 private fun PluginBottomSheet(
     pluginItem: PluginItem,
@@ -293,7 +297,9 @@ fun PluginInfo(
     )
 
 
-    Column {
+    Column (
+        modifier = Modifier.fillMaxHeight()
+    ) {
         pluginInfo.forEach {
             OutlinedCard(
                 modifier = Modifier

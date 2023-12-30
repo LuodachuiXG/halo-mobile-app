@@ -58,5 +58,7 @@ enum class FormKit {
     @SerializedName("select")
     SELECT,
     @SerializedName("text")
-    TEXT
+    TEXT,
+    @SerializedName("url")
+    URL
 }

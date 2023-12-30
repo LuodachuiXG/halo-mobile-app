@@ -60,7 +60,9 @@ import cc.loac.kalo.ui.theme.MIDDLE
 import cc.loac.kalo.ui.theme.MIDDLE_MIDDLE
 import cc.loac.kalo.ui.theme.SMALL
 import cc.loac.kalo.ui.theme.VERY_SMALL
+import cc.loac.kalo.utils.isUrl
 import kotlinx.coroutines.launch
+import java.lang.NullPointerException
 
 @Composable
 fun PluginSetting(
@@ -72,15 +74,10 @@ fun PluginSetting(
         vm.getPluginSetting(pluginName)
     }
 
-    // 对话框内容，不为空就显示对话框
-    var dialogText by remember {
-        mutableStateOf("")
-    }
-
     // 显示对话框
-    if (dialogText.isNotEmpty()) {
-        dialogText.Alert {
-            dialogText = ""
+    if (vm.dialogText.value.isNotEmpty()) {
+        vm.dialogText.value.Alert {
+            vm.dialogText.value = ""
         }
     }
 
@@ -98,7 +95,7 @@ fun PluginSetting(
             },
             failure = {
                 // 插件设置信息获取失败
-                dialogText = "插件设置加载失败，$it"
+                vm.dialogText.value = "插件设置加载失败，$it"
             }
         )
     }
@@ -223,7 +220,7 @@ fun PluginSettingForm(
                                     }
                                 ) {
                                     Icon(
-                                        painter = painterResource(id = R.drawable.arrow_down), 
+                                        painter = painterResource(id = R.drawable.arrow_down),
                                         contentDescription = "显示下拉菜单",
                                         modifier = Modifier.size(MIDDLE)
                                     )
@@ -249,8 +246,33 @@ fun PluginSettingForm(
                                 )
                             }
                         }
+                    }
 
-
+                    FormKit.URL -> {
+                        // 标记当前用户输入的是否是正确的 URL
+                        var isCorrectUrl by remember {
+                            mutableStateOf(true)
+                        }
+                        OutlinedTextField(
+                            value = vm.getPluginSettingValue(index),
+                            onValueChange = {
+                                vm.setPluginSettingValue(index, it)
+                                isCorrectUrl = it.isUrl()
+                            },
+                            isError = !isCorrectUrl,
+                            modifier = Modifier.fillMaxWidth(),
+                            label = {
+                                Text(text = formSchema.label)
+                            }
+                        )
+                        if (!isCorrectUrl) {
+                            Text(
+                                text = "请输入正确的地址",
+                                style = MaterialTheme.typography.bodySmall,
+                                modifier = Modifier.padding(top = VERY_SMALL),
+                                color = MaterialTheme.colorScheme.error
+                            )
+                        }
                     }
                 }
                 // 显示帮助
@@ -259,7 +281,6 @@ fun PluginSettingForm(
                         text = formSchema.help,
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.padding(top = VERY_SMALL)
-
                     )
                 }
             }
@@ -274,6 +295,9 @@ fun PluginSettingForm(
 class PluginSettingViewModel : ViewModel() {
     // 初始化插件数据操作类
     private val pluginRepo = PluginRepo()
+
+    // 对话框内容，不为空就显示对话框
+    val dialogText = mutableStateOf("")
 
     // 插件设置实体类
     private val _pluginSetting = mutableStateOf(MyResponse<PluginSetting>())
