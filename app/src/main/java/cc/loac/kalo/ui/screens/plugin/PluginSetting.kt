@@ -116,7 +116,6 @@ fun PluginSetting(
 }
 
 
-@SuppressLint("UnusedCrossfadeTargetStateParameter")
 @Composable
 fun PluginSettingItem(
     vm: PluginSettingViewModel,

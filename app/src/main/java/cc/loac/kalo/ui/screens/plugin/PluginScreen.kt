@@ -108,7 +108,9 @@ fun PluginScreen(
     }
 
     // 底部弹出菜单，点击插件后弹出显示插件信息
-    val sheetState = rememberModalBottomSheetState()
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true
+    )
     // 弹出菜单显示的插件索引
     var bottomSheetPluginIndex by remember { mutableIntStateOf(0) }
     // 是否显示弹出菜单
@@ -188,6 +190,7 @@ fun PluginScreen(
                         showPluginSetting = false
                     },
                     sheetState = sheetState,
+                    modifier = Modifier.fillMaxHeight()
                 ) {
                     // 底部弹出菜单内容
                     PluginBottomSheet(
@@ -237,7 +240,6 @@ fun PluginScreen(
  * @param onPluginSwitchClick 插件启用状态切换按钮点击事件
  * @param onPluginSettingClick 插件设置按钮点击事件
  */
-@SuppressLint("UnusedCrossfadeTargetStateParameter")
 @Composable
 private fun PluginBottomSheet(
     pluginItem: PluginItem,
