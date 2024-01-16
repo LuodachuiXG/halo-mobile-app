@@ -1,5 +1,21 @@
 package cc.loac.kalo.ui.screens
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.EaseIn
+import androidx.compose.animation.core.EaseOut
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -49,7 +65,6 @@ private sealed class Screen(
 fun AppNavigation() {
     val navController = rememberNavController()
     val snackBarHostState = remember { SnackbarHostState() }
-
     // 底部导航栏页面项
     val item = listOf(
         Screen.Home,
@@ -105,7 +120,15 @@ fun AppNavigation() {
         NavHost(
             navController = navController,
             startDestination = AppScreen.LOGIN.route,
-            modifier = Modifier.padding(it)
+            modifier = Modifier
+                .padding(it)
+                .fillMaxSize(),
+            enterTransition = {
+                fadeIn()
+            },
+            exitTransition = {
+                fadeOut()
+            }
         ) {
             // 登录页面
             composable(AppScreen.LOGIN.route) {

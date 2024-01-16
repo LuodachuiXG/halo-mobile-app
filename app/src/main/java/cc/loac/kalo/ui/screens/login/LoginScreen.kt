@@ -3,6 +3,8 @@ package cc.loac.kalo.ui.screens.login
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.scaleIn
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -114,17 +116,16 @@ private fun Title() {
 
     AnimatedVisibility(
         visibleState = state,
-        enter = slideInVertically(
+        enter = scaleIn(
             animationSpec = tween(
                 durationMillis = 500
-            ),
-            initialOffsetY = { -850 }
+            )
         )
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 38.dp, bottom = 28.dp),
+                .padding(top = LARGE * 2, bottom = LARGE * 2),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Icon(
@@ -273,13 +274,14 @@ private fun LoginBtn(
     // 登录状态
     val loginStatus by loginViewModel.loginStatus
 
+
+
     AnimatedVisibility(
         visibleState = animateState,
-        enter = slideInVertically(
+        enter = fadeIn(
             animationSpec = tween(
                 durationMillis = 500
-            ),
-            initialOffsetY = { 1000 }
+            )
         )
     ) {
         Column(
