@@ -93,7 +93,7 @@ class LoginRepo(url: String) {
                 success = { _, response ->
                     // 登录成功
                     // 获取登录成功的 Session Cookie
-                    val sessionCookie = response.headers().get("set-cookie")
+                    val sessionCookie = response.headers()["set-cookie"]
                     // sessionCookie 为空，登录失败
                     if (sessionCookie == null) {
                         result.failure("登录 Session 获取失败，登陆失败")

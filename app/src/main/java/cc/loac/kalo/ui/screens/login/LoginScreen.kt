@@ -2,6 +2,7 @@ package cc.loac.kalo.ui.screens.login
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,10 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
@@ -51,9 +50,9 @@ import cc.loac.kalo.ui.components.ProgressAlert
 import cc.loac.kalo.ui.screens.AppScreen
 import cc.loac.kalo.ui.theme.LARGE
 import cc.loac.kalo.ui.theme.MIDDLE
+import cc.loac.kalo.ui.theme.NINETY_NINE
 import cc.loac.kalo.ui.theme.SMALL
-import cc.loac.kalo.ui.theme.aliFontFamily
-import cc.loac.kalo.utils.isUrl
+import cc.loac.kalo.utils.formatURL
 import kotlinx.coroutines.launch
 
 /**
@@ -116,23 +115,24 @@ private fun Title() {
     AnimatedVisibility(
         visibleState = state,
         enter = slideInVertically(
+            animationSpec = tween(
+                durationMillis = 500
+            ),
             initialOffsetY = { -850 }
         )
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 68.dp, bottom = 48.dp),
+                .padding(top = 38.dp, bottom = 28.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = stringResource(R.string.app_name),
-                fontFamily = aliFontFamily,
-                fontSize = 130.sp,
-                fontStyle = FontStyle.Italic,
-                color = MaterialTheme.colorScheme.primary
+            Icon(
+                painter = painterResource(id = R.drawable.kalo),
+                contentDescription = "Kalo",
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(150.dp)
             )
-
         }
     }
 
@@ -163,7 +163,7 @@ private fun Inputs(
     ) {
         Input(
             label = "Halo 站点地址",
-            placeholder = "需要 加 https:// 或 http://",
+            placeholder = "URL 或 IP 地址",
             value = urlValue,
             onValueChange = onUrlChange
         )
@@ -276,6 +276,9 @@ private fun LoginBtn(
     AnimatedVisibility(
         visibleState = animateState,
         enter = slideInVertically(
+            animationSpec = tween(
+                durationMillis = 500
+            ),
             initialOffsetY = { 1000 }
         )
     ) {
@@ -292,17 +295,21 @@ private fun LoginBtn(
                         return@Button
                     }
 
-                    if (!url.isUrl()) {
+                    // 判断并格式化网址
+                    val formatUrl = url.formatURL()
+                    if (formatUrl.isEmpty()) {
                         alertTitle = "登录失败"
-                        alertText = "站点地址有误，请重新输入"
+                        alertText = "站点地址有误，请重新输入，\n" +
+                                "URL 需要加上 https:// 或 http://"
                         showAlert = true
                         return@Button
                     }
+
                     showLoadingAlert = true
                     // 启动协程处理登录操作
                     scope.launch {
                         // 尝试登录
-                        loginViewModel.login(url, username, password)
+                        loginViewModel.login(formatUrl, username, password)
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
@@ -361,24 +368,15 @@ private fun BottomTips() {
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        var showAlert by remember { mutableStateOf(false) }
         TextButton(
             modifier = Modifier.padding(bottom = 5.dp),
-            onClick = {
-                showAlert = true
-            }
+            onClick = {}
         ) {
             Text(
-                text = "支持 Halo 2.11 +",
+                text = "支持 Halo 2.0 +",
                 fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.secondary,
             )
-        }
-
-        if (showAlert) {
-            "支持 Halo 2.10.0 +".Alert("温馨提示") {
-                showAlert = false
-            }
         }
     }
 }

@@ -50,6 +50,20 @@ data class PluginSettingFormOption(
 )
 
 /**
+ * 插件设置数据提交更新实体类
+ */
+data class PluginSettingSubmit(
+    val data: PluginSettingSubmitData,
+    val apiVersion: String = "",
+    val kind: String = "",
+    val metadata: MetaData = MetaData()
+)
+
+data class PluginSettingSubmitData(
+    val basic: String
+)
+
+/**
  * 表单组件类型枚举类
  */
 enum class FormKit {

@@ -3,6 +3,8 @@ package cc.loac.kalo.network.api
 import cc.loac.kalo.data.models.Plugin
 import cc.loac.kalo.data.models.PluginItem
 import cc.loac.kalo.data.models.PluginSetting
+import cc.loac.kalo.data.models.PluginSettingSubmit
+import org.json.JSONObject
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -39,4 +41,15 @@ interface PluginApiService {
         @Path("pluginName") pluginName: String,
         @Body pluginItem: PluginItem
     ): Response<PluginItem>
+
+    /**
+     * 更新插件设置信息
+     * @param pluginName 插件名
+     * @param data 插件设置信息提交修改实体类
+     */
+    @PUT("/apis/api.console.halo.run/v1alpha1/plugins/{pluginName}/config")
+    suspend fun updatePluginSetting(
+        @Path("pluginName") pluginName: String,
+        @Body data: PluginSettingSubmit
+    ): Response<PluginSettingSubmit>
 }

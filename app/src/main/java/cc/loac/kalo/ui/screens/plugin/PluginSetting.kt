@@ -1,13 +1,10 @@
 package cc.loac.kalo.ui.screens.plugin
 
+import android.annotation.SuppressLint
 import android.util.Log
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -30,7 +26,6 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -38,13 +33,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -56,6 +45,8 @@ import cc.loac.kalo.data.models.FormKit
 import cc.loac.kalo.data.models.MyResponse
 import cc.loac.kalo.data.models.PluginSetting
 import cc.loac.kalo.data.models.PluginSettingFormSchema
+import cc.loac.kalo.data.models.PluginSettingSubmit
+import cc.loac.kalo.data.models.PluginSettingSubmitData
 import cc.loac.kalo.data.repositories.PluginRepo
 import cc.loac.kalo.network.handle
 import cc.loac.kalo.ui.components.Alert
@@ -65,9 +56,10 @@ import cc.loac.kalo.ui.theme.MIDDLE
 import cc.loac.kalo.ui.theme.MIDDLE_MIDDLE
 import cc.loac.kalo.ui.theme.SMALL
 import cc.loac.kalo.ui.theme.VERY_SMALL
-import cc.loac.kalo.utils.isUrl
+import cc.loac.kalo.utils.formatURL
+import cc.loac.kalo.utils.toJson
+import com.google.gson.JsonObject
 import kotlinx.coroutines.launch
-import java.lang.NullPointerException
 
 @Composable
 fun PluginSetting(
@@ -124,6 +116,7 @@ fun PluginSetting(
 }
 
 
+@SuppressLint("UnusedCrossfadeTargetStateParameter")
 @Composable
 fun PluginSettingItem(
     vm: PluginSettingViewModel,
@@ -135,6 +128,7 @@ fun PluginSettingItem(
     var current by remember {
         mutableIntStateOf(0)
     }
+
     TabRow(selectedTabIndex = current) {
         settings!!.forEachIndexed { index, pluginSetting ->
             Tab(
@@ -277,7 +271,7 @@ fun PluginSettingForm(
                             onValueChange = {
                                 vm.setPluginSettingValue(index, it)
                                 // 判断输入的是否是正确的 URL
-                                isCorrectUrl = it.isUrl() || it.isEmpty()
+                                isCorrectUrl = it.formatURL().isNotEmpty() || it.isEmpty()
                             },
                             isError = !isCorrectUrl,
                             modifier = Modifier.fillMaxWidth(),
@@ -323,9 +317,10 @@ fun PluginSettingForm(
                 Text(text = "重置")
             }
 
+            // 保存设置按钮
             OutlinedButton(
                 onClick = {
-
+                    vm.updatePluginSetting(formSchema)
                 },
                 shape = CardDefaults.shape
             ) {
@@ -380,6 +375,35 @@ class PluginSettingViewModel : ViewModel() {
             ""
         } else {
             _pluginSettingValues[index]
+        }
+    }
+
+    /**
+     * 更新插件设置数据
+     * @param formSchemas 当前插件设置实体类集合
+     */
+    fun updatePluginSetting(
+        formSchemas: List<PluginSettingFormSchema>,
+    ) {
+        viewModelScope.launch {
+            // 将插件设置项和数据封装成 JSON
+            val jsonData = JsonObject()
+            formSchemas.forEachIndexed { index, formSchema ->
+                jsonData.addProperty(formSchema.name, getPluginSettingValue(index))
+            }
+            // 封装插件更新提交实体类
+            val metaData = _pluginSetting.value.data!!.metadata
+            val newData = PluginSettingSubmit(
+                data = PluginSettingSubmitData(
+                    basic = jsonData.toString()
+                ),
+                apiVersion = _pluginSetting.value.data!!.apiVersion,
+                kind = "ConfigMap",
+                metadata = metaData.copy(
+                    name = metaData.name.replace("settings", "configMap")
+                )
+            )
+            Log.e(this.javaClass.name, newData.toJson())
         }
     }
 
