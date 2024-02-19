@@ -1,3 +1,6 @@
+> Kalo 以及其他 Halo App 停止更新，感谢大家的支持，详情看：[关于 Kalo 以及博客的后续](https://loac.cc/archives/guan-yu-kalo-yi-ji-bo-ke-de-hou-xu)
+
+
 <div align="center">
 <img src="./img/kalo.png" width="240" style="border-radius:10px;" />
 </div>
